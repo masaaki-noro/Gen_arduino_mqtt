@@ -1,0 +1,7 @@
+#
+# Grove analog light
+#
+groveAnalogLight:
+  use_groveAnalogLight: true # true(使う) , false(使わない)
+  groveAnalogLight_pin: A3
+  sensor_id: -1

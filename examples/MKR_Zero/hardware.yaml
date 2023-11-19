@@ -1,0 +1,40 @@
+platform:
+  type: mkr # classic , mega , nano , mkr , none
+  network: ethernet # wifi , ethernet , none
+  rtc: PCF8523 # RTC8564NB , DS1307 , DS3231 , PCF8523 , RV8803 , RX8025 , RX8900 , none
+  use_led: true # true(使う) , false(使わない)
+  use_sd: true # true(使う) , false(使わない)
+
+sensor:
+  # I2C
+  #sht31: true # true(使う) , false(使わない)
+  #sht2x: false # true(使う) , false(使わない)
+  #am232x: true # true(使う) , false(使わない)
+  #bme280: true # true(使う) , false(使わない)
+  #bmp180: true # true(使う) , false(使わない)
+  #adxl345: true # true(使う) , false(使わない)
+  #mma7660: true # true(使う) , false(使わない)
+  #itg320: true # true(使う) , false(使わない)
+  #groveI2C_Touch: true # true(使う) , false(使わない)
+  #tcs34725: true # true(使う) , false(使わない)
+  #tsl2561: true # true(使う) , false(使わない)
+  # digital
+  dht: true # true(使う) , false(使わない)
+  #digitalSwitch: true # true(使う) , false(使わない)
+  #groveTouch: true # true(使う) , false(使わない)
+  #waterDetection: true # true(使う) , false(使わない)
+  #groveLineFinder: true # true(使う) , false(使わない)
+  #groveDistanceInterrupter: true # true(使う) , false(使わない)
+  #groveIrRefrect: true # true(使う) , false(使わない)
+  #grovePIR: true # true(使う) , false(使わない)
+  # analog
+  #adxl335: true # true(使う) , false(使わない)
+  #murataENC03: true # true(使う) , false(使わない)
+  #analogTemperature: true # true(使う) , false(使わない)
+  #analogRotalyAngle: true # true(使う) , false(使わない)
+  #groveAnalogLight: true # true(使う) , false(使わない)
+  #groveAnalogSound: true # true(使う) , false(使わない)
+  #groveAnalogMoisture: true # true(使う) , false(使わない)
+  #groveGSR: true # true(使う) , false(使わない)
+  #groveCurrent: true # true(使う) , false(使わない)
+  

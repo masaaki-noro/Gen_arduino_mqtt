@@ -1,0 +1,8 @@
+#
+# Grove Digital Switch
+#
+digitalSwitch:
+  use_digitalSwitch: true # true(使う) , false(使わない)
+  digitalSwitch_pin: 2
+  sensor_id: -1
+

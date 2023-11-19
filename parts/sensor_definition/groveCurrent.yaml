@@ -1,0 +1,11 @@
+#
+# Grove電流センサ
+#
+groveCurrent:
+  use_groveCurrent: true # true(使う) , false(使わない)
+  groveCurrent_pin: A3
+  groveCurrent_vdd: 3.3
+  groveCurrent_mode: 0 # 0 , 1
+  sensor_id: -1
+
+

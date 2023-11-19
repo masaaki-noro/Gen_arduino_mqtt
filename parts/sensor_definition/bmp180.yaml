@@ -1,0 +1,8 @@
+#
+# BMP180
+#
+bmp180:
+  use_bmp180: true # true(使う) , false(使わない)
+  bmp180_mode: BMP085_MODE_ULTRALOWPOWER # BMP085_MODE_ULTRALOWPOWER , BMP085_MODE_STANDARD , BMP085_MODE_HIGHRES , BMP085_MODE_ULTRAHIGHRES
+  sensor_id: -1
+

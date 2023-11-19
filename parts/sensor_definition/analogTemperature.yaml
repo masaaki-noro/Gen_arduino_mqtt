@@ -1,0 +1,10 @@
+#
+# Grove analog temperature
+#
+analogTemperature:
+  use_analogTemperature: true # true(使う) , false(使わない)
+  analogTemperature_pin: A3
+  sensor_id: -1
+
+
+

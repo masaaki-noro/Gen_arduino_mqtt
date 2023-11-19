@@ -1,0 +1,7 @@
+#
+# Grove  IR interrupter
+#
+groveDistanceInterrupter:
+  use_groveDistanceInterrupter: true # true(使う) , false(使わない)
+  groveDistanceInterrupter_pin: 2
+  sensor_id: -1

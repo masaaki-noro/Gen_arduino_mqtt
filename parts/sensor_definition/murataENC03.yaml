@@ -1,0 +1,8 @@
+#
+# Grove Analog 1 Axis Gyro
+#
+murataENC03:
+  use_murataENC03: true # true(使う) , false(使わない)
+  murataENC03_pin: A3
+  murataENC03_try: 1000
+  sensor_id: -1

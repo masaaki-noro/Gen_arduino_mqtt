@@ -1,0 +1,6 @@
+#
+# Grove I2C タッチセンサ
+#
+groveI2C_Touch:
+  use_groveI2C_Touch: true # true(使う) , false(使わない)
+  sensor_id: -1

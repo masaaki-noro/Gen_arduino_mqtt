@@ -1,0 +1,8 @@
+#
+# MMA7660
+#
+mma7660:
+  use_mma7660: true # true(使う) , false(使わない)
+  mma7660_rate: 64
+  mma7660_delay: 4000
+  sensor_id: -1

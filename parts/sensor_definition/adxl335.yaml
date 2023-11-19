@@ -1,0 +1,10 @@
+#
+# ADXL335
+#
+adxl335:
+  use_adxl335: true # true(使う) , false(使わない)
+  adxl335_x_pin: A1
+  adxl335_y_pin: A2
+  adxl335_z_pin: A3
+  sensor_id: -1
+

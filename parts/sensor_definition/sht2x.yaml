@@ -1,0 +1,8 @@
+#
+# SHT2x
+#
+sht2x:
+  use_sht2x: true
+  sht2x_type: SHT21 # sht21
+  temperature_sensor_id: -1
+  humidity_sensor_id: -1

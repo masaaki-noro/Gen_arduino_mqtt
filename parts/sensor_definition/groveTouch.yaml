@@ -1,0 +1,8 @@
+#
+# Grove タッチセンサ
+#
+groveTouch:
+  use_groveTouch: true # true(使う) , false(使わない)
+  groveTouch_pin: 2
+  sensor_id: -1
+

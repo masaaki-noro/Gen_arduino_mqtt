@@ -1,0 +1,10 @@
+#
+# Grove GSR
+#
+groveGSR:
+  use_groveGSR: true # true(使う) , false(使わない)
+  groveGSR_pin: A3
+  sensor_id: -1
+
+
+

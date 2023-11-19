@@ -1,0 +1,7 @@
+#
+# 人感センサ
+#
+grovePIR:
+  use_grovePIR: true # true(使う) , false(使わない)
+  grovePIR_pin: 2
+  sensor_id: -1

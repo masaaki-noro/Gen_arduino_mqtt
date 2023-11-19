@@ -1,0 +1,9 @@
+#
+# Groveモイスチャーセンサ
+#
+groveAnalogMoisture:
+  use_groveAnalogMoisture: true # true(使う) , false(使わない)
+  groveAnalogMoisture_pin: A3
+  sensor_id: -1
+
+

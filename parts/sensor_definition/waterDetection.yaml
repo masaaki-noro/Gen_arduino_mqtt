@@ -1,0 +1,8 @@
+#
+# Grove水検知センサ
+#
+waterDetection:
+  use_waterDetection: true # true(使う) , false(使わない)
+  waterDetection_pin: 2
+  sensor_id: -1
+

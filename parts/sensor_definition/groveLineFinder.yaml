@@ -1,0 +1,8 @@
+#
+# Grove Lineファインダ
+#
+groveLineFinder:
+  use_groveLineFinder: true # true(使う) , false(使わない)
+  groveLineFinder_pin: 2
+  sensor_id: -1
+

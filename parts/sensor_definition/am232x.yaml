@@ -1,0 +1,8 @@
+#
+# AM232x
+#
+am232x:
+  use_am232x: true
+  am232x_type: AM2321 # AM2321 , AM2322
+  temperature_sensor_id: -1
+  humidity_sensor_id: -1
