@@ -147,6 +147,8 @@ RTC(DS3231)の配線は，VIN端子に赤色，GND端子に黒色，SCL端子に
 ![DS3231](../images/DS3231.JPG)
 
 
+
+
 ## Arduino Uno R4 Minima + Ethernetシールド
 
 ### パーツリスト
@@ -225,13 +227,7 @@ https://www.seeedstudio.com/SD-Card-Shield-V4-p-1381.html
 - SparkFun microSD Shield
 https://www.sparkfun.com/products/12761
 
-- ピンヘッダ
-https://www.adafruit.com/product/85
-https://akizukidenshi.com/catalog/g/gC-17103/
-https://akizukidenshi.com/catalog/g/gC-17102/
-
 - マイクロSDメディア
-
 
 - Grove – Chainable RGB LED
 ![Grove – Chainable RGB LED](../images/Grove_Chainable_RGB_LED.jpg)
@@ -248,6 +244,21 @@ https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-
 
 ### 組み立て
 
+下の手順は，[SDシールド](https://www.seeedstudio.com/SD-Card-Shield-V4-p-1381.html)ではなく，[マイクロSDシールド](https://www.sparkfun.com/products/12761)を
+用いたものであるが，手順は同じである．
+
+まずはじめに，マイクロSDのシールドにメディアを挿しておく．
+![Sparcfun_sd_shield](../images/Sparcfun_sd_shield.JPG)
+
+マイクロSDのシールドは基板面に触ることがないので，本体とGroveのシールドで挟む形で組み立てる．
+![Uno_R4_WiFi_Base](../images/Uno_R4_WiFi_Base.JPG)
+
+RTC(DS3231)の配線は，VIN端子に赤色，GND端子に黒色，SCL端子に黄色，SDA端子に白色端子を接続する．
+![DS3231](../images/DS3231.JPG)
+
+最後に，RTCをGroveのI2C端子のいずれかに，また，LEDはGroveのD6コネクタ(D6ピンとD7ピンを使うもの)に挿す．
+
+![Uno_R4_WiFi_Base_all](../images/Uno_R4_WiFi_Base_all.JPG)
 
 ## Arduino Nano 33 IoT
 ### パーツリスト

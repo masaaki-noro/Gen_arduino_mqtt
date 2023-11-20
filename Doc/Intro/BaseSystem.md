@@ -1,6 +1,6 @@
 # 利用するマイコン
 
-センサを接続するだけでセンサ系のIoT端末のハードウェアとして動作する物が配布される．
+センサを接続するだけでセンサ系のIoT端末のハードウェアとして動作する物が管理者から配布される．
 配布されるハードウェアは以下うちの何れかである．
 
 - MKR Zero + MKR Ethernetシールド
@@ -30,7 +30,7 @@ https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compat
 ![Grove – Chainable RGB LED](../images/Grove_Chainable_RGB_LED.jpg)
 https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html
 
-- Adafruit DS3231 Precision RTC Breakout
+- Adafruit DS3231 Precision RTC Breakout (RTCは各種都合により変更される可能性あり)
 ![Adafruit DS3231](../images/Adafruit_DS3231.jpg)
 https://www.adafruit.com/product/3013
 
@@ -83,7 +83,7 @@ https://store-usa.arduino.cc/products/mkr-sd-proto-shield
 ![Grove – Chainable RGB LED](../images/Grove_Chainable_RGB_LED.jpg)
 https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html
 
-- Adafruit DS3231 Precision RTC Breakout
+- Adafruit DS3231 Precision RTC Breakout (RTCは各種都合により変更される可能性あり)
 ![Adafruit DS3231](../images/Adafruit_DS3231.jpg)
 https://www.adafruit.com/product/3013
 
@@ -122,7 +122,7 @@ https://jp.seeedstudio.com/Base-Shield-V2.html
 ![Grove – Chainable RGB LED](../images/Grove_Chainable_RGB_LED.jpg)
 https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html
 
-- Adafruit DS3231 Precision RTC Breakout
+- Adafruit DS3231 Precision RTC Breakout (RTCは各種都合により変更される可能性あり)
 ![Adafruit DS3231](../images/Adafruit_DS3231.jpg)
 https://www.adafruit.com/product/3013
 
@@ -161,28 +161,32 @@ https://store-usa.arduino.cc/products/uno-r4-wifi
 https://jp.seeedstudio.com/Base-Shield-V2.html
 
 
-- SD Card Shield
-https://www.seeedstudio.com/SD-Card-Shield-V4-p-1381.html
+- SDカード用シールド : 以下のうちのいずれか
+    - SD Card Shield
+    https://www.seeedstudio.com/SD-Card-Shield-V4-p-1381.html
 
-- SparkFun microSD Shield
-https://www.sparkfun.com/products/12761
-
-- ピンヘッダ
-https://www.adafruit.com/product/85
-https://akizukidenshi.com/catalog/g/gC-17103/
-https://akizukidenshi.com/catalog/g/gC-17102/
-
-- マイクロSD : 好きなものを購入すれば良い(ただし，16GB以下)．
+    - SparkFun microSD Shield
+    https://www.sparkfun.com/products/12761
 
 
 - Grove – Chainable RGB LED
 ![Grove – Chainable RGB LED](../images/Grove_Chainable_RGB_LED.jpg)
 https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html
 
-- Adafruit DS3231 Precision RTC Breakout
+- Adafruit DS3231 Precision RTC Breakout (RTCは各種都合により変更される可能性あり)
 ![Adafruit DS3231](../images/Adafruit_DS3231.jpg)
 https://www.adafruit.com/product/3013
 
+
+### 使用済みのGroveコネクタ
+
+センサ等を後に追加する場合に，I2C以外は既に使われている端子は利用できない．
+
+デジタル端子の4(D4)はマイクロSDのチップセレクトとして利用されるため，
+センサやその他の周辺回路を接続することができない．また．
+I2Cコネクタ4つのうちの1つとLEDで6番7番端子を使っているため，下図のバツ印のところは利用不可である．
+
+![Minima_Grove_コネクタ](../images/Minima_Grove_コネクタ.png)
 
 
 
@@ -208,7 +212,7 @@ https://www.adafruit.com/product/254
 ![Grove – Chainable RGB LED](../images/Grove_Chainable_RGB_LED.jpg)
 https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html
 
-- Adafruit DS3231 Precision RTC Breakout
+- Adafruit DS3231 Precision RTC Breakout (RTCは各種都合により変更される可能性あり)
 ![Adafruit DS3231](../images/Adafruit_DS3231.jpg)
 https://www.adafruit.com/product/3013
 
@@ -250,7 +254,7 @@ https://www.seeedstudio.com/Grove-Shield-for-Arduino-Nano-p-4112.html
 ![Grove – Chainable RGB LED](../images/Grove_Chainable_RGB_LED.jpg)
 https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html
 
-- Adafruit DS3231 Precision RTC Breakout
+- Adafruit DS3231 Precision RTC Breakout (RTCは各種都合により変更される可能性あり)
 ![Adafruit DS3231](../images/Adafruit_DS3231.jpg)
 https://www.adafruit.com/product/3013
 

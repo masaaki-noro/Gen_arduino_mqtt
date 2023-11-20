@@ -61,18 +61,35 @@ RTCとは異なり，ピンヘッダは端子に名前が印字されている�
 
 ## Classicファミリ用マイクロSDシールド
 
+Classic用には，SD(大きいもの)用のシールドとマイクロSDのシールド(部品の購入とはんだ付けが必要)の
+いずれかが利用できる．
+
+SDのものは，マイクロSDのメディアを直接挿せないが，はんだ付けが不要なところが利点である．
+管理者の好みで選択すれば良い．
+
+### SDカードのシールド
 - SD Card Shield
 https://www.seeedstudio.com/SD-Card-Shield-V4-p-1381.html
+
+
+### マイクロSDのシールド
+利用するものは以下の部材である．
 
 - SparkFun microSD Shield
 https://www.sparkfun.com/products/12761
 
-- ピンヘッダ
+- ピンソケット
 https://www.adafruit.com/product/85
 https://akizukidenshi.com/catalog/g/gC-17103/
 https://akizukidenshi.com/catalog/g/gC-17102/
 
-![]()
+ピンソケットが重複しているのは，
+[adafruitのピンソケット](https://www.adafruit.com/product/85)」に印字がなく，
+今後の使い勝手を考えて，秋月電子で売っているArduino用のピンソケット([これ](https://akizukidenshi.com/catalog/g/gC-17103/)と[これ](https://akizukidenshi.com/catalog/g/gC-17102/))とSPIの端子以外は入れ替えた．
+
+これらを下図のようにはんだ付けする．
+![Sparcfun_sd_shield](../images/Sparcfun_sd_shield.JPG)
+
 
 
 ## Nano用Groveシールド

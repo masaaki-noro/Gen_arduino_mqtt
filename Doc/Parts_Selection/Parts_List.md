@@ -183,6 +183,9 @@ https://www.adafruit.com/product/85
 https://akizukidenshi.com/catalog/g/gC-17103/
 https://akizukidenshi.com/catalog/g/gC-17102/
 
+ピンヘッダはAdafruit物を購入すれば，端子的には足りるものの，ピンに印刷してあったほうが便利なので，2x3ピンのものと秋月で売られているものの
+組み合わせが便利．
+
 - マイクロSDのメディア : 好きなものを購入すれば良い(ただし，16GB以下)．
 
 
