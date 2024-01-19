@@ -1,0 +1,7 @@
+#
+# Grove IR反射センサ
+#
+groveIrReflect:
+  use_groveIrReflect: true # true(使う) , false(使わない)
+  groveIrReflect_pin: 2
+  sensor_id: -1

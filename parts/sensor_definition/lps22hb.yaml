@@ -1,0 +1,7 @@
+#
+# LPS22HB
+#
+lps22hb:
+  use_lps22hb: true # true(使う) , false(使わない)
+  sensor_id: -1
+

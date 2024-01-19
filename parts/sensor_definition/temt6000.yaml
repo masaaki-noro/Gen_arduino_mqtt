@@ -1,0 +1,10 @@
+#
+# temt6000
+#
+temt6000:
+  use_temt6000: true # true(使う) , false(使わない)
+  temt6000_pin: A2
+  temt6000_vdd: 3.3
+  sensor_id: -1
+
+

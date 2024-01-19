@@ -1,6 +1,6 @@
 #define USE_WIFI
 #define USE_RTC
-#define USE_DS3231
+#define USE_PCF8523
 #define USE_COLOR_LED
 #define LED_DATA_PIN 6
 #define LED_CLK_PIN 5
@@ -32,7 +32,6 @@
 #define MQTT_PORT 1883
 #define USE_WDT
 #define MAX_SLEEP_DURATION 15000
-#define USE_SLEEP
 #define SLEEP_MODE MODE_PWR_DOWN
 #define USE_SENSOR_BME280
 #define BME280_I2C

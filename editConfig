@@ -1,0 +1,4239 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[4]:
+
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from flet_multi_page import subPage
+import flet as ft
+
+import yaml
+
+config_file_name=""
+output_file_name=""
+lastView=""
+#save_result=""
+
+# HELP
+help_file="parts/Help/editConfig/help.yaml"
+helpPageName = ''
+
+error = ''
+
+#
+# 共通部分(主にハードウェア)
+#
+# ネットワークメディア
+def network_type_changed(e):
+    configuration['platform']['network_hardware']['network_type'] = network_type.value
+
+network_type = ft.Dropdown(
+    label="network type",
+    width=200,
+    on_change=network_type_changed,
+    options=[
+        ft.dropdown.Option("wifi"),
+        ft.dropdown.Option("ethernet"),
+        #ft.dropdown.Option("none"),
+    ],
+)
+
+# イーサネット
+ethernet_chip_select =  ft.TextField(label="Chip select pin number") # configuration['platform']['network_hardware']['ethernet_chip_select']
+
+ethernet_mac_0 = ft.TextField(label="1st octet") # configuration['network']['ethernet']['mac_addr'][0]
+ethernet_mac_1 = ft.TextField(label="2nd octet") # configuration['network']['ethernet']['mac_addr'][1]
+ethernet_mac_2 = ft.TextField(label="3rd octet") # configuration['network']['ethernet']['mac_addr'][2]
+ethernet_mac_3 = ft.TextField(label="4th octet") # configuration['network']['ethernet']['mac_addr'][3]
+ethernet_mac_4 = ft.TextField(label="5th octet") # configuration['network']['ethernet']['mac_addr'][4]
+ethernet_mac_5 = ft.TextField(label="6th octet") # configuration['network']['ethernet']['mac_addr'][5]
+
+# WiFi
+wifi_ssid = ft.TextField(label="SSID") # configuration['network']['wifi']['ssid']
+wifi_pass = ft.TextField(label="Pass phrase") # configuration['network']['wifi']['wifi_pass']
+
+# RTC種別選択
+def rtc_type_changed(e):
+    configuration['platform']['rtc']['rtc_type'] = rtc_type.value
+
+rtc_type = ft.Dropdown(
+    label="RTC type",
+    width=200,
+    on_change=rtc_type_changed,
+    options=[
+        ft.dropdown.Option("DS3231"),
+        ft.dropdown.Option("PCF8523"),
+        ft.dropdown.Option("DS1307"),
+        ft.dropdown.Option("RTC8564NB"),
+        ft.dropdown.Option("RV8803"),
+        ft.dropdown.Option("RX8025"),
+        ft.dropdown.Option("RX8900"),
+        ft.dropdown.Option("none"),
+    ],
+)
+
+# LED関係
+def led_flag_changed(e):
+    configuration['platform']['color_led']['use_led'] = led_flag.value
+
+led_flag = ft.Dropdown(
+    label="use LED",
+    width=200,
+    on_change=led_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+led_clock_pin = ft.TextField(label="LED clock pin") # configuration['platform']['color_led']['led_clk_pin']
+led_data_pin = ft.TextField(label="LED data pin") # configuration['platform']['color_led']['led_data_pin']
+led_long_duration = ft.TextField(label="LED LONG blink duration") # configuration['platform']['color_led']['led_duration']
+led_short_duration = ft.TextField(label="LED SHORT blink duration") # configuration['platform']['color_led']['led_short_duration']
+
+# SD/マイクロSD関係
+def sd_flag_changed(e):
+    configuration['platform']['sd']['use_sd'] = sd_flag.value
+
+sd_flag = ft.Dropdown(
+    label="use SD/micro SD",
+    width=200,
+    on_change=sd_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+sd_chip_select_pin = ft.TextField(label="SD chip select pin") # configuration['platform']['sd']['sd_chip_select']
+
+# シリアル通信
+def serial_speed_changed(e):
+    configuration['common']['serial']['speed'] = serial_speed.value
+
+serial_speed = ft.Dropdown(
+    label="Communication speed",
+    width=300,
+    on_change=serial_speed_changed,
+    options=[
+        ft.dropdown.Option("110"),
+        ft.dropdown.Option("300"),
+        ft.dropdown.Option("600"),
+        ft.dropdown.Option("1200"),
+        ft.dropdown.Option("2400"),
+        ft.dropdown.Option("4800"),
+        ft.dropdown.Option("9600"),
+        ft.dropdown.Option("14400"),
+        ft.dropdown.Option("19200"),
+        ft.dropdown.Option("38400"),
+        ft.dropdown.Option("57600"),
+        ft.dropdown.Option("115200"),
+        ft.dropdown.Option("230400"),
+        ft.dropdown.Option("460800"),
+        ft.dropdown.Option("921600"),
+    ],
+)
+
+# ログ出力
+def logfile_flag_changed(e):
+    configuration['common']['log']['use_logfile'] = logfile_flag.value
+
+logfile_flag = ft.Dropdown(
+    label="logfile",
+    width=200,
+    on_change=logfile_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+def serial_log_flag_changed(e):
+    configuration['common']['log']['use_serial_log'] = serial_log_flag.value
+
+serial_log_flag = ft.Dropdown(
+    label="Serial log output",
+    width=200,
+    on_change=serial_log_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# ログフォーマット
+host_name = ft.TextField(label="Hostname field of log") # configuration['common']['log']['host_name']
+app_name = ft.TextField(label="Application name field of log") # configuration['common']['log']['app_name']
+
+# ログファイル
+logfile_name = ft.TextField(label="header of logfile name") # configuration['common']['log']['logfile_name_hdr']
+logfile_size = ft.TextField(label="Max size of logfile") # configuration['common']['log']['logfile_size_max']
+
+#
+# ネットワーク関係
+#
+# DHCP
+def dhcp_flag_changed(e):
+    configuration['network']['ip']['use_dhcp'] = dhcp_flag.value
+
+dhcp_flag = ft.Dropdown(
+    label="DHCP usage",
+    width=200,
+    on_change=dhcp_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# IPアドレス
+ip_addr_0 = ft.TextField(label="1st octet") # configuration['network']['ip']['ip_addr'][0]
+ip_addr_1 = ft.TextField(label="2nd octet") # configuration['network']['ip']['ip_addr'][1]
+ip_addr_2 = ft.TextField(label="3rd octet") # configuration['network']['ip']['ip_addr'][2]
+ip_addr_3 = ft.TextField(label="4th octet") # configuration['network']['ip']['ip_addr'][3]
+
+# ネットマスク
+netmask_0 = ft.TextField(label="1st octet") # configuration['network']['ip']['netmask'][0]
+netmask_1 = ft.TextField(label="2nd octet") # configuration['network']['ip']['netmask'][1]
+netmask_2 = ft.TextField(label="3rd octet") # configuration['network']['ip']['netmask'][2]
+netmask_3 = ft.TextField(label="4th octet") # configuration['network']['ip']['netmask'][3]
+
+# ゲートウェイ(ルータ)
+gateway_0 = ft.TextField(label="1st octet") # configuration['network']['ip']['gateway'][0]
+gateway_1 = ft.TextField(label="2nd octet") # configuration['network']['ip']['gateway'][1]
+gateway_2 = ft.TextField(label="3rd octet") # configuration['network']['ip']['gateway'][2]
+gateway_3 = ft.TextField(label="4th octet") # configuration['network']['ip']['gateway'][3]
+
+# DNSサーバ
+dns_server_0 = ft.TextField(label="1st octet") # configuration['network']['ip']['dns_server'][0]
+dns_server_1 = ft.TextField(label="2nd octet") # configuration['network']['ip']['dns_server'][1]
+dns_server_2 = ft.TextField(label="3rd octet") # configuration['network']['ip']['dns_server'][2]
+dns_server_3 = ft.TextField(label="4th octet") # configuration['network']['ip']['dns_server'][3]
+
+# MQTT
+def mqtt_format_changed(e):
+    configuration['network']['mqtt']['mqtt_format'] = mqtt_format.value
+
+mqtt_format = ft.Dropdown(
+    label="Data format",
+    width=300,
+    on_change=mqtt_format_changed,
+    options=[
+        ft.dropdown.Option("plain"),
+        ft.dropdown.Option("syslog"),
+        ft.dropdown.Option("json"),
+    ],
+)
+
+mqtt_topic = ft.TextField(label="Topic") # configuration['network']['mqtt']['mqtt_topic']
+mqtt_server = ft.TextField(label="Server IP address") # configuration['network']['mqtt']['mqtt_server']
+mqtt_port = ft.TextField(label="Port number") # configuration['network']['mqtt']['mqtt_port']
+
+def mqtt_auth_flag_changed(e):
+    configuration['network']['ip']['use_dhcp'] = mqtt_auth_flag.value
+
+mqtt_auth_flag = ft.Dropdown(
+    label="Authentication",
+    width=200,
+    on_change=mqtt_auth_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+mqtt_user = ft.TextField(label="User name") # configuration['network']['mqtt']['mqtt_user']
+mqtt_pass = ft.TextField(label="Password") # configuration['network']['mqtt']['mqtt_pass']
+
+# NTP関係
+def ntp_flag_changed(e):
+    configuration['common']['clock']['use_ntp'] = ntp_flag.value
+
+ntp_flag = ft.Dropdown(
+    label="Use NTP for log time-stamp",
+    width=200,
+    on_change=ntp_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+def rtc_ntp_flag_changed(e):
+    configuration['common']['clock']['update_rtc_by_ntp'] = rtc_ntp_flag.value
+
+rtc_ntp_flag = ft.Dropdown(
+    label="Update RTC by NTP",
+    width=200,
+    on_change=rtc_ntp_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# WDT関連
+def wdt_flag_changed(e):
+    configuration['safety']['use_wdt'] = wdt_flag.value
+
+wdt_flag = ft.Dropdown(
+    label="Watch dog timer(WDT)",
+    width=200,
+    on_change=wdt_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+wdt_duration = ft.TextField(label="WDT duration") # configuration['platform']['wdt']['wdt_duration']
+wdt_short_duration = ft.TextField(label="WDT short duration") # configuration['platform']['wdt']['wdt_short_duration']
+
+sensing_interval = ft.TextField(label="Sensing interval") # configuration['sensor']['sensor_interval']
+
+def sleep_flag_changed(e):
+    configuration['sensor']['low_power']['use_sleep'] = sleep_flag.value
+
+sleep_flag = ft.Dropdown(
+    label="Use low power mode",
+    width=200,
+    on_change=sleep_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+def sleep_mode_changed(e):
+    configuration['sensor']['low_power']['sleep_mode'] = sleep_mode.value
+
+sleep_mode = ft.Dropdown(
+    label="Sleep mode",
+    width=200,
+    on_change=sleep_mode_changed,
+    options=[
+        ft.dropdown.Option("idle"),
+        ft.dropdown.Option("adc"),
+        ft.dropdown.Option("power_save"),
+        ft.dropdown.Option("standby"),
+        ft.dropdown.Option("power_down"),
+    ],
+)
+
+#
+# 環境センサメニュー
+#
+# BME280
+def BME280_flag_changed(e):
+    configuration['bme280']['use_bme280'] = BME280_flag.value
+
+BME280_flag = ft.Dropdown(
+    label="BME280",
+    width=200,
+    on_change=BME280_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# BMP180
+def BMP180_flag_changed(e):
+    configuration['bmp180']['use_bmp180'] = BMP180_flag.value
+
+BMP180_flag = ft.Dropdown(
+    label="BMP180",
+    width=200,
+    on_change=BMP180_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# SHT31
+def SHT31_flag_changed(e):
+    configuration['sht31']['use_sht31'] = SHT31_flag.value
+
+SHT31_flag = ft.Dropdown(
+    label="SHT31",
+    width=200,
+    on_change=SHT31_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# SHT2X
+def SHT2x_flag_changed(e):
+    configuration['sht31']['use_sht2x'] = SHT2x_flag.value
+
+SHT2x_flag = ft.Dropdown(
+    label="SHT2x",
+    width=200,
+    on_change=SHT2x_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# AM232x
+def AM232x_flag_changed(e):
+    configuration['am232x']['use_am232x'] = AM232x_flag.value
+
+AM232x_flag = ft.Dropdown(
+    label="AM232x",
+    width=200,
+    on_change=AM232x_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# DHT
+def DHT_flag_changed(e):
+    configuration['dht']['use_dht'] = DHT_flag.value
+
+DHT_flag = ft.Dropdown(
+    label="DHT",
+    width=200,
+    on_change=DHT_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# Grove analog temperature sensor
+def Grove_analog_temperature_sensor_flag_changed(e):
+    configuration['analogTemperature']['use_analogTemperature'] = Grove_analog_temperature_sensor_flag.value
+
+Grove_analog_temperature_sensor_flag = ft.Dropdown(
+    label="Grove analog temperature sensor",
+    width=250,
+    on_change=Grove_analog_temperature_sensor_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# LPS22HB
+def LPS22HB_flag_changed(e):
+    configuration['lps22hb']['use_lps22hb'] = LPS22HB_flag.value
+
+LPS22HB_flag = ft.Dropdown(
+    label="LPS22HB",
+    width=200,
+    on_change=LPS22HB_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# HTS221
+def HTS221_flag_changed(e):
+    configuration['hts221']['use_hts221'] = HTS221_flag.value
+
+HTS221_flag = ft.Dropdown(
+    label="HTS221",
+    width=200,
+    on_change=HTS221_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+#
+# 環境センサパラメータメニュー
+#
+# BME280
+bme280_temperature_sensor_id = ft.TextField(label="Temperature sensor ID") # configuration['bme280']['temperature_sensor_id']
+bme280_humidity_sensor_id = ft.TextField(label="Humidity sensor ID") # configuration['bme280']['humidity_sensor_id']
+bme280_pressure_sensor_id = ft.TextField(label="Pressure sensor ID") # configuration['bme280']['pressure_sensor_id']
+
+# BMP180
+bmp180_sensor_id = ft.TextField(label="Sensor ID") # configuration['bmp180']['sensor_id']
+
+def BMP180_mode_changed(e):
+    configuration['bmp180']['bmp180_mode'] = BMP180_mode.value
+
+BMP180_mode = ft.Dropdown(
+    label="BMP180 mode",
+    width=350,
+    on_change=BMP180_mode_changed,
+    options=[
+        ft.dropdown.Option("BMP085_MODE_ULTRALOWPOWER"),
+        ft.dropdown.Option("BMP085_MODE_STANDARD"),
+        ft.dropdown.Option("BMP085_MODE_HIGHRES"),
+        ft.dropdown.Option("BMP085_MODE_ULTRAHIGHRES"),
+    ],
+)
+
+# SHT31
+sht31_temperature_sensor_id = ft.TextField(label="Temperature sensor ID") # configuration['sht31']['temperature_sensor_id']
+sht31_humidity_sensor_id = ft.TextField(label="Humidity sensor ID") # configuration['sht31']['humidity_sensor_id']
+
+# SHT2X
+sht2x_temperature_sensor_id = ft.TextField(label="Temperature sensor ID") # configuration['sht2x']['temperature_sensor_id']
+sht2x_humidity_sensor_id = ft.TextField(label="Humidity sensor ID") # configuration['sht2x']['humidity_sensor_id']
+
+def SHT2x_type_changed(e):
+    configuration['sht2x']['sht2x_type'] = SHT2x_type.value
+
+SHT2x_type = ft.Dropdown(
+    label="SHT2x type",
+    width=200,
+    on_change=SHT2x_type_changed,
+    options=[
+        ft.dropdown.Option("SHT21"),
+        ft.dropdown.Option("SHT25"),
+    ],
+)
+
+# AM232x
+am232x_temperature_sensor_id = ft.TextField(label="Temperature sensor ID") # configuration['am232x']['temperature_sensor_id']
+am232x_humidity_sensor_id = ft.TextField(label="Humidity sensor ID") # configuration['am232x']['humidity_sensor_id']
+
+def AM232x_type_changed(e):
+    configuration['am232x']['am232x_type'] = AM232x_type.value
+
+AM232x_type = ft.Dropdown(
+    label="AM232x type",
+    width=200,
+    on_change=AM232x_type_changed,
+    options=[
+        ft.dropdown.Option("AM2321"),
+        ft.dropdown.Option("AM2322"),
+    ],
+)
+
+# DHT
+DHT_pin = ft.TextField(label="Arduino pin number") # configuration['dht']['dht_pin']
+DHT_temperature_sensor_id = ft.TextField(label="Temperature sensor ID") # configuration['dht']['temperature_sensor_id']
+DHT_humidity_sensor_id = ft.TextField(label="Humidity sensor ID") # configuration['dht']['humidity_sensor_id']
+
+def DHT_type_changed(e):
+    configuration['dht']['dht_type'] = DHT_type.value
+
+DHT_type = ft.Dropdown(
+    label="DHT type",
+    width=200,
+    on_change=DHT_type_changed,
+    options=[
+        ft.dropdown.Option("DHT11"),
+        ft.dropdown.Option("DHT21"),
+        ft.dropdown.Option("DHT22"),
+    ],
+)
+
+# Grove analog temperature sensor
+Grove_analog_temperature_sensor_pin = ft.TextField(label="Arduino pin number") # configuration['analogTemperature']['analogTemperature_pin']
+Grove_analog_temperature_sensor_id = ft.TextField(label="Sensor ID") # configuration['analogTemperature']['sensor_id']
+
+# LPS22HB
+LPS22HB_sensor_id = ft.TextField(label="Sensor ID") # configuration['lps22hb']['sensor_id']
+
+# HTS221
+HTS221_temperature_sensor_id = ft.TextField(label="Temperature sensor ID") # configuration['hts221']['temperature_sensor_id']
+HTS221_humidity_sensor_id = ft.TextField(label="Humidity sensor ID") # configuration['hts221']['humidity_sensor_id']
+
+
+#
+# 振動・加速度センサメニュー
+#
+# ITG3200 (GROVE - I2C 3軸ジャイロセンサ)
+def ITG3200_flag_changed(e):
+    configuration['itg3200']['use_itg3200'] = ITG3200_flag.value
+
+ITG3200_flag = ft.Dropdown(
+    label="ITG3200",
+    width=200,
+    on_change=ITG3200_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# MMA7660
+def MMA7660_flag_changed(e):
+    configuration['mma7660']['use_mma7660'] = MMA7660_flag.value
+
+MMA7660_flag = ft.Dropdown(
+    label="MMA7660",
+    width=200,
+    on_change=MMA7660_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# ADXL345
+def ADXL345_flag_changed(e):
+    configuration['adxl345']['use_adxl345'] = ADXL345_flag.value
+
+ADXL345_flag = ft.Dropdown(
+    label="ADXL345",
+    width=200,
+    on_change=ADXL345_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# ADXL335
+def ADXL335_flag_changed(e):
+    configuration['adxl335']['use_adxl335'] = ADXL335_flag.value
+
+ADXL335_flag = ft.Dropdown(
+    label="ADXL335",
+    width=200,
+    on_change=ADXL335_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# ENC03R
+def ENC03R_flag_changed(e):
+    configuration['murataENC03']['use_murataENC03'] = ENC03R_flag.value
+
+ENC03R_flag = ft.Dropdown(
+    label="ENC03R",
+    width=200,
+    on_change=ENC03R_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+
+#
+# 振動・加速度センサパラメータメニュー
+#
+# ITG3200
+ITG3200_sensor_id = ft.TextField(label="Sensor ID") # configuration['itg3200']['sensor_id']
+ITG3200_samples = ft.TextField(label="samples") # configuration['itg3200']['itg3200_samples']
+ITG3200_delay = ft.TextField(label="delay") # configuration['itg3200']['itg3200_delay']
+
+# MMA7660
+MMA7660_sensor_id = ft.TextField(label="Sensor ID") # configuration['mma7660']['sensor_id']
+MMA7660_rate = ft.TextField(label="rate") # configuration['mma7660']['mma7660_rate']
+MMA7660_delay = ft.TextField(label="delay") # configuration['mma7660']['mma7660_delay']
+
+# ADXL345
+ADXL345_sensor_id = ft.TextField(label="Sensor ID") # configuration['adxl345']['sensor_id']
+
+def ADXL345_rate_changed(e):
+    configuration['adxl345']['adxl345_data_rate'] = ADXL345_rate.value
+
+ADXL345_rate = ft.Dropdown(
+    label="Data rate",
+    width=400,
+    on_change=ADXL345_rate_changed,
+    options=[
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_3200_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_1600_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_800_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_400_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_200_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_100_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_50_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_25_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_12_5_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_6_25HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_3_13_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_1_56_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_0_78_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_0_39_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_0_20_HZ"),
+        ft.dropdown.Option("AUSEX_ADXL345_DATARATE_0_10_HZ"),
+    ],
+)
+
+def ADXL345_range_changed(e):
+    configuration['adxl345']['adxl345_range'] = ADXL345_range.value
+
+ADXL345_range = ft.Dropdown(
+    label="Data range",
+    width=350,
+    on_change=ADXL345_range_changed,
+    options=[
+        ft.dropdown.Option("AUSEX_ADXL345_RANGE_2_G"),
+        ft.dropdown.Option("AUSEX_ADXL345_RANGE_4_G"),
+        ft.dropdown.Option("AUSEX_ADXL345_RANGE_8_G"),
+        ft.dropdown.Option("AUSEX_ADXL345_RANGE_16_G"),
+    ],
+)
+
+# ADXL335
+ADXL335_sensor_id = ft.TextField(label="Sensor ID") # configuration['adxl335']['sensor_id']
+ADXL335_x_pin = ft.TextField(label="Pin number of X axis") # configuration['adxl335']['adxl335_x_pin']
+ADXL335_y_pin = ft.TextField(label="Pin number of Y axis") # configuration['adxl335']['adxl335_y_pin']
+ADXL335_z_pin = ft.TextField(label="Pin number of Z axis") # configuration['adxl335']['adxl335_z_pin']
+
+# ENC03R
+ENC03R_sensor_id = ft.TextField(label="Sensor ID") # configuration['murataENC03']['sensor_id']
+ENC03R_pin = ft.TextField(label="Arduino Pin number") # configuration['murataENC03']['murataENC03_pin']
+ENC03R_try = ft.TextField(label="Try count") # configuration['murataENC03']['murataENC03_try']
+
+#
+# 対人センサメニュー
+#
+# MPR121 (GROVE - I2C タッチセンサ)
+def MPR121_flag_changed(e):
+    configuration['groveI2C_Touch']['use_groveI2C_Touch'] = MPR121_flag.value
+
+MPR121_flag = ft.Dropdown(
+    label="Grove I2Cタッチセンサ",
+    width=200,
+    on_change=MPR121_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# Grove Touch sensor
+def Grove_touch_flag_changed(e):
+    configuration['groveTouch']['use_groveTouch'] = Grove_touch_flag.value
+
+Grove_touch_flag = ft.Dropdown(
+    label="Groveタッチセンサ",
+    width=200,
+    on_change=Grove_touch_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# PIRセンサ
+def PIR_flag_changed(e):
+    configuration['grovePIR']['use_grovePIR'] = PIR_flag.value
+
+PIR_flag = ft.Dropdown(
+    label="PIRセンサ",
+    width=200,
+    on_change=PIR_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# Grove GSRセンサ
+def Grove_GSR_flag_changed(e):
+    configuration['groveGSR']['use_groveGSR'] = Grove_GSR_flag.value
+
+Grove_GSR_flag = ft.Dropdown(
+    label="Grove GSRセンサ",
+    width=200,
+    on_change=Grove_GSR_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+#
+# 対人センサパラメータメニュー
+#
+# MPR121 (GROVE - I2C タッチセンサ)
+MPR121_sensor_id = ft.TextField(label="Sensor ID") # configuration['groveI2C_Touch']['sensor_id']
+
+# Grove Touch sensor
+Grove_touch_sensor_id = ft.TextField(label="Sensor ID") # configuration['groveTouch']['sensor_id']
+Grove_touch_pin = ft.TextField(label="Arduino Pin number") # configuration['groveTouch']['groveTouch_pin']
+
+# PIRセンサ
+PIR_sensor_id = ft.TextField(label="Sensor ID") # configuration['grovePIR']['sensor_id']
+PIR_pin = ft.TextField(label="Arduino Pin number") # configuration['grovePIR']['grovePIR_pin']
+
+# Grove GSRセンサ
+Grove_GSR_sensor_id = ft.TextField(label="Sensor ID") # configuration['groveGSR']['sensor_id']
+Grove_GSR_pin = ft.TextField(label="Arduino Pin number") # configuration['groveGSR']['groveGSR_pin']
+
+#
+# 視覚関連センサメニュー
+#
+# TCS34725
+def TCS34725_flag_changed(e):
+    configuration['tcs34725']['use_tcs34725'] = TCS34725_flag.value
+
+TCS34725_flag = ft.Dropdown(
+    label="TCS34725",
+    width=200,
+    on_change=TCS34725_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# TSL2561
+def TSL2561_flag_changed(e):
+    configuration['tsl2561']['use_tsl2561'] = TSL2561_flag.value
+
+TSL2561_flag = ft.Dropdown(
+    label="TSL2561",
+    width=200,
+    on_change=TSL2561_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# Grove analog Light Sensor
+def Grove_analog_light_flag_changed(e):
+    configuration['groveAnalogLight']['use_groveAnalogLight'] = Grove_analog_light_flag.value
+
+Grove_analog_light_flag = ft.Dropdown(
+    label="Grove analog光センサ",
+    width=200,
+    on_change=Grove_analog_light_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# TEMT6000
+def TEMT6000_flag_changed(e):
+    configuration['temt6000']['use_temt6000'] = TEMT6000_flag.value
+
+TEMT6000_flag = ft.Dropdown(
+    label="TEMT6000",
+    width=200,
+    on_change=TEMT6000_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+#
+# 視覚関連センサパラメータメニュー
+#
+# TCS34725
+TCS34725_sensor_id = ft.TextField(label="Sensor ID") # configuration['tcs34725']['sensor_id']
+
+def TCS34725_interval_changed(e):
+    configuration['tcs34725']['tcs34725_int'] = TCS34725_interval.value
+
+TCS34725_interval = ft.Dropdown(
+    label="Integration time",
+    width=400,
+    on_change=TCS34725_interval_changed,
+    options=[
+        ft.dropdown.Option("TCS34725_INTEGRATIONTIME_2_4MS"),
+        ft.dropdown.Option("TCS34725_INTEGRATIONTIME_24MS"),
+        ft.dropdown.Option("TCS34725_INTEGRATIONTIME_50MS"),
+        ft.dropdown.Option("TCS34725_INTEGRATIONTIME_101MS"),
+        ft.dropdown.Option("TCS34725_INTEGRATIONTIME_154MS"),
+        ft.dropdown.Option("TCS34725_INTEGRATIONTIME_700MS"),
+    ],
+)
+
+def TCS34725_gain_changed(e):
+    configuration['tcs34725']['tcs34725_gain'] = TCS34725_gain.value
+
+TCS34725_gain = ft.Dropdown(
+    label="Gain",
+    width=300,
+    on_change=TCS34725_gain_changed,
+    options=[
+        ft.dropdown.Option("TCS34725_GAIN_1X"),
+        ft.dropdown.Option("TCS34725_GAIN_4X"),
+        ft.dropdown.Option("TCS34725_GAIN_16X"),
+        ft.dropdown.Option("TCS34725_GAIN_60X"),
+    ],
+)
+
+# TSL2561
+TSL2561_sensor_id = ft.TextField(label="Sensor ID") # configuration['tsl2561']['sensor_id']
+
+def TSL2561_gain_changed(e):
+    configuration['tsl2561']['tsl2561_gain'] = TSL2561_gain.value
+
+TSL2561_gain = ft.Dropdown(
+    label="Gain",
+    width=300,
+    on_change=TSL2561_gain_changed,
+    options=[
+        ft.dropdown.Option("TSL2561_GAIN_1X"),
+        ft.dropdown.Option("TSL2561_GAIN_16X"),
+    ],
+)
+
+def TSL2561_interval_changed(e):
+    configuration['tsl2561']['tsl2561_int'] = TSL2561_interval.value
+
+TSL2561_interval = ft.Dropdown(
+    label="Integration time",
+    width=450,
+    on_change=TSL2561_interval_changed,
+    options=[
+        ft.dropdown.Option("TSL2561_INTEGRATIONTIME_13MS"),
+        ft.dropdown.Option("TSL2561_INTEGRATIONTIME_101MS"),
+        ft.dropdown.Option("TSL2561_INTEGRATIONTIME_402MS"),
+    ],
+)
+
+def TSL2561_addr_changed(e):
+    configuration['tsl2561']['tsl2561_addr'] = TSL2561_addr.value
+
+TSL2561_addr = ft.Dropdown(
+    label="I2C address",
+    width=300,
+    on_change=TSL2561_addr_changed,
+    options=[
+        ft.dropdown.Option("TSL2561_ADDR_FLOAT"),
+        ft.dropdown.Option("TSL2561_ADDR_LOW"),
+        ft.dropdown.Option("TSL2561_ADDR_HIGH"),
+    ],
+)
+
+# Grove analog Light Sensor
+Grove_analog_light_sensor_id = ft.TextField(label="Sensor ID") # configuration['groveAnalogLight']['sensor_id']
+Grove_analog_light_pin = ft.TextField(label="Arduino Pin number") # configuration['groveAnalogLight']['groveAnalogLight_pin']
+
+# TEMT6000
+TEMT6000_sensor_id = ft.TextField(label="Sensor ID") # configuration['temt6000']['sensor_id']
+TEMT6000_pin = ft.TextField(label="Arduino Pin number") # configuration['temt6000']['temt6000_pin']
+
+def TEMT6000_vdd_changed(e):
+    configuration['temt6000']['temt6000_vdd'] = TEMT6000_vdd.value
+
+TEMT6000_vdd = ft.Dropdown(
+    label="VDD",
+    width=200,
+    on_change=TEMT6000_vdd_changed,
+    options=[
+        ft.dropdown.Option("3.3"),
+        ft.dropdown.Option("5.0"),
+    ],
+)
+
+#
+# その他のセンサメニュー
+#
+# Grove switch sensor
+def Grove_switch_flag_changed(e):
+    configuration['digitalSwitch']['use_digitalSwitch'] = Grove_switch_flag.value
+
+Grove_switch_flag = ft.Dropdown(
+    label="Grove Switch",
+    width=200,
+    on_change=Grove_switch_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# Grove water sensor
+def Grove_water_flag_changed(e):
+    configuration['waterDetection']['use_waterDetection'] = Grove_water_flag.value
+
+Grove_water_flag = ft.Dropdown(
+    label="Grove Waterセンサ",
+    width=200,
+    on_change=Grove_water_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# Grove Line finder
+def Grove_line_finder_flag_changed(e):
+    configuration['groveLineFinder']['use_groveLineFinder'] = Grove_line_finder_flag.value
+
+Grove_line_finder_flag = ft.Dropdown(
+    label="Grove line finder",
+    width=200,
+    on_change=Grove_line_finder_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# Grove IR distance interrupter
+def Grove_IR_distance_interrupter_flag_changed(e):
+    configuration['groveDistanceInterrupter']['use_groveDistanceInterrupter'] = Grove_IR_distance_interrupter_flag.value
+
+Grove_IR_distance_interrupter_flag = ft.Dropdown(
+    label="Grove IR distance interrupter",
+    width=200,
+    on_change=Grove_IR_distance_interrupter_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# Grove IR reflective sensor
+def Grove_IR_reflective_flag_changed(e):
+    configuration['groveIrReflect']['use_groveIrReflect'] = Grove_IR_reflective_flag.value
+
+Grove_IR_reflective_flag = ft.Dropdown(
+    label="Grove IR reflective sensor",
+    width=200,
+    on_change=Grove_IR_reflective_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# Grove rotary angle sensor
+def Grove_rotary_angle_flag_changed(e):
+    configuration['analogRotaryAngle']['use_analogRotaryAngle'] = Grove_rotary_angle_flag.value
+
+Grove_rotary_angle_flag = ft.Dropdown(
+    label="Grove rotary angle sensor",
+    width=200,
+    on_change=Grove_rotary_angle_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# Grove sound sensor
+def Grove_sound_flag_changed(e):
+    configuration['groveAnalogSound']['use_groveAnalogSound'] = Grove_sound_flag.value
+
+Grove_sound_flag = ft.Dropdown(
+    label="Grove sound sensor",
+    width=200,
+    on_change=Grove_sound_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# Grove moisture sensor
+def Grove_moisture_flag_changed(e):
+    configuration['groveAnalogMoisture']['use_groveAnalogMoisture'] = Grove_moisture_flag.value
+
+Grove_moisture_flag = ft.Dropdown(
+    label="Grove moisture sensor",
+    width=200,
+    on_change=Grove_moisture_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+# Grove current sensor
+def Grove_current_flag_changed(e):
+    configuration['groveCurrent']['use_groveCurrent'] = Grove_current_flag.value
+
+Grove_current_flag = ft.Dropdown(
+    label="Grove current sensor",
+    width=200,
+    on_change=Grove_current_flag_changed,
+    options=[
+        ft.dropdown.Option(key=True, text="yes"),
+        ft.dropdown.Option(key=False, text="no"),
+    ],
+)
+
+#
+# その他のセンサパラメータメニュー
+#
+# Grove switch sensor
+Grove_switch_sensor_id = ft.TextField(label="Sensor ID") # configuration['digitalSwitch']['sensor_id']
+Grove_switch_pin = ft.TextField(label="Arduino Pin number") # configuration['digitalSwitch']['digitalSwitch_pin']
+
+# Grove water sensor
+Grove_water_sensor_id = ft.TextField(label="Sensor ID") # configuration['waterDetection']['sensor_id']
+Grove_water_pin = ft.TextField(label="Arduino Pin number") # configuration['waterDetection']['waterDetection_pin']
+
+# Grove Line finder
+Grove_line_finder_sensor_id = ft.TextField(label="Sensor ID") # configuration['groveLineFinder']['sensor_id']
+Grove_line_finder_pin = ft.TextField(label="Arduino Pin number") # configuration['groveLineFinder']['groveLineFinder_pin']
+
+# Grove IR distance interrupter
+Grove_IR_distance_interrupter_sensor_id = ft.TextField(label="Sensor ID") # configuration['groveDistanceInterrupter']['sensor_id']
+Grove_IR_distance_interrupter_pin = ft.TextField(label="Arduino Pin number") # configuration['groveDistanceInterrupter']['groveDistanceInterrupter_pin']
+
+# Grove IR reflective sensor
+Grove_IR_reflective_sensor_id = ft.TextField(label="Sensor ID") # configuration['groveIrReflect']['sensor_id']
+Grove_IR_reflective_pin = ft.TextField(label="Arduino Pin number") # configuration['groveIrReflect']['groveIrReflect_pin']
+
+# Grove rotary angle sensor
+Grove_rotary_angle_sensor_id = ft.TextField(label="Sensor ID") # configuration['analogRotaryAngle']['sensor_id']
+Grove_rotary_angle_pin = ft.TextField(label="Arduino Pin number") # configuration['analogRotaryAngle']['analogRotaryAngle_pin']
+
+def Grove_rotary_angle_vdd_changed(e):
+    configuration['analogRotaryAngle']['analogRotaryAngle_vdd'] = Grove_rotary_angle_vdd.value
+
+Grove_rotary_angle_vdd = ft.Dropdown(
+    label="VDD",
+    width=200,
+    on_change=Grove_rotary_angle_vdd_changed,
+    options=[
+        ft.dropdown.Option("3.3"),
+        ft.dropdown.Option("5.0"),
+    ],
+)
+
+# Grove sound sensor
+Grove_sound_sensor_id = ft.TextField(label="Sensor ID") # configuration['groveAnalogSound']['sensor_id']
+Grove_sound_pin = ft.TextField(label="Arduino Pin number") # configuration['groveAnalogSound']['groveAnalogSound_pin']
+
+# Grove moisture sensor
+Grove_moisture_sensor_id = ft.TextField(label="Sensor ID") # configuration['groveAnalogMoisture']['sensor_id']
+Grove_moisture_pin = ft.TextField(label="Arduino Pin number") # configuration['groveAnalogMoisture']['groveAnalogMoisture_pin']
+
+# Grove current sensor
+Grove_current_sensor_id = ft.TextField(label="Sensor ID") # configuration['groveCurrent']['sensor_id']
+Grove_current_pin = ft.TextField(label="Arduino Pin number") # configuration['groveCurrent']['groveCurrent_pin']
+
+def Grove_current_vdd_changed(e):
+    configuration['groveCurrent']['groveCurrent_vdd'] = Grove_current_vdd.value
+
+Grove_current_vdd = ft.Dropdown(
+    label="VDD",
+    width=200,
+    on_change=Grove_current_vdd_changed,
+    options=[
+        ft.dropdown.Option("3.3"),
+        ft.dropdown.Option("5.0"),
+    ],
+)
+
+def Grove_current_mode_changed(e):
+    configuration['groveCurrent']['groveCurrent_mode'] = Grove_current_mode.value
+
+Grove_current_mode = ft.Dropdown(
+    label="Mode",
+    width=200,
+    on_change=Grove_current_mode_changed,
+    options=[
+        ft.dropdown.Option("0"),
+        ft.dropdown.Option("1"),
+    ],
+)
+
+# 設定ファイルから，メニューへ値のコピー
+def saveMenuValue():
+    global configuration
+    #
+    # Arduino本体+センサ以外の周辺機器
+    #
+    # ネットワークメディア
+    configuration['platform']['network_hardware']['network_type'] = network_type.value
+    # イーサネット関係
+    configuration['platform']['network_hardware']['ethernet_chip_select'] = ethernet_chip_select.value
+    configuration['network']['ethernet']['mac_addr'][0] = ethernet_mac_0.value
+    configuration['network']['ethernet']['mac_addr'][1] = ethernet_mac_1.value
+    configuration['network']['ethernet']['mac_addr'][2] = ethernet_mac_2.value
+    configuration['network']['ethernet']['mac_addr'][3] = ethernet_mac_3.value
+    configuration['network']['ethernet']['mac_addr'][4] = ethernet_mac_4.value
+    configuration['network']['ethernet']['mac_addr'][5] = ethernet_mac_5.value
+    # WiFi
+    configuration['network']['wifi']['ssid'] = wifi_ssid.value
+    configuration['network']['wifi']['wifi_pass'] = wifi_pass.value
+    # RTC種別
+    configuration['platform']['rtc']['rtc_type'] = rtc_type.value
+    # LED
+    configuration['platform']['color_led']['use_led'] = led_flag.value
+    configuration['platform']['color_led']['led_clk_pin'] = led_clock_pin.value
+    configuration['platform']['color_led']['led_data_pin'] = led_data_pin.value
+    configuration['platform']['color_led']['led_duration'] = led_long_duration.value
+    configuration['platform']['color_led']['led_short_duration'] = led_short_duration.value
+    # SD
+    configuration['platform']['sd']['use_sd'] = sd_flag.value
+    configuration['platform']['sd']['sd_chip_select'] = sd_chip_select_pin.value
+    # シリアル通信速度
+    configuration['common']['serial']['speed'] = serial_speed.value
+    # ログ出力
+    configuration['common']['log']['use_logfile'] = logfile_flag.value
+    configuration['common']['log']['use_serial_log'] = serial_log_flag.value
+    # ログフォーマット
+    configuration['common']['log']['host_name'] = host_name.value
+    configuration['common']['log']['app_name'] = app_name.value
+    # ログファイル
+    configuration['common']['log']['logfile_name_hdr'] = logfile_name.value
+    configuration['common']['log']['logfile_size_max'] = logfile_size.value
+    # DHCP
+    configuration['network']['ip']['use_dhcp'] = dhcp_flag.value
+    # IPアドレス
+    configuration['network']['ip']['ip_addr'][0] = ip_addr_0.value
+    configuration['network']['ip']['ip_addr'][1] = ip_addr_1.value
+    configuration['network']['ip']['ip_addr'][2] = ip_addr_2.value
+    configuration['network']['ip']['ip_addr'][3] = ip_addr_3.value
+    # ネットマスク
+    configuration['network']['ip']['netmask'][0] = netmask_0.value
+    configuration['network']['ip']['netmask'][1] = netmask_1.value
+    configuration['network']['ip']['netmask'][2] = netmask_2.value
+    configuration['network']['ip']['netmask'][3] = netmask_3.value
+    # ゲートウェイ(ルータ)
+    configuration['network']['ip']['gateway'][0] = gateway_0.value
+    configuration['network']['ip']['gateway'][1] = gateway_1.value
+    configuration['network']['ip']['gateway'][2] = gateway_2.value
+    configuration['network']['ip']['gateway'][3] = gateway_3.value
+    # DNSサーバ
+    configuration['network']['ip']['dns_server'][0] = dns_server_0.value
+    configuration['network']['ip']['dns_server'][1] = dns_server_1.value
+    configuration['network']['ip']['dns_server'][2] = dns_server_2.value
+    configuration['network']['ip']['dns_server'][3] = dns_server_3.value
+    # MQTT
+    configuration['network']['mqtt']['mqtt_format'] = mqtt_format.value
+    configuration['network']['mqtt']['mqtt_topic'] = mqtt_topic.value
+    configuration['network']['mqtt']['mqtt_server'] = mqtt_server.value
+    configuration['network']['mqtt']['mqtt_port'] = mqtt_port.value
+    configuration['network']['mqtt']['mqtt_auth'] = mqtt_auth_flag.value
+    configuration['network']['mqtt']['mqtt_user'] = mqtt_user.value
+    configuration['network']['mqtt']['mqtt_pass'] = mqtt_pass.value
+    # NTP関係
+    configuration['common']['clock']['use_ntp'] = ntp_flag.value
+    configuration['common']['clock']['update_rtc_by_ntp'] = rtc_ntp_flag.value
+    # WDT
+    configuration['safety']['use_wdt'] = wdt_flag.value
+    configuration['platform']['wdt']['wdt_duration'] = wdt_duration.value
+    configuration['platform']['wdt']['wdt_short_duration'] = wdt_short_duration.value
+    # センシング
+    configuration['sensor']['sensor_interval'] = sensing_interval.value
+    # スリープ
+    configuration['sensor']['low_power']['use_sleep'] = sleep_flag.value
+    configuration['sensor']['low_power']['sleep_mode'] = sleep_mode.value
+    #
+    # 環境センサ
+    #
+    # BME280
+    configuration['bme280']['use_bme280'] = BME280_flag.value
+    configuration['bme280']['temperature_sensor_id'] = bme280_temperature_sensor_id.value
+    configuration['bme280']['humidity_sensor_id'] = bme280_humidity_sensor_id.value
+    configuration['bme280']['pressure_sensor_id'] = bme280_pressure_sensor_id.value
+    # BMP180
+    configuration['bmp180']['use_bmp180'] = BMP180_flag.value
+    configuration['bmp180']['sensor_id'] = bmp180_sensor_id.value
+    configuration['bmp180']['bmp180_mode'] = BMP180_mode.value
+    # SHT31
+    configuration['sht31']['use_sht31'] = SHT31_flag.value
+    configuration['sht31']['temperature_sensor_id'] = sht31_temperature_sensor_id.value
+    configuration['sht31']['humidity_sensor_id'] = sht31_humidity_sensor_id.value
+    # SHT2X
+    configuration['sht31']['use_sht2x'] = SHT2x_flag.value
+    configuration['sht2x']['temperature_sensor_id'] = sht2x_temperature_sensor_id.value
+    configuration['sht2x']['humidity_sensor_id'] = sht2x_humidity_sensor_id.value
+    configuration['sht2x']['sht2x_type'] = SHT2x_type.value
+    # AM232x
+    configuration['am232x']['use_am232x'] = AM232x_flag.value
+    configuration['am232x']['temperature_sensor_id'] = am232x_temperature_sensor_id.value
+    configuration['am232x']['humidity_sensor_id'] = am232x_humidity_sensor_id.value
+    configuration['am232x']['am232x_type'] = AM232x_type.value
+    # DHT
+    configuration['dht']['use_dht'] = DHT_flag.value
+    configuration['dht']['dht_pin'] = DHT_pin.value
+    configuration['dht']['temperature_sensor_id'] = DHT_temperature_sensor_id.value
+    configuration['dht']['humidity_sensor_id'] = DHT_humidity_sensor_id.value
+    configuration['dht']['dht_type'] = DHT_type.value
+    # Grove analog temperature sensor
+    configuration['analogTemperature']['use_analogTemperature'] = Grove_analog_temperature_sensor_flag.value
+    configuration['analogTemperature']['analogTemperature_pin'] = Grove_analog_temperature_sensor_pin.value
+    configuration['analogTemperature']['sensor_id'] = Grove_analog_temperature_sensor_id.value
+    # LPS22HB
+    configuration['lps22hb']['use_lps22hb'] = LPS22HB_flag.value
+    configuration['lps22hb']['sensor_id'] = LPS22HB_sensor_id.value
+    # HTS221
+    configuration['hts221']['use_hts221'] = HTS221_flag.value
+    configuration['hts221']['temperature_sensor_id'] = HTS221_temperature_sensor_id.value
+    configuration['hts221']['humidity_sensor_id'] = HTS221_humidity_sensor_id.value
+    #
+    # 振動・加速度センサ
+    #
+    # ITG3200 (GROVE - I2C 3軸ジャイロセンサ)
+    configuration['itg3200']['use_itg3200'] = ITG3200_flag.value
+    configuration['itg3200']['sensor_id'] = ITG3200_sensor_id.value
+    configuration['itg3200']['itg3200_samples'] = ITG3200_samples.value
+    configuration['itg3200']['itg3200_delay'] = ITG3200_delay.value
+    # MMA7660
+    configuration['mma7660']['use_mma7660'] = MMA7660_flag.value
+    configuration['mma7660']['sensor_id'] = MMA7660_sensor_id.value
+    configuration['mma7660']['mma7660_rate'] = MMA7660_rate.value
+    configuration['mma7660']['mma7660_delay'] = MMA7660_delay.value
+    # ADXL345
+    configuration['adxl345']['use_adxl345'] = ADXL345_flag.value
+    configuration['adxl345']['sensor_id'] = ADXL345_sensor_id.value
+    configuration['adxl345']['adxl345_data_rate'] = ADXL345_rate.value
+    configuration['adxl345']['adxl345_range'] = ADXL345_range.value
+    # ADXL335
+    configuration['adxl335']['use_adxl335'] = ADXL335_flag.value
+    configuration['adxl335']['sensor_id'] = ADXL335_sensor_id.value
+    configuration['adxl335']['adxl335_x_pin'] = ADXL335_x_pin.value
+    configuration['adxl335']['adxl335_y_pin'] = ADXL335_y_pin.value
+    configuration['adxl335']['adxl335_z_pin'] = ADXL335_z_pin.value
+    # ENC03R
+    configuration['murataENC03']['use_murataENC03'] = ENC03R_flag.value
+    configuration['murataENC03']['sensor_id'] = ENC03R_sensor_id.value
+    configuration['murataENC03']['murataENC03_pin'] = ENC03R_pin.value
+    configuration['murataENC03']['murataENC03_try'] = ENC03R_try.value
+    #
+    # 対人センサメニュー
+    #
+    # MPR121 (GROVE - I2C タッチセンサ)
+    configuration['groveI2C_Touch']['use_groveI2C_Touch'] = MPR121_flag.value
+    configuration['groveI2C_Touch']['sensor_id'] = MPR121_sensor_id.value
+    # Grove Touch sensor
+    configuration['groveTouch']['use_groveTouch'] = Grove_touch_flag.value
+    configuration['groveTouch']['sensor_id'] = Grove_touch_sensor_id.value
+    configuration['groveTouch']['groveTouch_pin'] = Grove_touch_pin.value
+    # PIRセンサ
+    configuration['grovePIR']['use_grovePIR'] = PIR_flag.value
+    configuration['grovePIR']['sensor_id'] = PIR_sensor_id.value
+    configuration['grovePIR']['grovePIR_pin'] = PIR_pin.value
+    # Grove GSRセンサ
+    configuration['groveGSR']['use_groveGSR'] = Grove_GSR_flag.value
+    configuration['groveGSR']['sensor_id'] = Grove_GSR_sensor_id.value
+    configuration['groveGSR']['groveGSR_pin'] = Grove_GSR_pin.value
+    #
+    # 視覚関連センサ
+    #
+    # TCS34725
+    configuration['tcs34725']['use_tcs34725'] = TCS34725_flag.value
+    configuration['tcs34725']['sensor_id'] = TCS34725_sensor_id.value
+    configuration['tcs34725']['tcs34725_int'] = TCS34725_interval.value
+    configuration['tcs34725']['tcs34725_gain'] = TCS34725_gain.value
+    # TSL2561
+    configuration['tsl2561']['use_tsl2561'] = TSL2561_flag.value
+    configuration['tsl2561']['sensor_id'] = TSL2561_sensor_id.value
+    configuration['tsl2561']['tsl2561_gain'] = TSL2561_gain.value
+    configuration['tsl2561']['tsl2561_int'] = TSL2561_interval.value
+    configuration['tsl2561']['tsl2561_addr'] = TSL2561_addr.value
+    # Grove analog Light Sensor
+    configuration['groveAnalogLight']['use_groveAnalogLight'] = Grove_analog_light_flag.value
+    configuration['groveAnalogLight']['sensor_id'] = Grove_analog_light_sensor_id.value
+    configuration['groveAnalogLight']['groveAnalogLight_pin'] = Grove_analog_light_pin.value
+    # TEMT6000
+    configuration['temt6000']['use_temt6000'] = TEMT6000_flag.value
+    configuration['temt6000']['sensor_id'] = TEMT6000_sensor_id.value
+    configuration['temt6000']['temt6000_pin'] = TEMT6000_pin.value
+    configuration['temt6000']['temt6000_vdd'] = TEMT6000_vdd.value
+    #
+    # その他のセンサ
+    #
+    # Grove switch sensor
+    configuration['digitalSwitch']['use_digitalSwitch'] = Grove_switch_flag.value
+    configuration['digitalSwitch']['sensor_id'] = Grove_switch_sensor_id.value
+    configuration['digitalSwitch']['digitalSwitch_pin'] = Grove_switch_pin.value
+    # Grove water sensor
+    configuration['waterDetection']['use_waterDetection'] = Grove_water_flag.value
+    configuration['waterDetection']['sensor_id'] = Grove_water_sensor_id.value
+    configuration['waterDetection']['waterDetection_pin'] = Grove_water_pin.value
+    # Grove Line finder
+    configuration['groveLineFinder']['use_groveLineFinder'] = Grove_line_finder_flag.value
+    configuration['groveLineFinder']['sensor_id'] = Grove_line_finder_sensor_id.value
+    configuration['groveLineFinder']['groveLineFinder_pin'] = Grove_line_finder_pin.value
+    # Grove IR distance interrupter
+    configuration['groveDistanceInterrupter']['use_groveDistanceInterrupter'] = Grove_IR_distance_interrupter_flag.value
+    configuration['groveDistanceInterrupter']['sensor_id'] = Grove_IR_distance_interrupter_sensor_id.value
+    configuration['groveDistanceInterrupter']['groveDistanceInterrupter_pin'] = Grove_IR_distance_interrupter_pin.value
+    # Grove IR reflective sensor
+    configuration['groveIrReflect']['use_groveIrReflect'] = Grove_IR_reflective_flag.value
+    configuration['groveIrReflect']['sensor_id'] = Grove_IR_reflective_sensor_id.value
+    configuration['groveIrReflect']['groveIrReflect_pin'] = Grove_IR_reflective_pin.value
+    # Grove rotary angle sensor
+    configuration['analogRotaryAngle']['use_analogRotaryAngle'] = Grove_rotary_angle_flag.value
+    configuration['analogRotaryAngle']['sensor_id'] = Grove_rotary_angle_sensor_id.value
+    configuration['analogRotaryAngle']['analogRotaryAngle_pin'] = Grove_rotary_angle_pin.value
+    configuration['analogRotaryAngle']['analogRotaryAngle_vdd'] = Grove_rotary_angle_vdd.value
+    # Grove sound sensor
+    configuration['groveAnalogSound']['use_groveAnalogSound'] = Grove_sound_flag.value
+    configuration['groveAnalogSound']['sensor_id'] = Grove_sound_sensor_id.value
+    configuration['groveAnalogSound']['groveAnalogSound_pin'] = Grove_sound_pin.value
+    # Grove moisture sensor
+    configuration['groveAnalogMoisture']['use_groveAnalogMoisture'] = Grove_moisture_flag.value
+    configuration['groveAnalogMoisture']['sensor_id'] = Grove_moisture_sensor_id.value
+    configuration['groveAnalogMoisture']['groveAnalogMoisture_pin'] = Grove_moisture_pin.value
+    # Grove current sensor
+    configuration['groveCurrent']['use_groveCurrent'] = Grove_current_flag.value
+    configuration['groveCurrent']['sensor_id'] = Grove_current_sensor_id.value
+    configuration['groveCurrent']['groveCurrent_pin'] = Grove_current_pin.value
+    configuration['groveCurrent']['groveCurrent_vdd'] = Grove_current_vdd.value
+    configuration['groveCurrent']['groveCurrent_mode'] = Grove_current_mode.value
+
+def loadMenuValue():
+    global configuration
+    #
+    # Arduino本体+センサ以外の周辺機器
+    #
+    # ネットワークメディア
+    network_type.value = configuration['platform']['network_hardware']['network_type']
+    # イーサネット関係
+    ethernet_chip_select.value = configuration['platform']['network_hardware']['ethernet_chip_select']
+    ethernet_mac_0.value = configuration['network']['ethernet']['mac_addr'][0]
+    ethernet_mac_1.value = configuration['network']['ethernet']['mac_addr'][1]
+    ethernet_mac_2.value = configuration['network']['ethernet']['mac_addr'][2]
+    ethernet_mac_3.value = configuration['network']['ethernet']['mac_addr'][3]
+    ethernet_mac_4.value = configuration['network']['ethernet']['mac_addr'][4]
+    ethernet_mac_5.value = configuration['network']['ethernet']['mac_addr'][5]
+    # WiFi
+    wifi_ssid.value = configuration['network']['wifi']['ssid']
+    wifi_pass.value = configuration['network']['wifi']['wifi_pass']
+    # RTC種別
+    rtc_type.value = configuration['platform']['rtc']['rtc_type']
+    # LED
+    led_flag.value = configuration['platform']['color_led']['use_led']
+    led_clock_pin.value = configuration['platform']['color_led']['led_clk_pin']
+    led_data_pin.value = configuration['platform']['color_led']['led_data_pin']
+    led_long_duration.value = configuration['platform']['color_led']['led_duration']
+    led_short_duration.value = configuration['platform']['color_led']['led_short_duration']
+    # SD
+    sd_flag.value = configuration['platform']['sd']['use_sd']
+    sd_chip_select_pin.value = configuration['platform']['sd']['sd_chip_select']
+    # シリアル通信速度
+    serial_speed.value = configuration['common']['serial']['speed']
+    # ログ出力
+    logfile_flag.value = configuration['common']['log']['use_logfile']
+    serial_log_flag.value = configuration['common']['log']['use_serial_log']
+    # ログフォーマット
+    host_name.value = configuration['common']['log']['host_name']
+    app_name.value = configuration['common']['log']['app_name']
+    # ログファイル
+    logfile_name.value = configuration['common']['log']['logfile_name_hdr']
+    logfile_size.value = configuration['common']['log']['logfile_size_max']
+    # DHCP
+    dhcp_flag.value = configuration['network']['ip']['use_dhcp']
+    # IPアドレス
+    ip_addr_0.value = configuration['network']['ip']['ip_addr'][0]
+    ip_addr_1.value = configuration['network']['ip']['ip_addr'][1]
+    ip_addr_2.value = configuration['network']['ip']['ip_addr'][2]
+    ip_addr_3.value = configuration['network']['ip']['ip_addr'][3]
+    # ネットマスク
+    netmask_0.value = configuration['network']['ip']['netmask'][0]
+    netmask_1.value = configuration['network']['ip']['netmask'][1]
+    netmask_2.value = configuration['network']['ip']['netmask'][2]
+    netmask_3.value = configuration['network']['ip']['netmask'][3]
+    # ゲートウェイ(ルータ)
+    gateway_0.value = configuration['network']['ip']['gateway'][0]
+    gateway_1.value = configuration['network']['ip']['gateway'][1]
+    gateway_2.value = configuration['network']['ip']['gateway'][2]
+    gateway_3.value = configuration['network']['ip']['gateway'][3]
+    # DNSサーバ
+    dns_server_0.value = configuration['network']['ip']['dns_server'][0]
+    dns_server_1.value = configuration['network']['ip']['dns_server'][1]
+    dns_server_2.value = configuration['network']['ip']['dns_server'][2]
+    dns_server_3.value = configuration['network']['ip']['dns_server'][3]
+    # MQTT
+    mqtt_format.value = configuration['network']['mqtt']['mqtt_format']
+    mqtt_topic.value = configuration['network']['mqtt']['mqtt_topic']
+    mqtt_server.value = configuration['network']['mqtt']['mqtt_server']
+    mqtt_port.value = configuration['network']['mqtt']['mqtt_port']
+    mqtt_auth_flag.value = configuration['network']['mqtt']['mqtt_auth']
+    mqtt_user.value = configuration['network']['mqtt']['mqtt_user']
+    mqtt_pass.value = configuration['network']['mqtt']['mqtt_pass']
+    # NTP関係
+    ntp_flag.value = configuration['common']['clock']['use_ntp']
+    rtc_ntp_flag.value = configuration['common']['clock']['update_rtc_by_ntp']
+    # WDT
+    wdt_flag.value = configuration['safety']['use_wdt']
+    wdt_duration.value = configuration['platform']['wdt']['wdt_duration']
+    wdt_short_duration.value = configuration['platform']['wdt']['wdt_short_duration']
+    # センシング
+    sensing_interval.value = configuration['sensor']['sensor_interval']
+    # スリープ
+    sleep_flag.value = configuration['sensor']['low_power']['use_sleep']
+    sleep_mode.value = configuration['sensor']['low_power']['sleep_mode']
+    #
+    # 環境センサ
+    #
+    # BME280
+    BME280_flag.value = configuration['bme280']['use_bme280']
+    bme280_temperature_sensor_id.value = configuration['bme280']['temperature_sensor_id']
+    bme280_humidity_sensor_id.value = configuration['bme280']['humidity_sensor_id']
+    bme280_pressure_sensor_id.value = configuration['bme280']['pressure_sensor_id']
+    # BMP180
+    BMP180_flag.value = configuration['bmp180']['use_bmp180']
+    bmp180_sensor_id.value = configuration['bmp180']['sensor_id']
+    BMP180_mode.value = configuration['bmp180']['bmp180_mode']
+    # SHT31
+    SHT31_flag.value = configuration['sht31']['use_sht31']
+    sht31_temperature_sensor_id.value = configuration['sht31']['temperature_sensor_id']
+    sht31_humidity_sensor_id.value = configuration['sht31']['humidity_sensor_id']
+    # SHT2X
+    SHT2x_flag.value = configuration['sht2x']['use_sht2x']
+    sht2x_temperature_sensor_id.value = configuration['sht2x']['temperature_sensor_id']
+    sht2x_humidity_sensor_id.value = configuration['sht2x']['humidity_sensor_id']
+    SHT2x_type.value = configuration['sht2x']['sht2x_type']
+    # AM232x
+    AM232x_flag.value = configuration['am232x']['use_am232x']
+    am232x_temperature_sensor_id.value = configuration['am232x']['temperature_sensor_id']
+    am232x_humidity_sensor_id.value = configuration['am232x']['humidity_sensor_id']
+    AM232x_type.value = configuration['am232x']['am232x_type']
+    # DHT
+    DHT_flag.value = configuration['dht']['use_dht']
+    DHT_pin.value = configuration['dht']['dht_pin']
+    DHT_temperature_sensor_id.value = configuration['dht']['temperature_sensor_id']
+    DHT_humidity_sensor_id.value = configuration['dht']['humidity_sensor_id']
+    DHT_type.value = configuration['dht']['dht_type']
+    # Grove analog temperature sensor
+    Grove_analog_temperature_sensor_flag.value = configuration['analogTemperature']['use_analogTemperature']
+    Grove_analog_temperature_sensor_pin.value = configuration['analogTemperature']['analogTemperature_pin']
+    Grove_analog_temperature_sensor_id.value = configuration['analogTemperature']['sensor_id']
+    # LPS22HB
+    LPS22HB_flag.value = configuration['lps22hb']['use_lps22hb']
+    LPS22HB_sensor_id.value = configuration['lps22hb']['sensor_id']
+    # HTS221
+    HTS221_flag.value = configuration['hts221']['use_hts221']
+    HTS221_temperature_sensor_id.value = configuration['hts221']['temperature_sensor_id']
+    HTS221_humidity_sensor_id.value = configuration['hts221']['humidity_sensor_id']
+    #
+    # 振動・加速度センサ
+    #
+    # ITG3200 (GROVE - I2C 3軸ジャイロセンサ)
+    ITG3200_flag.value = configuration['itg3200']['use_itg3200']
+    ITG3200_sensor_id.value = configuration['itg3200']['sensor_id']
+    ITG3200_samples.value = configuration['itg3200']['itg3200_samples']
+    ITG3200_delay.value = configuration['itg3200']['itg3200_delay']
+    # MMA7660
+    MMA7660_flag.value = configuration['mma7660']['use_mma7660']
+    MMA7660_sensor_id.value = configuration['mma7660']['sensor_id']
+    MMA7660_rate.value = configuration['mma7660']['mma7660_rate']
+    MMA7660_delay.value = configuration['mma7660']['mma7660_delay']
+    # ADXL345
+    ADXL345_flag.value = configuration['adxl345']['use_adxl345']
+    ADXL345_sensor_id.value = configuration['adxl345']['sensor_id']
+    ADXL345_rate.value = configuration['adxl345']['adxl345_data_rate']
+    ADXL345_range.value = configuration['adxl345']['adxl345_range']
+    # ADXL335
+    ADXL335_flag.value = configuration['adxl335']['use_adxl335']
+    ADXL335_sensor_id.value = configuration['adxl335']['sensor_id']
+    ADXL335_x_pin.value = configuration['adxl335']['adxl335_x_pin']
+    ADXL335_y_pin.value = configuration['adxl335']['adxl335_y_pin']
+    ADXL335_z_pin.value = configuration['adxl335']['adxl335_z_pin']
+    # ENC03R
+    ENC03R_flag.value = configuration['murataENC03']['use_murataENC03']
+    ENC03R_sensor_id.value = configuration['murataENC03']['sensor_id']
+    ENC03R_pin.value = configuration['murataENC03']['murataENC03_pin']
+    ENC03R_try.value = configuration['murataENC03']['murataENC03_try']
+    #
+    # 対人センサメニュー
+    #
+    # MPR121 (GROVE - I2C タッチセンサ)
+    MPR121_flag.value = configuration['groveI2C_Touch']['use_groveI2C_Touch']
+    MPR121_sensor_id.value = configuration['groveI2C_Touch']['sensor_id']
+    # Grove Touch sensor
+    Grove_touch_flag.value = configuration['groveTouch']['use_groveTouch']
+    Grove_touch_sensor_id.value = configuration['groveTouch']['sensor_id']
+    Grove_touch_pin.value = configuration['groveTouch']['groveTouch_pin']
+    # PIRセンサ
+    PIR_flag.value = configuration['grovePIR']['use_grovePIR']
+    PIR_sensor_id.value = configuration['grovePIR']['sensor_id']
+    PIR_pin.value = configuration['grovePIR']['grovePIR_pin']
+    # Grove GSRセンサ
+    Grove_GSR_flag.value = configuration['groveGSR']['use_groveGSR']
+    Grove_GSR_sensor_id.value = configuration['groveGSR']['sensor_id']
+    Grove_GSR_pin.value = configuration['groveGSR']['groveGSR_pin']
+    #
+    # 視覚関連センサ
+    #
+    # TCS34725
+    TCS34725_flag.value = configuration['tcs34725']['use_tcs34725']
+    TCS34725_sensor_id.value = configuration['tcs34725']['sensor_id']
+    TCS34725_interval.value = configuration['tcs34725']['tcs34725_int']
+    TCS34725_gain.value = configuration['tcs34725']['tcs34725_gain']
+    # TSL2561
+    TSL2561_flag.value = configuration['tsl2561']['use_tsl2561']
+    TSL2561_sensor_id.value = configuration['tsl2561']['sensor_id']
+    TSL2561_gain.value = configuration['tsl2561']['tsl2561_gain']
+    TSL2561_interval.value = configuration['tsl2561']['tsl2561_int']
+    TSL2561_addr.value = configuration['tsl2561']['tsl2561_addr']
+    # Grove analog Light Sensor
+    Grove_analog_light_flag.value = configuration['groveAnalogLight']['use_groveAnalogLight']
+    Grove_analog_light_sensor_id.value = configuration['groveAnalogLight']['sensor_id']
+    Grove_analog_light_pin.value = configuration['groveAnalogLight']['groveAnalogLight_pin']
+    # TEMT6000
+    TEMT6000_flag.value = configuration['temt6000']['use_temt6000']
+    TEMT6000_sensor_id.value = configuration['temt6000']['sensor_id']
+    TEMT6000_pin.value = configuration['temt6000']['temt6000_pin']
+    TEMT6000_vdd.value = configuration['temt6000']['temt6000_vdd']
+    #
+    # その他のセンサ
+    #
+    # Grove switch sensor
+    Grove_switch_flag.value = configuration['digitalSwitch']['use_digitalSwitch']
+    Grove_switch_sensor_id.value = configuration['digitalSwitch']['sensor_id']
+    Grove_switch_pin.value = configuration['digitalSwitch']['digitalSwitch_pin']
+    # Grove water sensor
+    Grove_water_flag.value = configuration['waterDetection']['use_waterDetection']
+    Grove_water_sensor_id.value = configuration['waterDetection']['sensor_id']
+    Grove_water_pin.value = configuration['waterDetection']['waterDetection_pin']
+    # Grove Line finder
+    Grove_line_finder_flag.value = configuration['groveLineFinder']['use_groveLineFinder']
+    Grove_line_finder_sensor_id.value = configuration['groveLineFinder']['sensor_id']
+    Grove_line_finder_pin.value = configuration['groveLineFinder']['groveLineFinder_pin']
+    # Grove IR distance interrupter
+    Grove_IR_distance_interrupter_flag.value = configuration['groveDistanceInterrupter']['use_groveDistanceInterrupter']
+    Grove_IR_distance_interrupter_sensor_id.value = configuration['groveDistanceInterrupter']['sensor_id']
+    Grove_IR_distance_interrupter_pin.value = configuration['groveDistanceInterrupter']['groveDistanceInterrupter_pin']
+    # Grove IR reflective sensor
+    Grove_IR_reflective_flag.value = configuration['groveIrReflect']['use_groveIrReflect']
+    Grove_IR_reflective_sensor_id.value = configuration['groveIrReflect']['sensor_id']
+    Grove_IR_reflective_pin.value = configuration['groveIrReflect']['groveIrReflect_pin']
+    # Grove rotary angle sensor
+    Grove_rotary_angle_flag.value = configuration['analogRotaryAngle']['use_analogRotaryAngle']
+    Grove_rotary_angle_sensor_id.value = configuration['analogRotaryAngle']['sensor_id']
+    Grove_rotary_angle_pin.value = configuration['analogRotaryAngle']['analogRotaryAngle_pin']
+    Grove_rotary_angle_vdd.value = configuration['analogRotaryAngle']['analogRotaryAngle_vdd']
+    # Grove sound sensor
+    Grove_sound_flag.value = configuration['groveAnalogSound']['use_groveAnalogSound']
+    Grove_sound_sensor_id.value = configuration['groveAnalogSound']['sensor_id']
+    Grove_sound_pin.value = configuration['groveAnalogSound']['groveAnalogSound_pin']
+    # Grove moisture sensor
+    Grove_moisture_flag.value = configuration['groveAnalogMoisture']['use_groveAnalogMoisture']
+    Grove_moisture_sensor_id.value = configuration['groveAnalogMoisture']['sensor_id']
+    Grove_moisture_pin.value = configuration['groveAnalogMoisture']['groveAnalogMoisture_pin']
+    # Grove current sensor
+    Grove_current_flag.value = configuration['groveCurrent']['use_groveCurrent']
+    Grove_current_sensor_id.value = configuration['groveCurrent']['sensor_id']
+    Grove_current_pin.value = configuration['groveCurrent']['groveCurrent_pin']
+    Grove_current_vdd.value = configuration['groveCurrent']['groveCurrent_vdd']
+    Grove_current_mode.value = configuration['groveCurrent']['groveCurrent_mode']
+
+#
+# 設定ファイルのロード
+#
+def loadConfigFile():
+    global config_file_name, configuration
+    try:
+        with open(config_file_name, mode='r', encoding='utf-8') as f:
+            configuration = yaml.safe_load(f)
+    except Exception as e:
+        return 'Exception occurred while loading configuration YAML...'
+    loadMenuValue()
+    return ''
+
+#
+# 設定のセーブ
+#
+def saveConfig(output_file_name):
+    global configuration
+    saveMenuValue()
+    # 出力ファイルのオープン
+    try:
+        output_file = open(output_file_name, mode='w', encoding='utf-8')
+    except Exception as e1:
+        return "Error : Exception occurred at opening output file..."
+    # プラットフォーム関係の定義出力
+    print('platform:', file=output_file)
+    print('  network_hardware:', file=output_file)
+    print('    network_type: %s # wifi , ethernet , none' % configuration['platform']['network_hardware']['network_type'], file=output_file)
+    print('    ethernet_chip_select: %s # イーサネットのチップセレクトピン番号' % configuration['platform']['network_hardware']['ethernet_chip_select'], file=output_file)
+    print('  rtc:', file=output_file)
+    print('    rtc_type: %s # RTC8564NB , DS1307 , DS3231 , PCF8523 , RV8803 , RX8025 , RX8900 , none' % configuration['platform']['rtc']['rtc_type'], file=output_file)
+    print('    rtc_int_pin: %s # ピン番号' % configuration['platform']['rtc']['rtc_int_pin'], file=output_file)
+    print('  color_led:', file=output_file)
+    if checkYamlVal(configuration['platform']['color_led']['use_led']):
+        print('    use_led: true # true(使う) , false(使わない)', file=output_file)
+    else:
+        print('    use_led: false # true(使う) , false(使わない)', file=output_file)
+    print('    led_data_pin: %s # ピン番号' % configuration['platform']['color_led']['led_data_pin'], file=output_file)
+    print('    led_clk_pin: %s # ピン番号' % configuration['platform']['color_led']['led_clk_pin'], file=output_file)
+    print('    led_duration: %s # 時間(単位:ミリ秒)' % configuration['platform']['color_led']['led_duration'], file=output_file)
+    print('    led_short_duration: %s # 時間(単位:ミリ秒)' % configuration['platform']['color_led']['led_short_duration'], file=output_file)
+    print('  sd:', file=output_file)
+    if checkYamlVal(configuration['platform']['sd']['use_sd']):
+        print('    use_sd: true # true(使う) , false(使わない)', file=output_file)
+    else:
+        print('    use_sd: false # true(使う) , false(使わない)', file=output_file)
+    print('    sd_chip_select: %s # ピン番号' % configuration['platform']['sd']['sd_chip_select'], file=output_file)
+    print('  wdt:', file=output_file)
+    print('    wdt_duration: %s # 時間(単位:ミリ秒)' % configuration['platform']['wdt']['wdt_duration'], file=output_file)
+    print('    wdt_short_duration: %s # 時間(単位:ミリ秒)' % configuration['platform']['wdt']['wdt_short_duration'], file=output_file)
+    print('', file=output_file)
+    print('common:', file=output_file)
+    print('  serial:', file=output_file)
+    print('    speed: %s # コンソールのシリアル速度(bps)' % configuration['common']['serial']['speed'], file=output_file)
+    print('  log:', file=output_file)
+    print('    host_name: \"%s\" # ホスト名(文字列)' % configuration['common']['log']['host_name'], file=output_file)
+    print('    app_name: \"%s\" # アプリ名(文字列)' % configuration['common']['log']['app_name'], file=output_file)
+    if checkYamlVal(configuration['common']['log']['use_logfile']):
+        print('    use_logfile: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('    use_logfile: false # true(使う) , false(使わない)' , file=output_file)
+    if checkYamlVal(configuration['common']['log']['use_serial_log']):
+        print('    use_serial_log: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('    use_serial_log: false # true(使う) , false(使わない)' , file=output_file)
+    print('    logfile_name_hdr: \"%s\" # ログファイル名' % configuration['common']['log']['logfile_name_hdr'], file=output_file)
+    print('    logfile_size_max: %s # ログファイルの最大値(バイト)' % configuration['common']['log']['logfile_size_max'], file=output_file)
+    if checkYamlVal(configuration['common']['log']['log_rotate']):
+        print('    log_rotate: true # true(使う) , false(使わない) 現在未対応' , file=output_file)
+    else:
+        print('    log_rotate: false # true(使う) , false(使わない) 現在未対応' , file=output_file)
+    print('  clock:', file=output_file)
+    if checkYamlVal(configuration['common']['clock']['use_ntp']):
+        print('    use_ntp : true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('    use_ntp : false # true(使う) , false(使わない)' , file=output_file)
+    if checkYamlVal(configuration['common']['clock']['update_rtc_by_ntp']):
+        print('    update_rtc_by_ntp : true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('    update_rtc_by_ntp : false # true(使う) , false(使わない)' , file=output_file)
+    print('', file=output_file)
+    print('network:', file=output_file)
+    print('  wifi:', file=output_file)
+    print('    ssid: \"%s\" # ssid名' % configuration['network']['wifi']['ssid'], file=output_file)
+    print('    wifi_pass: \"%s\" # wifiパスワード' % configuration['network']['wifi']['wifi_pass'], file=output_file)
+    print('  ethernet:', file=output_file)
+    print('    mac_addr: [ \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\']  # macアドレス' % (configuration['network']['ethernet']['mac_addr'][0],
+                configuration['network']['ethernet']['mac_addr'][1],configuration['network']['ethernet']['mac_addr'][2],configuration['network']['ethernet']['mac_addr'][3],
+                configuration['network']['ethernet']['mac_addr'][4],configuration['network']['ethernet']['mac_addr'][5]), file=output_file)
+    print('  ip:', file=output_file)
+    if checkYamlVal(configuration['network']['ip']['use_dhcp']):
+        print('    use_dhcp: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('    use_dhcp: false # true(使う) , false(使わない)' , file=output_file)
+    print('    ip_addr: [%s, %s, %s, %s] # ipアドレス' % (configuration['network']['ip']['ip_addr'][0],configuration['network']['ip']['ip_addr'][1],
+                configuration['network']['ip']['ip_addr'][2],configuration['network']['ip']['ip_addr'][3]), file=output_file)
+    print('    dns_server:  [%s, %s, %s, %s] # DNSサーバ' % (configuration['network']['ip']['dns_server'][0],configuration['network']['ip']['dns_server'][1],
+                configuration['network']['ip']['dns_server'][2],configuration['network']['ip']['dns_server'][3]), file=output_file)
+    print('    gateway: [%s, %s, %s, %s] # gateway' % (configuration['network']['ip']['gateway'][0],configuration['network']['ip']['gateway'][1],
+                configuration['network']['ip']['gateway'][2],configuration['network']['ip']['gateway'][3]), file=output_file)
+    print('    netmask: [%s, %s, %s, %s] # マスク' % (configuration['network']['ip']['netmask'][0],configuration['network']['ip']['netmask'][1],
+                configuration['network']['ip']['netmask'][2],configuration['network']['ip']['netmask'][3]), file=output_file)
+    print('  mqtt:', file=output_file)
+    print('    mqtt_format: %s # plain, json, syslog' % configuration['network']['mqtt']['mqtt_format'], file=output_file)
+    if checkYamlVal(configuration['network']['mqtt']['mqtt_auth']):
+        print('    mqtt_auth: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('    mqtt_auth: false # true(使う) , false(使わない)' , file=output_file)
+    print('    mqtt_user: \"%s\" # ユーザ名(文字列)' % configuration['network']['mqtt']['mqtt_user'], file=output_file)
+    print('    mqtt_pass: \"%s\" # パスワード(文字列)' % configuration['network']['mqtt']['mqtt_pass'], file=output_file)
+    print('    mqtt_topic: \"%s\" # MQTTトピック (文字列)' % configuration['network']['mqtt']['mqtt_topic'], file=output_file)
+    print('    mqtt_server: \"%s\" # mqttサーバIPアドレス' % configuration['network']['mqtt']['mqtt_server'], file=output_file)
+    print('    mqtt_port: %s # mqttポート番号' % configuration['network']['mqtt']['mqtt_port'], file=output_file)
+    print('', file=output_file)
+    print('safety:', file=output_file)
+    if checkYamlVal(configuration['safety']['use_wdt']):
+        print('  use_wdt: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_wdt: false # true(使う) , false(使わない)' , file=output_file)
+    print('', file=output_file)
+    print('sensor:', file=output_file)
+    print('  sensor_interval: %s # 測定間の待ち時間 (単位:ミリ秒)' % configuration['sensor']['sensor_interval'], file=output_file)
+    print('  low_power:', file=output_file)
+    if checkYamlVal(configuration['sensor']['low_power']['use_sleep']):
+        print('    use_sleep: true # 待機中のsleep true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('    use_sleep: false # 待機中のsleep true(使う) , false(使わない)' , file=output_file)
+    print('    sleep_mode: %s # idle, adc, power_save, standby, power_down' % configuration['sensor']['low_power']['sleep_mode'], file=output_file)
+    print('', file=output_file)
+    print('#\n# SHT31\n#', file=output_file)
+    print('sht31:', file=output_file)
+    if checkYamlVal(configuration['sht31']['use_sht31']):
+        print('  use_sht31: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_sht31: false # true(使う) , false(使わない)' , file=output_file)
+    print('  temperature_sensor_id: %s' % configuration['sht31']['temperature_sensor_id'], file=output_file)
+    print('  humidity_sensor_id: %s' % configuration['sht31']['humidity_sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# SHT2x\n#', file=output_file)
+    print('sht2x:', file=output_file)
+    if checkYamlVal(configuration['sht2x']['use_sht2x']):
+        print('  use_sht2x: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_sht2x: false # true(使う) , false(使わない)' , file=output_file)
+    print('  sht2x_type: %s # SHT21 , SHT25' % configuration['sht2x']['sht2x_type'], file=output_file)
+    print('  temperature_sensor_id: %s' % configuration['sht2x']['temperature_sensor_id'], file=output_file)
+    print('  humidity_sensor_id: %s' % configuration['sht2x']['humidity_sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# AM232x\n#', file=output_file)
+    print('am232x:', file=output_file)
+    if checkYamlVal(configuration['am232x']['use_am232x']):
+        print('  use_am232x: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_am232x: false # true(使う) , false(使わない)' , file=output_file)
+    print('  am232x_type: %s # AM2321 , AM2322' % configuration['am232x']['am232x_type'], file=output_file)
+    print('  temperature_sensor_id: %s' % configuration['am232x']['temperature_sensor_id'], file=output_file)
+    print('  humidity_sensor_id: %s' % configuration['am232x']['humidity_sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# BME280\n#', file=output_file)
+    print('bme280:', file=output_file)
+    if checkYamlVal(configuration['bme280']['use_bme280']):
+        print('  use_bme280: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_bme280: false # true(使う) , false(使わない)' , file=output_file)
+    print('  temperature_sensor_id: %s' % configuration['bme280']['temperature_sensor_id'], file=output_file)
+    print('  humidity_sensor_id: %s' % configuration['bme280']['humidity_sensor_id'], file=output_file)
+    print('  pressure_sensor_id: %s' % configuration['bme280']['pressure_sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# BMP180\n#', file=output_file)
+    print('bmp180:', file=output_file)
+    if checkYamlVal(configuration['bmp180']['use_bmp180']):
+        print('  use_bmp180: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_bmp180: false # true(使う) , false(使わない)' , file=output_file)
+    print('  bmp180_mode: %s # BMP085_MODE_ULTRALOWPOWER , BMP085_MODE_STANDARD , BMP085_MODE_HIGHRES , BMP085_MODE_ULTRAHIGHRES' % configuration['bmp180']['bmp180_mode'], file=output_file)
+    print('  sensor_id: %s' % configuration['bmp180']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# ADXL345\n#', file=output_file)
+    print('adxl345:', file=output_file)
+    if checkYamlVal(configuration['adxl345']['use_adxl345']):
+        print('  use_adxl345: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_adxl345: false # true(使う) , false(使わない)' , file=output_file)
+    print('  adxl345_data_rate: %s # AUSEX_ADXL345_DATARATE_3200_HZ , AUSEX_ADXL345_DATARATE_1600_HZ , AUSEX_ADXL345_DATARATE_800_HZ , AUSEX_ADXL345_DATARATE_400_HZ , AUSEX_ADXL345_DATARATE_200_HZ , AUSEX_ADXL345_DATARATE_100_HZ , AUSEX_ADXL345_DATARATE_50_HZ , AUSEX_ADXL345_DATARATE_25_HZ , AUSEX_ADXL345_DATARATE_12_5_HZ , AUSEX_ADXL345_DATARATE_6_25HZ , AUSEX_ADXL345_DATARATE_3_13_HZ , AUSEX_ADXL345_DATARATE_1_56_HZ , AUSEX_ADXL345_DATARATE_0_78_HZ , AUSEX_ADXL345_DATARATE_0_39_HZ , AUSEX_ADXL345_DATARATE_0_20_HZ , AUSEX_ADXL345_DATARATE_0_10_HZ' % configuration['adxl345']['adxl345_data_rate'], file=output_file)
+    print('  adxl345_range: %s # AUSEX_ADXL345_RANGE_2_G , AUSEX_ADXL345_RANGE_4_G , AUSEX_ADXL345_RANGE_8_G , AUSEX_ADXL345_RANGE_16_G' % configuration['adxl345']['adxl345_range'], file=output_file)
+    print('  sensor_id: %s' % configuration['adxl345']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# MMA7660\n#', file=output_file)
+    print('mma7660:', file=output_file)
+    if checkYamlVal(configuration['mma7660']['use_mma7660']):
+        print('  use_mma7660: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_mma7660: false # true(使う) , false(使わない)' , file=output_file)
+    print('  mma7660_rate: %s' % configuration['mma7660']['mma7660_rate'], file=output_file)
+    print('  mma7660_delay: %s' % configuration['mma7660']['mma7660_delay'], file=output_file)
+    print('  sensor_id: %s' % configuration['mma7660']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove I2C タッチセンサ\n#', file=output_file)
+    print('groveI2C_Touch:', file=output_file)
+    if checkYamlVal(configuration['groveI2C_Touch']['use_groveI2C_Touch']):
+        print('  use_groveI2C_Touch: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_groveI2C_Touch: false # true(使う) , false(使わない)' , file=output_file)
+    print('  sensor_id: %s' % configuration['groveI2C_Touch']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# TCS34725\n#', file=output_file)
+    print('tcs34725:', file=output_file)
+    if checkYamlVal(configuration['tcs34725']['use_tcs34725']):
+        print('  use_tcs34725: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_tcs34725: false # true(使う) , false(使わない)' , file=output_file)
+    print('  tcs34725_int: %s # TCS34725_INTEGRATIONTIME_2_4MS , TCS34725_INTEGRATIONTIME_24MS , TCS34725_INTEGRATIONTIME_50MS , TCS34725_INTEGRATIONTIME_101MS , TCS34725_INTEGRATIONTIME_154MS , TCS34725_INTEGRATIONTIME_700MS' % configuration['tcs34725']['tcs34725_int'], file=output_file)
+    print('  tcs34725_gain: %s # TCS34725_GAIN_1X , TCS34725_GAIN_4X , TCS34725_GAIN_16X , TCS34725_GAIN_60X' % configuration['tcs34725']['tcs34725_gain'], file=output_file)
+    print('  sensor_id: %s' % configuration['tcs34725']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# TSL2561\n#', file=output_file)
+    print('tsl2561:', file=output_file)
+    if checkYamlVal(configuration['tsl2561']['use_tsl2561']):
+        print('  use_tsl2561: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_tsl2561: false # true(使う) , false(使わない)' , file=output_file)
+    print('  tsl2561_int: %s # TSL2561_INTEGRATIONTIME_13MS , TSL2561_INTEGRATIONTIME_101MS , TSL2561_INTEGRATIONTIME_402MS' % configuration['tsl2561']['tsl2561_int'], file=output_file)
+    print('  tsl2561_gain: %s # TSL2561_GAIN_1X , TSL2561_GAIN_16X' % configuration['tsl2561']['tsl2561_gain'], file=output_file)
+    print('  tsl2561_addr: %s # TSL2561_ADDR_FLOAT , TSL2561_ADDR_LOW , TSL2561_ADDR_HIGH' % configuration['tsl2561']['tsl2561_addr'], file=output_file)
+    print('  sensor_id: %s' % configuration['tsl2561']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# HTS221\n#', file=output_file)
+    print('hts221:', file=output_file)
+    if checkYamlVal(configuration['hts221']['use_hts221']):
+        print('  use_hts221: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_hts221: false # true(使う) , false(使わない)' , file=output_file)
+    print('  temperature_sensor_id: %s' % configuration['hts221']['temperature_sensor_id'], file=output_file)
+    print('  humidity_sensor_id: %s' % configuration['hts221']['humidity_sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# LPS22HB\n#', file=output_file)
+    print('lps22hb:', file=output_file)
+    if checkYamlVal(configuration['lps22hb']['use_lps22hb']):
+        print('  use_lps22hb: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_lps22hb: false # true(使う) , false(使わない)' , file=output_file)
+    print('  sensor_id: %s' % configuration['lps22hb']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# ITG3200\n#', file=output_file)
+    print('itg3200:', file=output_file)
+    if checkYamlVal(configuration['itg3200']['use_itg3200']):
+        print('  use_itg3200: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_itg3200: false # true(使う) , false(使わない)' , file=output_file)
+    print('  itg3200_samples: %s' % configuration['itg3200']['itg3200_samples'], file=output_file)
+    print('  itg3200_delay: %s' % configuration['itg3200']['itg3200_delay'], file=output_file)
+    print('  sensor_id: %s' % configuration['itg3200']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# DHTシリーズ温湿度計\n#', file=output_file)
+    print('dht:', file=output_file)
+    if checkYamlVal(configuration['dht']['use_dht']):
+        print('  use_dht: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_dht: false # true(使う) , false(使わない)' , file=output_file)
+    print('  dht_pin: %s' % configuration['dht']['dht_pin'], file=output_file)
+    print('  dht_type: %s # DHT11 , DHT21 , DHT22' % configuration['dht']['dht_type'], file=output_file)
+    print('  temperature_sensor_id: %s' % configuration['dht']['temperature_sensor_id'], file=output_file)
+    print('  humidity_sensor_id: %s' % configuration['dht']['humidity_sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove Digital Switch\n#', file=output_file)
+    print('digitalSwitch:', file=output_file)
+    if checkYamlVal(configuration['digitalSwitch']['use_digitalSwitch']):
+        print('  use_digitalSwitch: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_digitalSwitch: false # true(使う) , false(使わない)' , file=output_file)
+    print('  digitalSwitch_pin: %s' % configuration['digitalSwitch']['digitalSwitch_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['digitalSwitch']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Groveタッチセンサ\n#', file=output_file)
+    print('groveTouch:', file=output_file)
+    if checkYamlVal(configuration['groveTouch']['use_groveTouch']):
+        print('  use_groveTouch: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_groveTouch: false # true(使う) , false(使わない)' , file=output_file)
+    print('  groveTouch_pin: %s' % configuration['groveTouch']['groveTouch_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['groveTouch']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove水検知センサ\n#', file=output_file)
+    print('waterDetection:', file=output_file)
+    if checkYamlVal(configuration['waterDetection']['use_waterDetection']):
+        print('  use_waterDetection: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_waterDetection: false # true(使う) , false(使わない)' , file=output_file)
+    print('  waterDetection_pin: %s' % configuration['waterDetection']['waterDetection_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['waterDetection']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove Lineファインダ\n#', file=output_file)
+    print('groveLineFinder:', file=output_file)
+    if checkYamlVal(configuration['groveLineFinder']['use_groveLineFinder']):
+        print('  use_groveLineFinder: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_groveLineFinder: false # true(使う) , false(使わない)' , file=output_file)
+    print('  groveLineFinder_pin: %s' % configuration['groveLineFinder']['groveLineFinder_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['groveLineFinder']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove  IR interrupter\n#', file=output_file)
+    print('groveDistanceInterrupter:', file=output_file)
+    if checkYamlVal(configuration['groveDistanceInterrupter']['use_groveDistanceInterrupter']):
+        print('  use_groveDistanceInterrupter: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_groveDistanceInterrupter: false # true(使う) , false(使わない)' , file=output_file)
+    print('  groveDistanceInterrupter_pin: %s' % configuration['groveDistanceInterrupter']['groveDistanceInterrupter_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['groveDistanceInterrupter']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove IR反射センサ\n#', file=output_file)
+    print('groveIrReflect:', file=output_file)
+    if checkYamlVal(configuration['groveIrReflect']['use_groveIrReflect']):
+        print('  use_groveIrReflect: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_groveIrReflect: false # true(使う) , false(使わない)' , file=output_file)
+    print('  groveIrReflect_pin: %s' % configuration['groveIrReflect']['groveIrReflect_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['groveIrReflect']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# 人感センサ\n#', file=output_file)
+    print('grovePIR:', file=output_file)
+    if checkYamlVal(configuration['grovePIR']['use_grovePIR']):
+        print('  use_grovePIR: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_grovePIR: false # true(使う) , false(使わない)' , file=output_file)
+    print('  grovePIR_pin: %s' % configuration['grovePIR']['grovePIR_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['grovePIR']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# ADXL335\n#', file=output_file)
+    print('adxl335:', file=output_file)
+    if checkYamlVal(configuration['adxl335']['use_adxl335']):
+        print('  use_adxl335: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_adxl335: false # true(使う) , false(使わない)' , file=output_file)
+    print('  adxl335_x_pin: %s' % configuration['adxl335']['adxl335_x_pin'], file=output_file)
+    print('  adxl335_y_pin: %s' % configuration['adxl335']['adxl335_y_pin'], file=output_file)
+    print('  adxl335_z_pin: %s' % configuration['adxl335']['adxl335_z_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['adxl335']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove Analog 1 Axis Gyro\n#', file=output_file)
+    print('murataENC03:', file=output_file)
+    if checkYamlVal(configuration['murataENC03']['use_murataENC03']):
+        print('  use_murataENC03: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_murataENC03: false # true(使う) , false(使わない)' , file=output_file)
+    print('  murataENC03_pin: %s' % configuration['murataENC03']['murataENC03_pin'], file=output_file)
+    print('  murataENC03_try: %s' % configuration['murataENC03']['murataENC03_try'], file=output_file)
+    print('  sensor_id: %s' % configuration['murataENC03']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove analog temperature\n#', file=output_file)
+    print('analogTemperature:', file=output_file)
+    if checkYamlVal(configuration['analogTemperature']['use_analogTemperature']):
+        print('  use_analogTemperature: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_analogTemperature: false # true(使う) , false(使わない)' , file=output_file)
+    print('  analogTemperature_pin: %s' % configuration['analogTemperature']['analogTemperature_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['analogTemperature']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove Rotary Angle sensor\n#', file=output_file)
+    print('analogRotaryAngle:', file=output_file)
+    #if configuration['analogRotaryAngle']['use_analogRotaryAngle'] == True:
+    if checkYamlVal(configuration['analogRotaryAngle']['use_analogRotaryAngle']):
+        print('  use_analogRotaryAngle: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_analogRotaryAngle: false # true(使う) , false(使わない)' , file=output_file)
+    print('  analogRotaryAngle_pin: %s' % configuration['analogRotaryAngle']['analogRotaryAngle_pin'], file=output_file)
+    print('  analogRotaryAngle_vdd: %s' % configuration['analogRotaryAngle']['analogRotaryAngle_vdd'], file=output_file)
+    print('  sensor_id: %s' % configuration['analogRotaryAngle']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove analog light\n#', file=output_file)
+    print('groveAnalogLight:', file=output_file)
+    if checkYamlVal(configuration['groveAnalogLight']['use_groveAnalogLight']):
+        print('  use_groveAnalogLight: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_groveAnalogLight: false # true(使う) , false(使わない)' , file=output_file)
+    print('  groveAnalogLight_pin: %s' % configuration['groveAnalogLight']['groveAnalogLight_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['groveAnalogLight']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove analog sound\n#', file=output_file)
+    print('groveAnalogSound:', file=output_file)
+    if checkYamlVal(configuration['groveAnalogSound']['use_groveAnalogSound']):
+        print('  use_groveAnalogSound: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_groveAnalogSound: false # true(使う) , false(使わない)' , file=output_file)
+    print('  groveAnalogSound_pin: %s' % configuration['groveAnalogSound']['groveAnalogSound_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['groveAnalogSound']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Groveモイスチャーセンサ\n#', file=output_file)
+    print('groveAnalogMoisture:', file=output_file)
+    if checkYamlVal(configuration['groveAnalogMoisture']['use_groveAnalogMoisture']):
+        print('  use_groveAnalogMoisture: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_groveAnalogMoisture: false # true(使う) , false(使わない)' , file=output_file)
+    print('  groveAnalogMoisture_pin: %s' % configuration['groveAnalogMoisture']['groveAnalogMoisture_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['groveAnalogMoisture']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove GSR\n#', file=output_file)
+    print('groveGSR:', file=output_file)
+    if checkYamlVal(configuration['groveGSR']['use_groveGSR']):
+        print('  use_groveGSR: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_groveGSR: false # true(使う) , false(使わない)' , file=output_file)
+    print('  groveGSR_pin: %s' % configuration['groveGSR']['groveGSR_pin'], file=output_file)
+    print('  sensor_id: %s' % configuration['groveGSR']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# Grove電流センサ\n#', file=output_file)
+    print('groveCurrent:', file=output_file)
+    if checkYamlVal(configuration['groveCurrent']['use_groveCurrent']):
+        print('  use_groveCurrent: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_groveCurrent: false # true(使う) , false(使わない)' , file=output_file)
+    print('  groveCurrent_pin: %s' % configuration['groveCurrent']['groveCurrent_pin'], file=output_file)
+    print('  groveCurrent_vdd: %s' % configuration['groveCurrent']['groveCurrent_vdd'], file=output_file)
+    print('  groveCurrent_mode: %s # 0 , 1' % configuration['groveCurrent']['groveCurrent_mode'], file=output_file)
+    print('  sensor_id: %s' % configuration['groveCurrent']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    print('#\n# temt6000\n#', file=output_file)
+    print('temt6000:', file=output_file)
+    if checkYamlVal(configuration['temt6000']['use_temt6000']):
+        print('  use_temt6000: true # true(使う) , false(使わない)' , file=output_file)
+    else:
+        print('  use_temt6000: false # true(使う) , false(使わない)' , file=output_file)
+    print('  temt6000_pin: %s' % configuration['temt6000']['temt6000_pin'], file=output_file)
+    print('  temt6000_vdd: %s' % configuration['temt6000']['temt6000_vdd'], file=output_file)
+    print('  sensor_id: %s' % configuration['temt6000']['sensor_id'], file=output_file)
+    print('', file=output_file)
+    return "Success"
+
+def checkYamlVal(val):
+    if (val==False) or (val == "false") or (val == "False") or (val == "FALSE"):
+        return False
+    return True
+
+def editWindow(page: ft.Page):
+    global configuration, lastView
+    def create_view0():
+        global config_file_name, helpPageName
+        def pick_config_file_result(e: ft.FilePickerResultEvent):
+            global config_file_name
+            if e.files:
+                selected_config_file.value = e.files[0].path
+            else:
+                selected_config_file.value = "Canceled."
+            config_file_name = selected_config_file.value
+            selected_config_file.update()
+
+        def load_button_clicked(e):
+            if (config_file_name=="") or (config_file_name=="Canceled."):
+                warning_message.value = "Please select config file."
+                warning_message.update()
+                return
+            warning_message.value = loadConfigFile()
+            if warning_message.value!='':
+                warning_message.update()
+                return
+            page.go("/view1")
+
+        pick_config_file_dialog = ft.FilePicker(on_result=pick_config_file_result)
+        selected_config_file = ft.Text()
+
+        page.window_width = 400
+        page.window_height = 450
+        helpPageName = 'loadConfig'
+    
+        page.overlay.append(pick_config_file_dialog)
+
+        load_button = ft.ElevatedButton(text="Load config file", on_click=load_button_clicked)
+        warning_message = ft.Text()
+
+        finish_button = ft.ElevatedButton(text="Close", on_click=lambda e: page.window_destroy())
+        
+        return ft.View("/view0", [
+            ft.AppBar(
+                title=ft.Text("configファイル選択"),
+                bgcolor=ft.colors.BLUE,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("Select config file", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            ft.ElevatedButton(
+                "configuration file",
+                icon=ft.icons.UPLOAD_FILE,
+                on_click=lambda _: pick_config_file_dialog.pick_files(
+                    allow_multiple=False,
+                    ),
+                ),
+            selected_config_file,
+            ft.Divider(height=2, color="black"),
+            ft.Text("Load config file", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            load_button,
+            warning_message,
+            ft.Divider(height=2, color="black"),
+            finish_button
+        ])
+
+    def create_view1():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 800
+        helpPageName = 'TOC'
+        page.title = "Main menu"
+        return ft.View("/view1", [
+            ft.AppBar(
+                title=ft.Text("目次"),
+                bgcolor=ft.colors.GREEN,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("Initial setup", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            ft.ElevatedButton(
+                "All option", on_click=lambda _: page.go("/view2")),
+            ft.Divider(height=2, color="black"),
+            ft.Text("Setup specific option", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            ft.Text("Platform"),
+            ft.ElevatedButton(
+                "hardware", on_click=lambda _: page.go("/view2")),
+            ft.ElevatedButton(
+                "log", on_click=lambda _: page.go("/view11")),
+            ft.ElevatedButton(
+                "network", on_click=lambda _: page.go("/view14")),
+            ft.ElevatedButton(
+                "misc", on_click=lambda _: page.go("/view20")),
+            ft.Divider(height=1, color="black"),
+            ft.Text("Sensors"),
+            ft.ElevatedButton(
+                "環境センサ", on_click=lambda _: page.go("/view100")),
+            ft.ElevatedButton(
+                "振動・加速度センサ", on_click=lambda _: page.go("/view200")),
+            ft.ElevatedButton(
+                "対人センサ", on_click=lambda _: page.go("/view300")),
+            ft.ElevatedButton(
+                "視覚関連センサ", on_click=lambda _: page.go("/view400")),
+            ft.ElevatedButton(
+                "その他のセンサ", on_click=lambda _: page.go("/view500")),
+            ft.Divider(height=2, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view2():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'NetworkMedia'
+        page.title = "platform definition"
+        return ft.View("/view2", [
+            ft.AppBar(
+                title=ft.Text("Network type selection"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            network_type,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view3")),
+            ft.ElevatedButton(
+                "Main menu", on_click=lambda _: page.go("/view1")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view3():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 850
+        helpPageName = 'EthernetSetting'
+        return ft.View("/view3", [
+            ft.AppBar(
+                title=ft.Text("Ethernet setting"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("Chip select pin"),
+            ethernet_chip_select,
+            ft.Divider(height=2, color="black"),
+            ft.Text("MAC address"),
+            ethernet_mac_0,
+            ethernet_mac_1,
+            ethernet_mac_2,
+            ethernet_mac_3,
+            ethernet_mac_4,
+            ethernet_mac_5,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view5")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view2")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view4():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'WiFiSetting'
+        return ft.View("/view4", [
+            ft.AppBar(
+                title=ft.Text("WiFi setting"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            wifi_ssid,
+            wifi_pass,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view5")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view2")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view5():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'rtcSetting'
+        return ft.View("/view5", [
+            ft.AppBar(
+                title=ft.Text("RTC selection"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            rtc_type,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view6")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view2")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view6():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'useLED'
+        return ft.View("/view6", [
+            ft.AppBar(
+                title=ft.Text("LED definition"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            led_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view7")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view5")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view7():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 600
+        helpPageName = 'ledParam'
+        return ft.View("/view7", [
+            ft.AppBar(
+                title=ft.Text("LED parameters"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            led_clock_pin,
+            led_data_pin,
+            led_long_duration,
+            led_short_duration,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view8")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view6")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view8():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'useSD'
+        return ft.View("/view8", [
+            ft.AppBar(
+                title=ft.Text("SD/micro SD definition"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            sd_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view9")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view6")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view9():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'sdParam'
+        return ft.View("/view9", [
+            ft.AppBar(
+                title=ft.Text("SD parameters"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            sd_chip_select_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view10")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view8")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view10():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'serialSpeed'
+        return ft.View("/view10", [
+            ft.AppBar(
+                title=ft.Text("Serial line definition"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            serial_speed,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view11")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view8")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view11():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 500
+        helpPageName = 'logUsage'
+        return ft.View("/view11", [
+            ft.AppBar(
+                title=ft.Text("log output selection"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            logfile_flag,
+            serial_log_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view12")),
+            ft.ElevatedButton(
+                "Main menu", on_click=lambda _: page.go("/view1")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view12():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'logField'
+        return ft.View("/view12", [
+            ft.AppBar(
+                title=ft.Text("log field parameters"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            host_name,
+            app_name,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view13")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view11")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view13():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'logFileParam'
+        return ft.View("/view13", [
+            ft.AppBar(
+                title=ft.Text("parameters of logfile"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            logfile_name,
+            logfile_size,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view14")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view11")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view14():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'dhcpFlag'
+        return ft.View("/view14", [
+            ft.AppBar(
+                title=ft.Text("TCP/IP definition"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            dhcp_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view15")),
+            ft.ElevatedButton(
+                "Main menu", on_click=lambda _: page.go("/view1")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view15():
+        global helpPageName
+        page.window_width = 400
+        page.window_height = 900
+        helpPageName = 'staticIP1'
+        return ft.View("/view15", [
+            ft.AppBar(
+                title=ft.Text("Static IP address definition"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("Static IP address"),
+            ip_addr_0,
+            ip_addr_1,
+            ip_addr_2,
+            ip_addr_3,
+            ft.Divider(height=2, color="black"),
+            ft.Text("netmask"),
+            netmask_0,
+            netmask_1,
+            netmask_2,
+            netmask_3,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view16")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view14")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view16():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 900
+        helpPageName = 'staticIP2'
+        return ft.View("/view16", [
+            ft.AppBar(
+                title=ft.Text("Server address"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("gateway address"),
+            gateway_0,
+            gateway_1,
+            gateway_2,
+            gateway_3,
+            ft.Divider(height=2, color="black"),
+            ft.Text("DNS server address"),
+            dns_server_0,
+            dns_server_1,
+            dns_server_2,
+            dns_server_3,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view17")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view14")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view17():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 700
+        helpPageName = 'mqttParam'
+        return ft.View("/view17", [
+            ft.AppBar(
+                title=ft.Text("MQTT setting"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            mqtt_format,
+            mqtt_topic,
+            mqtt_server,
+            mqtt_port,
+            ft.Divider(height=2, color="black"),
+            ft.Text("Authentication"),
+            mqtt_auth_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view18")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view14")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view18():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'mqttAuth'
+        return ft.View("/view18", [
+            ft.AppBar(
+                title=ft.Text("MQTT authentication"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            mqtt_user,
+            mqtt_pass,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view19")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view17")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view19():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'ntpParam'
+        return ft.View("/view19", [
+            ft.AppBar(
+                title=ft.Text("NTP setting"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ntp_flag,
+            rtc_ntp_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view20")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view17")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view20():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'useWDT'
+        return ft.View("/view20", [
+            ft.AppBar(
+                title=ft.Text("Watch dog timer setting"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            wdt_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view21")),
+            ft.ElevatedButton(
+                "Main menu", on_click=lambda _: page.go("/view1")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view21():
+        global helpPageName
+        page.window_width = 400
+        page.window_height = 450
+        helpPageName = 'wdtParam'
+        return ft.View("/view21", [
+            ft.AppBar(
+                title=ft.Text("Watch dog timer parameter"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            wdt_duration,
+            wdt_short_duration,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view22")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view20")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view22():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'sensingInterval'
+        return ft.View("/view22", [
+            ft.AppBar(
+                title=ft.Text("Sensing interval setting"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            sensing_interval,
+            sleep_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view23")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view20")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view23():
+        global helpPageName
+        page.window_width = 350
+        page.window_height = 400
+        helpPageName = 'lowPowerMode'
+        return ft.View("/view23", [
+            ft.AppBar(
+                title=ft.Text("Low power mode selection"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            sleep_mode,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view100")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view22")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view100(): # 環境センサ一覧メニュー
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 900
+        helpPageName = 'envSensorList'
+        return ft.View("/view100", [
+            ft.AppBar(
+                title=ft.Text("環境センサ"),
+                bgcolor=ft.colors.GREEN,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            BME280_flag,
+            BMP180_flag,
+            SHT31_flag,
+            SHT2x_flag,
+            AM232x_flag,
+            DHT_flag,
+            Grove_analog_temperature_sensor_flag,
+            LPS22HB_flag,
+            HTS221_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view101")),
+            ft.ElevatedButton(
+                "Main menu", on_click=lambda _: page.go("/view1")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+            #ft.ElevatedButton(
+            #    "Help", on_click=startHelp),
+            #    #"Help", on_click=displayHelpPage),
+        ])
+
+    def create_view101(): # BME280
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 500
+        helpPageName = 'bme280'
+        return ft.View("/view101", [
+            ft.AppBar(
+                title=ft.Text("BME280"),
+                bgcolor=ft.colors.CYAN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            bme280_temperature_sensor_id,
+            bme280_humidity_sensor_id,
+            bme280_pressure_sensor_id,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view102")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view100")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view102(): # BMP180
+        global helpPageName
+        page.window_width = 450
+        page.window_height = 450
+        helpPageName = 'bmp180'
+        return ft.View("/view102", [
+            ft.AppBar(
+                title=ft.Text("BMP180"),
+                bgcolor=ft.colors.CYAN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            bmp180_sensor_id,
+            BMP180_mode,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view103")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view100")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view103(): # SHT31
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'sht31'
+        return ft.View("/view103", [
+            ft.AppBar(
+                title=ft.Text("SHT31"),
+                bgcolor=ft.colors.CYAN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            sht31_temperature_sensor_id,
+            sht31_humidity_sensor_id,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view104")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view100")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view104(): # SHT2x
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 500
+        helpPageName = 'sht2x'
+        return ft.View("/view104", [
+            ft.AppBar(
+                title=ft.Text("SHT2x"),
+                bgcolor=ft.colors.CYAN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            sht2x_temperature_sensor_id,
+            sht2x_humidity_sensor_id,
+            SHT2x_type,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view105")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view100")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view105(): # AM232x
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 500
+        helpPageName = 'am232x'
+        return ft.View("/view105", [
+            ft.AppBar(
+                title=ft.Text("AM232x"),
+                bgcolor=ft.colors.CYAN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            am232x_temperature_sensor_id,
+            am232x_humidity_sensor_id,
+            AM232x_type,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view106")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view100")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view106(): # DHT
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 600
+        helpPageName = 'dht'
+        return ft.View("/view106", [
+            ft.AppBar(
+                title=ft.Text("DHT"),
+                bgcolor=ft.colors.CYAN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            DHT_temperature_sensor_id,
+            DHT_humidity_sensor_id,
+            DHT_pin,
+            DHT_type,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view107")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view100")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view107(): # Grove analog temperature sensor
+        global helpPageName
+        page.window_width = 450
+        page.window_height = 450
+        helpPageName = 'groveAnalogTemperatureSensor'
+        return ft.View("/view107", [
+            ft.AppBar(
+                title=ft.Text("Grove analog temperature sensor"),
+                bgcolor=ft.colors.CYAN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_analog_temperature_sensor_id,
+            Grove_analog_temperature_sensor_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view108")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view100")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view108(): # LPS22HB
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'lps22hb'
+        return ft.View("/view108", [
+            ft.AppBar(
+                title=ft.Text("LPS22HB"),
+                bgcolor=ft.colors.CYAN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            LPS22HB_sensor_id,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view109")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view100")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view109(): # HTS221
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'hts221'
+        return ft.View("/view109", [
+            ft.AppBar(
+                title=ft.Text("HTS221"),
+                bgcolor=ft.colors.CYAN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            HTS221_temperature_sensor_id,
+            HTS221_humidity_sensor_id,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view200")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view100")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view200(): # 振動・加速度センサ一覧
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 650
+        helpPageName = 'gyro_etc_list'
+        return ft.View("/view200", [
+            ft.AppBar(
+                title=ft.Text("振動・加速度センサ"),
+                bgcolor=ft.colors.GREEN,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ITG3200_flag,
+            MMA7660_flag,
+            ADXL345_flag,
+            ADXL335_flag,
+            ENC03R_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view201")),
+            ft.ElevatedButton(
+                "Main menu", on_click=lambda _: page.go("/view1")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view201(): # ITG3200 (GROVE - I2C 3軸ジャイロセンサ)
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 500
+        helpPageName = 'itg3200'
+        return ft.View("/view201", [
+            ft.AppBar(
+                title=ft.Text("ITG3200"),
+                bgcolor=ft.colors.YELLOW_300,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ITG3200_sensor_id,
+            ITG3200_samples,
+            ITG3200_delay,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view202")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view200")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view202(): # MMA7660
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 500
+        helpPageName = 'mma7660'
+        return ft.View("/view202", [
+            ft.AppBar(
+                title=ft.Text("MMA7660"),
+                bgcolor=ft.colors.YELLOW_300,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            MMA7660_sensor_id,
+            MMA7660_rate,
+            MMA7660_delay,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view203")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view200")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view203(): # ADXL345
+        global helpPageName
+        page.window_width = 400
+        page.window_height = 550
+        helpPageName = 'adxl345'
+        return ft.View("/view203", [
+            ft.AppBar(
+                title=ft.Text("ADXL345"),
+                bgcolor=ft.colors.YELLOW_300,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ADXL345_sensor_id,
+            ADXL345_rate,
+            ADXL345_range,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view204")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view200")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view204(): # ADXL335
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 600
+        helpPageName = 'adxl335'
+        return ft.View("/view204", [
+            ft.AppBar(
+                title=ft.Text("ADXL335"),
+                bgcolor=ft.colors.YELLOW_300,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ADXL335_sensor_id,
+            ADXL335_x_pin,
+            ADXL335_y_pin,
+            ADXL335_z_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view205")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view200")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view205(): # ENC03R
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 500
+        helpPageName = 'enc03r'
+        return ft.View("/view205", [
+            ft.AppBar(
+                title=ft.Text("ENC03R"),
+                bgcolor=ft.colors.YELLOW_300,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ENC03R_sensor_id,
+            ENC03R_pin,
+            ENC03R_try,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view300")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view200")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view300(): # 対人センサ一覧
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 600
+        helpPageName = 'human_sensor_list'
+        return ft.View("/view300", [
+            ft.AppBar(
+                title=ft.Text("対人センサ"),
+                bgcolor=ft.colors.GREEN,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            MPR121_flag,
+            Grove_touch_flag,
+            PIR_flag,
+            Grove_GSR_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view301")),
+            ft.ElevatedButton(
+                "Main menu", on_click=lambda _: page.go("/view1")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view301(): # MPR121 (GROVE - I2C タッチセンサ)
+        global helpPageName
+        page.window_width = 450
+        page.window_height = 400
+        helpPageName = 'mpr121'
+        return ft.View("/view301", [
+            ft.AppBar(
+                title=ft.Text("MPR121(GROVE I2Cタッチセンサ)"),
+                bgcolor=ft.colors.RED_100,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            MPR121_sensor_id,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view302")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view300")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view302(): # Grove Touch sensor
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'groveTouchSensor'
+        return ft.View("/view302", [
+            ft.AppBar(
+                title=ft.Text("Grove Touch sensor"),
+                bgcolor=ft.colors.RED_100,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_touch_sensor_id,
+            Grove_touch_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view303")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view300")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view303(): # PIRセンサ
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'pirSensor'
+        return ft.View("/view303", [
+            ft.AppBar(
+                title=ft.Text("PIRセンサ"),
+                bgcolor=ft.colors.RED_100,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            PIR_sensor_id,
+            PIR_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view304")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view300")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view304(): # Grove GSRセンサ
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'groveGSR'
+        return ft.View("/view304", [
+            ft.AppBar(
+                title=ft.Text("Grove GSRセンサ"),
+                bgcolor=ft.colors.RED_100,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_GSR_sensor_id,
+            Grove_GSR_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view400")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view300")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view400(): # 視覚関連センサ一覧
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 600
+        helpPageName = 'visual_sensor_list'
+        return ft.View("/view400", [
+            ft.AppBar(
+                title=ft.Text("視覚関連センサ"),
+                bgcolor=ft.colors.GREEN,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            TCS34725_flag,
+            TSL2561_flag,
+            Grove_analog_light_flag,
+            TEMT6000_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view401")),
+            ft.ElevatedButton(
+                "Main menu", on_click=lambda _: page.go("/view1")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view401(): # TCS34725
+        global helpPageName
+        page.window_width = 400
+        page.window_height = 550
+        helpPageName = 'tcs34725'
+        return ft.View("/view401", [
+            ft.AppBar(
+                title=ft.Text("TCS34725"),
+                bgcolor=ft.colors.DEEP_ORANGE_ACCENT_100,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            TCS34725_sensor_id,
+            TCS34725_interval,
+            TCS34725_gain,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view402")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view400")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view402(): # TSL2561
+        global helpPageName
+        page.window_width = 500
+        page.window_height = 600
+        helpPageName = 'tsl2561'
+        return ft.View("/view402", [
+            ft.AppBar(
+                title=ft.Text("TSL2561"),
+                bgcolor=ft.colors.DEEP_ORANGE_ACCENT_100,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            TSL2561_sensor_id,
+            TSL2561_gain,
+            TSL2561_interval,
+            TSL2561_addr,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view403")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view400")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view403(): # Grove analog Light Sensor
+        global helpPageName
+        page.window_width = 400
+        page.window_height = 450
+        helpPageName = 'grove_analog_light'
+        return ft.View("/view403", [
+            ft.AppBar(
+                title=ft.Text("Grove analog Light Sensor"),
+                bgcolor=ft.colors.DEEP_ORANGE_ACCENT_100,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_analog_light_sensor_id,
+            Grove_analog_light_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view404")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view400")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view404(): # TEMT6000
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 500
+        helpPageName = 'temt6000'
+        return ft.View("/view404", [
+            ft.AppBar(
+                title=ft.Text("TEMT6000"),
+                bgcolor=ft.colors.DEEP_ORANGE_ACCENT_100,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            TEMT6000_sensor_id,
+            TEMT6000_pin,
+            TEMT6000_vdd,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view500")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view400")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view500(): # その他のセンサ一覧
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 900
+        helpPageName = 'other_sensor_list'
+        return ft.View("/view500", [
+            ft.AppBar(
+                title=ft.Text("その他のセンサ"),
+                bgcolor=ft.colors.GREEN,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_switch_flag,
+            Grove_water_flag,
+            Grove_line_finder_flag,
+            Grove_IR_distance_interrupter_flag,
+            Grove_IR_reflective_flag,
+            Grove_rotary_angle_flag,
+            Grove_sound_flag,
+            Grove_moisture_flag,
+            Grove_current_flag,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view501")),
+            ft.ElevatedButton(
+                "Main menu", on_click=lambda _: page.go("/view1")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view501(): # Grove switch sensor
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'groveSwitchSensor'
+        return ft.View("/view501", [
+            ft.AppBar(
+                title=ft.Text("Grove switch sensor"),
+                bgcolor=ft.colors.LIGHT_GREEN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_switch_sensor_id,
+            Grove_switch_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view502")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view500")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view502(): # Grove water sensor
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'groveWaterSensor'
+        return ft.View("/view502", [
+            ft.AppBar(
+                title=ft.Text("Grove water sensor"),
+                bgcolor=ft.colors.LIGHT_GREEN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_water_sensor_id,
+            Grove_water_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view503")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view500")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view503(): # Grove Line finder
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'groveLineFinder'
+        return ft.View("/view503", [
+            ft.AppBar(
+                title=ft.Text("Grove Line finder"),
+                bgcolor=ft.colors.LIGHT_GREEN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_line_finder_sensor_id,
+            Grove_line_finder_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view504")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view500")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view504(): # Grove IR distance interrupter
+        global helpPageName
+        page.window_width = 400
+        page.window_height = 450
+        helpPageName = 'groveIRdistance'
+        return ft.View("/view504", [
+            ft.AppBar(
+                title=ft.Text("Grove IR distance interrupter"),
+                bgcolor=ft.colors.LIGHT_GREEN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_IR_distance_interrupter_sensor_id,
+            Grove_IR_distance_interrupter_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view505")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view500")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view505(): # Grove IR reflective sensor
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'groveIRrefrective'
+        return ft.View("/view505", [
+            ft.AppBar(
+                title=ft.Text("Grove IR reflective sensor"),
+                bgcolor=ft.colors.LIGHT_GREEN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_IR_reflective_sensor_id,
+            Grove_IR_reflective_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view506")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view500")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view506(): # Grove rotary angle sensor
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 500
+        helpPageName = 'groveRotaryAngle'
+        return ft.View("/view506", [
+            ft.AppBar(
+                title=ft.Text("Grove rotary angle sensor"),
+                bgcolor=ft.colors.LIGHT_GREEN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_rotary_angle_sensor_id,
+            Grove_rotary_angle_pin,
+            Grove_rotary_angle_vdd,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view507")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view500")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view507(): # Grove sound sensor
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'groveSoundSensor'
+        return ft.View("/view507", [
+            ft.AppBar(
+                title=ft.Text("Grove sound sensor"),
+                bgcolor=ft.colors.LIGHT_GREEN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_sound_sensor_id,
+            Grove_sound_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view508")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view500")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view508(): # Grove moisture sensor
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 450
+        helpPageName = 'groveMoistureSensor'
+        return ft.View("/view508", [
+            ft.AppBar(
+                title=ft.Text("Grove moisture sensor"),
+                bgcolor=ft.colors.LIGHT_GREEN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_moisture_sensor_id,
+            Grove_moisture_pin,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view509")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view500")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view509(): # Grove current sensor
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 600
+        helpPageName = 'groveCurrentSensor'
+        return ft.View("/view509", [
+            ft.AppBar(
+                title=ft.Text("Grove current sensor"),
+                bgcolor=ft.colors.LIGHT_GREEN_ACCENT,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            Grove_current_sensor_id,
+            Grove_current_pin,
+            Grove_current_vdd,
+            Grove_current_mode,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view999")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view500")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def create_view998():
+        global output_file_name, lastView, helpPageName
+        def pick_output_file_result(e: ft.FilePickerResultEvent):
+            global output_file_name
+            selected_output_file.value = e.path
+            output_file_name = selected_output_file.value
+            selected_output_file.update()
+        def save_button_clicked(e):
+            if (output_file_name=="") or (output_file_name=="Canceled."):
+                warning_message.value = "Please select output file."
+                warning_message.update()
+                return
+            warning_message.value = saveConfig(output_file_name)
+            warning_message.update()
+
+        pick_output_file_dialog = ft.FilePicker(on_result=pick_output_file_result)
+        selected_output_file = ft.Text()
+
+        page.window_width = 400
+        page.window_height = 500
+        helpPageName = 'saveConfig'
+    
+        page.overlay.append(pick_output_file_dialog)
+
+        save_button = ft.ElevatedButton(text="Save config", on_click=save_button_clicked)
+        warning_message = ft.Text()
+
+        finish_button = ft.ElevatedButton(text="Close", on_click=lambda e: page.window_destroy())
+        saveMenuValue()
+        
+        return ft.View("/view998", [
+            ft.AppBar(
+                title=ft.Text("config出力"),
+                bgcolor=ft.colors.BLUE,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("Select output file", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            ft.ElevatedButton(
+                "output file",
+                icon=ft.icons.UPLOAD_FILE,
+                on_click=lambda _: pick_output_file_dialog.save_file(),
+                ),
+            selected_output_file,
+            ft.Divider(height=2, color="black"),
+            ft.Text("Save config", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            save_button,
+            warning_message,
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go(lastView)),
+            finish_button
+        ])
+
+    def create_view999(): # All definition done
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 250
+        #helpPageName = ''
+        return ft.View("/view999", [
+            ft.AppBar(title=ft.Text("Finish definition"),
+            bgcolor=ft.colors.GREEN),
+            ft.ElevatedButton(
+                "Main menu", on_click=lambda _: page.go("/view1")),
+            ft.ElevatedButton(
+                "Save", on_click=lambda _: page.go("/view998")),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def route_change(handler):
+        global configuration, lastView
+        troute = ft.TemplateRoute(handler.route)
+        page.views.clear()
+        if troute.match("/view0"):
+            lastView="/view0"
+            page.views.append(create_view0())
+        elif troute.match("/view1"):
+            lastView="/view1"
+            saveMenuValue()
+            page.views.append(create_view1())
+        elif troute.match("/view2"):
+            lastView="/view2"
+            saveMenuValue()
+            page.views.append(create_view2())
+        elif troute.match("/view3"):
+            lastView="/view3"
+            saveMenuValue()
+            if network_type.value == "wifi":
+                page.go("/view4")
+            elif network_type.value == "none":
+                page.go("/view5")
+            else:
+                page.views.append(create_view3())
+        elif troute.match("/view4"):
+            lastView="/view4"
+            saveMenuValue()
+            page.views.append(create_view4())
+        elif troute.match("/view5"):
+            lastView="/view5"
+            saveMenuValue()
+            page.views.append(create_view5())
+        elif troute.match("/view6"):
+            lastView="/view6"
+            saveMenuValue()
+            page.views.append(create_view6())
+        elif troute.match("/view7"):
+            lastView="/view7"
+            saveMenuValue()
+            if not checkYamlVal(led_flag.value):
+                page.go("/view8")
+            else:
+                page.views.append(create_view7())
+        elif troute.match("/view8"):
+            lastView="/view8"
+            saveMenuValue()
+            page.views.append(create_view8())
+        elif troute.match("/view9"):
+            lastView="/view9"
+            saveMenuValue()
+            if not checkYamlVal(sd_flag.value):
+                page.go("/view10")
+            else:
+                page.views.append(create_view9())
+        elif troute.match("/view10"):
+            lastView="/view10"
+            saveMenuValue()
+            page.views.append(create_view10())
+        elif troute.match("/view11"):
+            lastView="/view11"
+            saveMenuValue()
+            page.views.append(create_view11())
+        elif troute.match("/view12"):
+            lastView="/view12"
+            saveMenuValue()
+            if checkYamlVal(logfile_flag.value) or checkYamlVal(serial_log_flag.value):
+                page.views.append(create_view12())
+            else:
+                page.go("/view14")
+        elif troute.match("/view13"):
+            lastView="/view13"
+            saveMenuValue()
+            if not checkYamlVal(logfile_flag.value):
+                page.go("/view14")
+            else:
+                page.views.append(create_view13())
+        elif troute.match("/view14"):
+            lastView="/view14"
+            saveMenuValue()
+            page.views.append(create_view14())
+        elif troute.match("/view15"):
+            lastView="/view15"
+            saveMenuValue()
+            if checkYamlVal(dhcp_flag.value):
+                page.go("/view17")
+            else:
+                page.views.append(create_view15())
+        elif troute.match("/view16"):
+            lastView="/view16"
+            saveMenuValue()
+            page.views.append(create_view16())
+        elif troute.match("/view17"):
+            lastView="/view17"
+            saveMenuValue()
+            page.views.append(create_view17())
+        elif troute.match("/view18"):
+            lastView="/view18"
+            saveMenuValue()
+            if not checkYamlVal(mqtt_auth_flag.value):
+                page.go("/view19")
+            else:
+                page.views.append(create_view18())
+        elif troute.match("/view19"):
+            lastView="/view19"
+            saveMenuValue()
+            page.views.append(create_view19())
+        elif troute.match("/view20"):
+            lastView="/view20"
+            saveMenuValue()
+            page.views.append(create_view20())
+        elif troute.match("/view21"):
+            lastView="/view21"
+            saveMenuValue()
+            if not checkYamlVal(wdt_flag.value):
+                page.go("/view22")
+            else:
+                page.views.append(create_view21())
+        elif troute.match("/view22"):
+            lastView="/view22"
+            saveMenuValue()
+            page.views.append(create_view22())
+        elif troute.match("/view23"):
+            lastView="/view23"
+            saveMenuValue()
+            if not (checkYamlVal(sleep_flag.value)):
+                page.go("/view100")
+            else:
+                page.views.append(create_view23())
+        elif troute.match("/view100"):
+            lastView="/view100"
+            saveMenuValue()
+            page.views.append(create_view100())
+        elif troute.match("/view101"):
+            lastView="/view101"
+            saveMenuValue()
+            if not checkYamlVal(BME280_flag.value):
+                page.go("/view102")
+            else:
+                page.views.append(create_view101())
+        elif troute.match("/view102"):
+            lastView="/view102"
+            saveMenuValue()
+            if not checkYamlVal(BMP180_flag.value):
+                page.go("/view103")
+            else:
+                page.views.append(create_view102())
+        elif troute.match("/view103"):
+            lastView="/view103"
+            saveMenuValue()
+            if not checkYamlVal(SHT31_flag.value):
+                page.go("/view104")
+            else:
+                page.views.append(create_view103())
+        elif troute.match("/view104"):
+            lastView="/view104"
+            saveMenuValue()
+            if not checkYamlVal(SHT2x_flag.value):
+                page.go("/view105")
+            else:
+                page.views.append(create_view104())
+        elif troute.match("/view105"):
+            lastView="/view105"
+            saveMenuValue()
+            if not checkYamlVal(AM232x_flag.value):
+                page.go("/view106")
+            else:
+                page.views.append(create_view105())
+        elif troute.match("/view106"):
+            lastView="/view106"
+            saveMenuValue()
+            if not checkYamlVal(DHT_flag.value):
+                page.go("/view107")
+            else:
+                page.views.append(create_view106())
+        elif troute.match("/view107"):
+            lastView="/view107"
+            saveMenuValue()
+            if not checkYamlVal(Grove_analog_temperature_sensor_flag.value):
+                page.go("/view108")
+            else:
+                page.views.append(create_view107())
+        elif troute.match("/view108"):
+            lastView="/view108"
+            saveMenuValue()
+            if not checkYamlVal(LPS22HB_flag.value):
+                page.go("/view109")
+            else:
+                page.views.append(create_view108())
+        elif troute.match("/view109"):
+            lastView="/view109"
+            saveMenuValue()
+            if not checkYamlVal(HTS221_flag.value):
+                page.go("/view200")
+            else:
+                page.views.append(create_view109())
+        elif troute.match("/view200"):
+            lastView="/view200"
+            saveMenuValue()
+            page.views.append(create_view200())
+        elif troute.match("/view201"):
+            lastView="/view201"
+            saveMenuValue()
+            if not checkYamlVal(ITG3200_flag.value):
+                page.go("/view202")
+            else:
+                page.views.append(create_view201())
+        elif troute.match("/view202"):
+            lastView="/view202"
+            saveMenuValue()
+            if not checkYamlVal(MMA7660_flag.value):
+                page.go("/view203")
+            else:
+                page.views.append(create_view202())
+        elif troute.match("/view203"):
+            lastView="/view203"
+            saveMenuValue()
+            if not checkYamlVal(ADXL345_flag.value):
+                page.go("/view204")
+            else:
+                page.views.append(create_view203())
+        elif troute.match("/view204"):
+            lastView="/view204"
+            saveMenuValue()
+            if not checkYamlVal(ADXL335_flag.value):
+                page.go("/view205")
+            else:
+                page.views.append(create_view204())
+        elif troute.match("/view205"):
+            lastView="/view205"
+            saveMenuValue()
+            if not checkYamlVal(ENC03R_flag.value):
+                page.go("/view300")
+            else:
+                page.views.append(create_view205())
+        elif troute.match("/view300"):
+            lastView="/view300"
+            saveMenuValue()
+            page.views.append(create_view300())
+        elif troute.match("/view301"):
+            lastView="/view301"
+            saveMenuValue()
+            if not checkYamlVal(MPR121_flag.value):
+                page.go("/view302")
+            else:
+                page.views.append(create_view301())
+        elif troute.match("/view302"):
+            lastView="/view302"
+            saveMenuValue()
+            if not checkYamlVal(Grove_touch_flag.value):
+                page.go("/view303")
+            else:
+                page.views.append(create_view302())
+        elif troute.match("/view303"):
+            lastView="/view303"
+            saveMenuValue()
+            if not checkYamlVal(PIR_flag.value):
+                page.go("/view304")
+            else:
+                page.views.append(create_view303())
+        elif troute.match("/view304"):
+            lastView="/view304"
+            saveMenuValue()
+            if not checkYamlVal(Grove_GSR_flag.value):
+                page.go("/view400")
+            else:
+                page.views.append(create_view304())
+        elif troute.match("/view400"):
+            lastView="/view400"
+            saveMenuValue()
+            page.views.append(create_view400())
+        elif troute.match("/view401"):
+            lastView="/view401"
+            saveMenuValue()
+            if not checkYamlVal(TCS34725_flag.value):
+                page.go("/view402")
+            else:
+                page.views.append(create_view401())
+        elif troute.match("/view402"):
+            lastView="/view402"
+            saveMenuValue()
+            if not checkYamlVal(TSL2561_flag.value):
+                page.go("/view403")
+            else:
+                page.views.append(create_view402())
+        elif troute.match("/view403"):
+            lastView="/view403"
+            saveMenuValue()
+            if not checkYamlVal(Grove_analog_light_flag.value):
+                page.go("/view404")
+            else:
+                page.views.append(create_view403())
+        elif troute.match("/view404"):
+            lastView="/view404"
+            saveMenuValue()
+            if not checkYamlVal(TEMT6000_flag.value):
+                page.go("/view500")
+            else:
+                page.views.append(create_view404())
+        elif troute.match("/view500"):
+            lastView="/view500"
+            saveMenuValue()
+            page.views.append(create_view500())
+        elif troute.match("/view501"):
+            lastView="/view501"
+            saveMenuValue()
+            if not checkYamlVal(Grove_switch_flag.value):
+                page.go("/view502")
+            else:
+                page.views.append(create_view501())
+        elif troute.match("/view502"):
+            lastView="/view502"
+            saveMenuValue()
+            if not checkYamlVal(Grove_water_flag.value):
+                page.go("/view503")
+            else:
+                page.views.append(create_view502())
+        elif troute.match("/view503"):
+            lastView="/view503"
+            saveMenuValue()
+            if not checkYamlVal(Grove_line_finder_flag.value):
+                page.go("/view504")
+            else:
+                page.views.append(create_view503())
+        elif troute.match("/view504"):
+            lastView="/view504"
+            saveMenuValue()
+            if not checkYamlVal(Grove_IR_distance_interrupter_flag.value):
+                page.go("/view505")
+            else:
+                page.views.append(create_view504())
+        elif troute.match("/view505"):
+            lastView="/view505"
+            saveMenuValue()
+            if not checkYamlVal(Grove_IR_reflective_flag.value):
+                page.go("/view506")
+            else:
+                page.views.append(create_view505())
+        elif troute.match("/view506"):
+            lastView="/view506"
+            saveMenuValue()
+            if not checkYamlVal(Grove_rotary_angle_flag.value):
+                page.go("/view507")
+            else:
+                page.views.append(create_view506())
+        elif troute.match("/view507"):
+            lastView="/view507"
+            saveMenuValue()
+            if not checkYamlVal(Grove_sound_flag.value):
+                page.go("/view508")
+            else:
+                page.views.append(create_view507())
+        elif troute.match("/view508"):
+            lastView="/view508"
+            saveMenuValue()
+            if not checkYamlVal(Grove_moisture_flag.value):
+                page.go("/view509")
+            else:
+                page.views.append(create_view508())
+        elif troute.match("/view509"):
+            lastView="/view509"
+            saveMenuValue()
+            if not checkYamlVal(Grove_moisture_flag.value):
+                page.go("/view999")
+            else:
+                page.views.append(create_view509())
+        elif troute.match("/view998"):
+            saveMenuValue()
+            page.views.append(create_view998())
+        elif troute.match("/view999"):
+            lastView="/view999"
+            saveMenuValue()
+            page.views.append(create_view999())
+        page.update()
+
+    page.on_route_change = route_change
+    page.title = "Edit config file"
+    page.go("/view0")
+
+def icon_clicked(e):
+    global helpPageName
+    p = subPage(
+        controls=[
+            ft.Markdown(
+                help[helpPageName],
+                selectable=True,
+                extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
+            )
+        ],
+        page_props={"window_width":800},
+    )
+    p.start()
+
+def errorWindow(page: ft.Page):
+    global error
+    page.title = "Error"
+    page.window_width = 400
+    page.window_height = 500
+    page.autoscroll = True
+    finish_button = ft.ElevatedButton(text="Close", on_click=lambda e: page.window_destroy())
+    page.add(
+        ft.AppBar(title=ft.Text("Fatal error"),
+        bgcolor=ft.colors.RED),
+    )
+    page.add(
+        ft.Text(error)
+    )
+    page.add(
+        ft.Divider(height=2, color="black")
+    )
+    page.add(finish_button)
+
+def load_init_file():
+    global help_file, help, error
+    try:
+        with open(help_file, mode='r', encoding='utf-8') as f:
+            help = yaml.safe_load(f)
+    except Exception as e:
+        error = 'Exception occurred while loading configuration YAML file of this application...'
+        return error
+    return ''
+
+if __name__ == "__main__":
+    if "" == load_init_file():
+        ft.app(target=editWindow)
+    else:
+        ft.app(target=errorWindow)
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+

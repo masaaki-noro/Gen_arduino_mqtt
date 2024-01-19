@@ -1,0 +1,10 @@
+#
+# Grove Rotary Angle sensor
+#
+analogRotaryAngle:
+  use_analogRotaryAngle: true # true(使う) , false(使わない)
+  analogRotaryAngle_pin: A3
+  analogRotaryAngle_vdd: 3.3
+  sensor_id: -1
+
+

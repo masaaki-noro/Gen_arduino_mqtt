@@ -1,0 +1,9 @@
+#
+# ITG3200
+#
+itg3200:
+  use_itg3200: true # true(使う) , false(使わない)
+  itg3200_samples: 100
+  itg3200_delay: 100
+  sensor_id: -1
+

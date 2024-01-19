@@ -1,0 +1,779 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[3]:
+
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from flet_multi_page import subPage
+import flet as ft
+
+import yaml
+
+customPlatform_file="parts/app_defaults/checkConfig_customPlatform.yaml"
+default_file="parts/app_defaults/checkConfig_defaults.yaml"
+help_file="parts/Help/checkConfig/help.yaml"
+
+config_file_name=""
+#lastView=""
+helpPageName=""
+
+selection = {}
+
+max_digital_pin = 25
+
+used_pin = {
+    #'digital' : list(range(max_digital_pin)),
+    'digital' :[],
+    'analog' : {
+        'A0': 0,
+        'A1': 0,
+        'A2': 0,
+        'A3': 0,
+        'A4': 0,
+        'A5': 0,
+        'A6': 0,
+        'A7': 0
+    }
+}
+
+for i in range(max_digital_pin):
+    used_pin['digital'].append(0)
+
+def dumpSelectedValues():
+    global selection
+    print("====== menu slection result ============")
+    if selection['useCustomPlatform']:
+        print("useCustomPlatform : True")
+    else:
+        print("useCustomPlatform : False")
+    print("custom platform type : %s" % selection['customPlatform_type'])
+    print("Arduino type : %s" % selection['arduino_type'])
+    if selection['use_groveShield']:
+        print("use_groveShield : True")
+    else:
+        print("use_groveShield : False")
+    print("Arduino family (form factor) : %s" % selection['arduino_family'])
+    print("MCU type : %s" % selection['mcu_type'])
+    if selection['vdd'] == 1:
+        print("vdd : 3.3v")
+    else:
+        print("vdd : 5.0v")
+    print("======== pin counter ==========")
+    for i in range(max_digital_pin):
+        print("pin %s = %d" %(i, used_pin['digital'][i]))
+    for i in used_pin['analog']:
+        print("pin %s = %d" %(i, used_pin['analog'][i]))
+    print("==================")
+
+def checkMCU():
+    global selection, defaults, config
+    message={
+        'warning' : '',
+        'error'   : ''
+    }
+    mcu_type = selection['mcu_type']
+    use_wdt = config['safety']['use_wdt']
+    use_sleep = config['sensor']['low_power']['use_sleep']
+    #print("mcu_type : %s" % mcu_type)
+    #print("use_wdt : %s" % use_wdt)
+    #print("use_sleep : %s" % use_sleep)
+    if mcu_type == "other":
+        if ((use_sleep) or (use_wdt)):
+            message['error'] = "can not use wdt and sleep in unkown MCU architecture\n"
+        return message
+    wdt_support = defaults['mcu_spec'][mcu_type]['wdt_support']
+    sleep_support = defaults['mcu_spec'][mcu_type]['sleep_support']
+    #print("wdt_support : %s" % wdt_support)
+    #print("sleep_support : %s" % sleep_support)
+    if ((not wdt_support) and (use_wdt)):
+        message['error'] = "can not use wdt in this MCU architecture\n"
+    if ((not sleep_support) and (use_sleep)):
+        message['error'] =  message['error'] + "can not use sleep in this MCU architecture\n"
+    #print("message : %s" % message['error'])
+    return message
+
+def check_multi_use_pin():
+    message={
+        'warning' : '',
+        'error'   : ''
+    }
+    for i in range(max_digital_pin):
+        if used_pin['digital'][i] > 1:
+            error = ("digital pin number %d is conflicted.\n" % i)
+            message['error'] = message['error'] + error
+    for i in used_pin['analog']:
+        if used_pin['analog'][i] > 1:
+            error = ("analog pin %s is conflicted.\n" % i)
+            message['error'] = message['error'] + error
+    return message
+
+def check_ad_overlap(type):
+    global config, defaults
+    for i in defaults[type]['pin_map']:
+        num = defaults[type]['pin_map'][i]
+        used_pin['analog'][i] += used_pin['digital'][num]
+
+def check_digital_sensor_pin():
+    # デジタルセンサのチェック
+    for i in defaults['sensors']['digital']:
+        u = "use_" + i
+        p = i + "_pin"
+        if config[i][u]:
+            pinNum = config[i][p]
+            used_pin['digital'][pinNum] += 1
+
+def check_analog_sensor_pin():
+    # デジタルセンサのチェック
+    for i in defaults['sensors']['analog']:
+        if i == 'adxl335':
+            pin1 = config[i]['adxl335_x_pin']
+            pin2 = config[i]['adxl335_y_pin']
+            pin3 = config[i]['adxl335_z_pin']
+            used_pin['analog'][pin1] += 1
+            used_pin['analog'][pin2] += 1
+            used_pin['analog'][pin3] += 1
+        else:
+            u = "use_" + i
+            p = i + "_pin"
+            if config[i][u]:
+                pinNum = config[i][p]
+                used_pin['analog'][pinNum] += 1
+
+def check_uart_pin():
+    global selection, defaults
+    if selection['arduino_type']=="other":
+        return
+    pin1 = defaults[selection['arduino_type']]['serial'][0]
+    pin2 = defaults[selection['arduino_type']]['serial'][1]
+    used_pin['digital'][pin1] += 1
+    used_pin['digital'][pin2] += 1
+
+def check_LED_usage():
+    global config
+    if config['platform']['color_led']['use_led']:
+        pin1 = config['platform']['color_led']['led_data_pin']
+        pin2 = config['platform']['color_led']['led_clk_pin']
+        used_pin['digital'][pin1] += 1
+        used_pin['digital'][pin2] += 1
+
+def check_I2C_Usage():
+    global config
+    if config['platform']['rtc']['rtc_type'] != 'none':
+        return True
+    # I2Cセンサのチェック
+    for i in defaults['sensors']['i2c']:
+        u = "use_" + i
+        if config[i][u]:
+            return True
+    return False
+
+def check_I2C_SPI_usage():
+    global config, selection, defaults
+    # check SPI (SDカード)
+    if (((config['platform']['sd']['use_sd']) or (config['platform']['network_hardware']['network_type']=='ethernet'))and (selection['arduino_type']!="other")):
+        pin1 = defaults[selection['arduino_type']]['spi'][0]
+        pin2 = defaults[selection['arduino_type']]['spi'][1]
+        pin3 = defaults[selection['arduino_type']]['spi'][2]
+        used_pin['digital'][pin1] += 1
+        used_pin['digital'][pin2] += 1
+        used_pin['digital'][pin3] += 1
+        if config['platform']['sd']['use_sd']:
+            cs_pin = config['platform']['sd']['sd_chip_select']
+            used_pin['digital'][cs_pin] += 1
+        if config['platform']['network_hardware']['network_type']=='ethernet':
+            cs_pin = config['platform']['network_hardware']['ethernet_chip_select']
+            used_pin['digital'][cs_pin] += 1
+    # check I2C (RTCおよびセンサ)
+    if ((selection['arduino_type']!="other") and (check_I2C_Usage())):
+        pin1 = defaults[selection['arduino_type']]['i2c'][0]
+        pin2 = defaults[selection['arduino_type']]['i2c'][1]
+        used_pin['digital'][pin1] += 1
+        used_pin['digital'][pin2] += 1
+
+def checkSensorVDD():
+    message={
+        'warning' : '',
+        'error'   : ''
+    }
+    # I2Cセンサのチェック
+    for i in defaults['sensors']['i2c']:
+        u = "use_" + i
+        if config[i][u]:
+            if defaults['sensor_param']['i2c'][i]['vdd'] != 0:
+                #print("sensor vdd = %d , platform vdd = %d" % (defaults['sensor_param']['i2c'][i]['vdd'],selection['vdd']))
+                if defaults['sensor_param']['i2c'][i]['vdd'] != selection['vdd']:
+                    message['warning'] = message['warning'] + ("VDD of %s is not eqal platform VDD\n" % i)
+                    #print('VDD of %s is not eqal platform VDD' % i)
+    # デジタルセンサのチェック
+    for i in defaults['sensors']['digital']:
+        u = "use_" + i
+        if config[i][u]:
+            if defaults['sensor_param']['digital'][i]['vdd'] != 0:
+                #print("sensor vdd = %d , platform vdd = %d" % (defaults['sensor_param']['i2c'][i]['vdd'],selection['vdd']))
+                if defaults['sensor_param']['digital'][i]['vdd'] != selection['vdd']:
+                    message['warning'] = message['warning'] + ("VDD of %s is not eqal platform VDD\n" % i)
+                    #print('VDD of %s is not eqal platform VDD' % i)
+    # デジタルセンサのチェック
+    for i in defaults['sensors']['analog']:
+        u = "use_" + i
+        if config[i][u]:
+            if defaults['sensor_param']['analog'][i]['vdd'] != 0:
+                #print("sensor vdd = %d , platform vdd = %d" % (defaults['sensor_param']['i2c'][i]['vdd'],selection['vdd']))
+                if defaults['sensor_param']['analog'][i]['vdd'] != selection['vdd']:
+                    message['warning'] = message['warning'] + ("VDD of %s is not eqal platform VDD\n" % i)
+                    #print('VDD of %s is not eqal platform VDD' % i)
+    return message
+
+def use_custom_changed(e):
+    global selection
+    if use_custom.value=="yes":
+        selection['useCustomPlatform'] = True
+    else:
+        selection['useCustomPlatform'] = False
+        selection['customPlatform_type'] = 'none'
+
+use_custom = ft.Dropdown(
+    label="利用するか?",
+    width=300,
+    on_change=use_custom_changed,
+    options=[
+        ft.dropdown.Option("yes"),
+        ft.dropdown.Option("no"),
+    ],
+)
+
+def substituteDefinition(type):
+    global selection
+    selection['arduino_type'] = type
+    if type != 'other':
+        selection['arduino_family'] = defaults[type]['form_factor']
+        selection['mcu_type'] = defaults[type]['mcu_arch']
+        selection['vdd'] = defaults['mcu_spec'][selection['mcu_type']]['vdd']
+
+def customPlatform_type_changed(e):
+    global selection
+    selection['customPlatform_type'] = customPlatform_type.value
+    arduinoType = customPlatform[customPlatform_type.value]['arduino_type']
+    substituteDefinition(arduinoType)
+    selection['use_groveShield'] = customPlatform[customPlatform_type.value]['use_groveShield']
+
+customPlatform_type = ft.Dropdown(
+    label="種別指定",
+    width=300,
+    on_change=customPlatform_type_changed,
+)
+
+def arduino_type_changed(e):
+    global selection
+    selection['arduino_type'] = arduino_type.value
+    substituteDefinition(arduino_type.value)
+
+arduino_type = ft.Dropdown(
+    label="機種指定",
+    width=300,
+    on_change=arduino_type_changed,
+)
+
+def use_groveShield_changed(e):
+    global selection
+    if use_groveShield.value=="yes":
+        selection['use_groveShield'] = True
+    else:
+        selection['use_groveShield'] = False
+    #print(use_groveShield.value)
+
+use_groveShield = ft.Dropdown(
+    label="利用するか?",
+    width=300,
+    on_change=use_groveShield_changed,
+    options=[
+        ft.dropdown.Option("yes"),
+        ft.dropdown.Option("no"),
+    ],
+)
+
+def arduino_family_changed(e):
+    global selection
+    selection['arduino_family'] = arduino_family.value
+    #print(arduino_family.value)
+
+arduino_family = ft.Dropdown(
+    label="基板形状(Arduinoのファミリ)指定",
+    width=300,
+    on_change=arduino_family_changed,
+)
+
+def mcu_type_changed(e):
+    global selection
+    selection['mcu_type'] = mcu_type.value
+    if mcu_type.value != 'other':
+        selection['vdd'] = defaults['mcu_spec'][mcu_type.value]['vdd']
+    #print(mcu_type.value)
+
+mcu_type = ft.Dropdown(
+    label="MCUの種類",
+    width=300,
+    on_change=mcu_type_changed,
+)
+
+def vdd_changed(e):
+    global selection
+    selection['vdd'] = vdd.value
+    #print(vdd.value)
+
+vdd = ft.Dropdown(
+    label="動作電圧",
+    width=300,
+    on_change=vdd_changed,
+    options=[
+        ft.dropdown.Option(text="3.3(V)", key=1),
+        ft.dropdown.Option(text="5.0(V)", key=2),
+    ],
+)
+
+def buildMenu():
+    # customPlatform_type
+    for i in customPlatform['custom_list']:
+        #print(i)
+        customPlatform_type.options.append(ft.dropdown.Option(key=i, text=customPlatform[i]['name']))
+    # arduino_type
+    for i in defaults['platform']:
+        #print(i)
+        arduino_type.options.append(ft.dropdown.Option(key=i, text=defaults[i]['name']))
+    # arduino family (formfactor)
+    for i in defaults['form_factor']:
+        #print(i)
+        arduino_family.options.append(ft.dropdown.Option(key=i, text=i))
+    # mcu_type
+    for i in defaults['mcu_type']:
+        #print(i)
+        mcu_type.options.append(ft.dropdown.Option(key=i, text=i))
+
+def loadDefaults(defaultFile, customFile, helpFile):
+    global defaults, customPlatform, help
+    try:
+        with open(defaultFile, mode='r', encoding='utf-8') as f:
+            defaults = yaml.safe_load(f)
+    except Exception as e:
+        return "Exception occurred while loading application default YAML file..."
+    try:
+        with open(customFile, mode='r', encoding='utf-8') as f:
+            customPlatform = yaml.safe_load(f)
+    except Exception as e:
+        return "Exception occurred while loading custom platform definition YAML file..."
+    try:
+        with open(helpFile, mode='r', encoding='utf-8') as f:
+            help = yaml.safe_load(f)
+    except Exception as e:
+        return "Exception occurred while loading custom platform definition YAML file..."
+    buildMenu()
+    return ""
+
+def loadConfig(filename):
+    global config
+    try:
+        with open(filename, mode='r', encoding='utf-8') as f:
+            config = yaml.safe_load(f)
+    except Exception as e:
+        return "Exception occurred while loading config YAML file..."
+    return ""
+
+def errorWindow(page: ft.Page):
+    global error
+    page.title = "Error"
+    page.window_width = 400
+    page.window_height = 500
+    page.autoscroll = True
+    finish_button = ft.ElevatedButton(text="Close", on_click=lambda e: page.window_destroy())
+    page.add(
+        ft.AppBar(title=ft.Text("Error"),
+        bgcolor=ft.colors.RED),
+    )
+    page.add(
+        ft.Text(error)
+    )
+    page.add(
+        ft.Divider(height=2, color="black")
+    )
+    page.add(finish_button)
+
+def icon_clicked(e):
+    global helpPageName
+    p = subPage(
+        controls=[
+            ft.Markdown(
+                help[helpPageName],
+                selectable=True,
+                extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
+            )
+        ],
+        page_props={"window_width":800},
+    )
+    p.start()
+
+def mainWindow(page: ft.Page):
+    #global lastView
+    def createView1():
+        global config_file_name, helpPageName
+        def pick_config_file_result(e: ft.FilePickerResultEvent):
+            global config_file_name
+            if e.files:
+                selected_config_file.value = e.files[0].path
+            else:
+                selected_config_file.value = "Canceled."
+            config_file_name = selected_config_file.value
+            selected_config_file.update()
+
+        def load_button_clicked(e):
+            if (config_file_name=="") or (config_file_name=="Canceled."):
+                warning_message.value = "Please select config file."
+                warning_message.update()
+                return
+            warning_message.value = loadConfig(config_file_name)
+            if warning_message.value!='':
+                warning_message.update()
+                return
+            page.go("/view2")
+
+        pick_config_file_dialog = ft.FilePicker(on_result=pick_config_file_result)
+        selected_config_file = ft.Text()
+
+        page.window_width = 400
+        page.window_height = 450
+    
+        page.overlay.append(pick_config_file_dialog)
+
+        load_button = ft.ElevatedButton(text="Load config file", on_click=load_button_clicked)
+        warning_message = ft.Text()
+
+        finish_button = ft.ElevatedButton(text="Close", on_click=lambda e: page.window_destroy())
+        helpPageName = 'loadConfig'
+        
+        return ft.View("/view1", [
+            ft.AppBar(
+                title=ft.Text("configファイル選択"),
+                bgcolor=ft.colors.BLUE,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("チェック対象のconfigファイルの選択", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            ft.ElevatedButton(
+                "configuration file",
+                icon=ft.icons.UPLOAD_FILE,
+                on_click=lambda _: pick_config_file_dialog.pick_files(
+                    allow_multiple=False,
+                    ),
+                ),
+            selected_config_file,
+            ft.Divider(height=2, color="black"),
+            ft.Text("Load config file", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            load_button,
+            warning_message,
+            ft.Divider(height=2, color="black"),
+            finish_button
+        ])
+
+    def createView2():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'useCustomPlatform'
+        return ft.View("/view2", [
+            ft.AppBar(
+                title=ft.Text("カスタムプラットフォームの利用"),
+                bgcolor=ft.colors.GREEN,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("管理者提供の周辺回路接続済みのArduinoを使うか否か", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            use_custom,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view3")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view1")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def createView3():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'customPlatformKind'
+        return ft.View("/view3", [
+            ft.AppBar(
+                title=ft.Text("Arduinoの種別選択"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("利用する周辺回路接続済みArduinoの指定", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            customPlatform_type,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view9")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view2")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def createView4():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'arduino'
+        return ft.View("/view4", [
+            ft.AppBar(
+                title=ft.Text("Arduinoの種別選択"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("利用するArduinoの機種の選択", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            arduino_type,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view5")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view2")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def createView5():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'useGroveShield'
+        return ft.View("/view5", [
+            ft.AppBar(
+                title=ft.Text("groveシールド"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("Grove用シールドを利用するか否か", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            use_groveShield,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view6")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view4")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def createView6():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'arduinoFamily'
+        return ft.View("/view6", [
+            ft.AppBar(
+                title=ft.Text("Arduinoファミリ"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("利用するArduinoの形状(ファミリ)の選択", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            arduino_family,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view7")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view5")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def createView7():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'mcuType'
+        return ft.View("/view7", [
+            ft.AppBar(
+                title=ft.Text("MCUの種類"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("MCUの種類の選択", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            mcu_type,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view8")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view5")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def createView8():
+        global helpPageName
+        page.window_width = 300
+        page.window_height = 400
+        helpPageName = 'vdd'
+        return ft.View("/view8", [
+            ft.AppBar(
+                title=ft.Text("電源電圧"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            ft.Text("システムの電源電圧の選択", style=ft.TextThemeStyle.TITLE_MEDIUM),
+            vdd,
+            ft.ElevatedButton(
+                "Next", on_click=lambda _: page.go("/view9")),
+            ft.ElevatedButton(
+                "Back", on_click=lambda _: page.go("/view7")),
+            ft.Divider(height=1, color="black"),
+            ft.ElevatedButton(
+                "Close", on_click=lambda _: page.window_destroy()),
+        ])
+
+    def createView9():
+        global helpPageName #, lastView
+        #check_result = { 'warn': "" , 'error': ""}
+        def exec_button_clicked(e):
+            global selection
+            # check VDD of sensors
+            messages=checkSensorVDD()
+            warning.value = messages['warning']
+            error.value = messages['error']
+            # check MCU spec
+            messages=checkMCU()
+            warning.value = warning.value + messages['warning']
+            error.value = error.value + messages['error']
+            # Check usage of SPI and I2C
+            check_I2C_SPI_usage()
+            # Check LED usage
+            check_LED_usage()
+            # Check uart(serial) pin
+            check_uart_pin()
+            # count Digital sensor pin
+            check_digital_sensor_pin()
+            # count Analog sensor pin
+            check_analog_sensor_pin()
+            # check overlap of analog digital pin
+            if selection['arduino_type']!="other":
+                check_ad_overlap(selection['arduino_type'])
+            else:
+                warning.value = warning.value + "Can not check overlap of digital pin and analog pin"
+            # check multi-used pin
+            messages=check_multi_use_pin()
+            warning.value = warning.value + messages['warning']
+            error.value = error.value + messages['error']
+            # result
+            page.update()
+        
+        page.window_width = 500
+        page.window_height = 700
+        helpPageName = 'checkAndResult'
+        page.auto_scross = True
+        warning = ft.Text()
+        error = ft.Text()
+        exec_button = ft.ElevatedButton("検査実施", on_click=exec_button_clicked)
+        divider = ft.Divider(height=1, color="black")
+        title1 = ft.Text("検査結果", style=ft.TextThemeStyle.TITLE_MEDIUM)
+        title2 = ft.Text("エラー", style=ft.TextThemeStyle.TITLE_MEDIUM)
+        title3 = ft.Text("警告", style=ft.TextThemeStyle.TITLE_MEDIUM)
+        top_button = ft.ElevatedButton("Back to top", on_click=lambda _: page.go("/view1"))
+        close_button = ft.ElevatedButton("Close", on_click=lambda _: page.window_destroy())
+        subview = ft.Column(width=500,spacing=10,expand=True,scroll=ft.ScrollMode.ALWAYS)
+        subview.controls.append(exec_button)
+        subview.controls.append(divider)
+        subview.controls.append(title1)
+        subview.controls.append(title2)
+        subview.controls.append(error)
+        subview.controls.append(divider)
+        subview.controls.append(title3)
+        subview.controls.append(warning)
+        subview.controls.append(divider)
+        subview.controls.append(top_button)
+        subview.controls.append(close_button)
+        return ft.View("/view9", [
+            ft.AppBar(
+                title=ft.Text("config検査"),
+                bgcolor=ft.colors.AMBER,
+                actions=[
+                    ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+                ]
+            ),
+            subview,
+        ])
+
+
+    def route_change(handler):
+        troute = ft.TemplateRoute(handler.route)
+        page.views.clear()
+        if troute.match("/view1"):
+            page.views.append(createView1())
+        elif troute.match("/view2"):
+            page.views.append(createView2())
+        elif troute.match("/view3"):
+            if selection['useCustomPlatform']:
+                page.views.append(createView3())
+            else:
+                page.go("/view4")
+        elif troute.match("/view4"):
+            page.views.append(createView4())
+        elif troute.match("/view5"):
+            page.views.append(createView5())
+        elif troute.match("/view6"):
+            if ((not selection['useCustomPlatform']) and (selection['arduino_type'] == "other") and selection['use_groveShield']):
+                page.views.append(createView6())
+            else:
+                selection['arduino_family']='none'
+                page.go("/view7")
+        elif troute.match("/view7"):
+            if ((not selection['useCustomPlatform']) and (selection['arduino_type'] == "other")):
+                page.views.append(createView7())
+            else:
+                page.go("/view8")
+        elif troute.match("/view8"):
+            if ((not selection['useCustomPlatform']) and (selection['arduino_type'] == "other") and (selection['mcu_type'] == "other")):
+                page.views.append(createView8())
+            else:
+                page.go("/view9")
+        elif troute.match("/view9"):
+            page.views.append(createView9())
+        page.update()
+
+    page.on_route_change = route_change
+    page.title = "Check config file"
+    page.go("/view1")
+
+
+if __name__ == "__main__":
+    error = loadDefaults(default_file, customPlatform_file, help_file)
+    if error != "":
+        ft.app(target=errorWindow)
+    else:
+        ft.app(target=mainWindow)
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+

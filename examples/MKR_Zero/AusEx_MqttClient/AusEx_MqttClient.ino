@@ -113,7 +113,11 @@ void(* resetFunc) (void) = 0;//declare reset function at address 0
 #if defined(ARDUINO_AVR_UNO_WIFI_DEV_ED) || defined(ARDUINO_SAMD_NANO_33_IOT) || defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_SAMD_MKRVIDOR4000)
 #include <WiFiNINA.h>
 #else
+#if HARDWARE_TYPE==ARDUINO_UNO_R4_WIFI
+#include <WiFiS3.h>
+#else
 #include <WiFi.h>
+#endif
 #endif
 #endif /* USE_WIFI */
 
@@ -696,14 +700,20 @@ void loop() {
 #if CPU_ARCH==XTENSA_LX6_ARCH /* ESP32 */
   WiFi.disconnect(true);
 #endif /* CPU_ARCH==XTENSA_LX6_ARCH */
-#else /* USE_SLEEP */
-
-  delay(MAX_DURATION);  // DHTは測定の周波数が非常に長いため，連続してアクセスできないように，待ち時間をはさむ
-#endif /* USE_SLEEP */
 
 #if HARDWARE_SERIAL_TYPE==SERIAL_TYPE_MKR
   USBDevice.attach();
   delay(2000);
 #endif /* HARDWARE_SERIAL_TYPE==SERIAL_TYPE_MKR */
+
+#else /* USE_SLEEP */
+
+  delay(MAX_DURATION);  // DHTは測定の周波数が非常に長いため，連続してアクセスできないように，待ち時間をはさむ
+
+
+
+#endif /* USE_SLEEP */
+
+
 }
 

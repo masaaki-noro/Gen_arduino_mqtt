@@ -1,0 +1,329 @@
+platform:
+  network_hardware:
+    network_type: wifi # wifi , ethernet , none
+    ethernet_chip_select: 8 # イーサネットのチップセレクトピン番号
+  rtc:
+    rtc_type: DS3231 # RTC8564NB , DS1307 , DS3231 , PCF8523 , RV8803 , RX8025 , RX8900 , none
+    rtc_int_pin: 4 # ピン番号
+  color_led:
+    use_led: true # true(使う) , false(使わない)
+    led_data_pin: 21 # ピン番号
+    led_clk_pin: 20 # ピン番号
+    led_duration: 3000 # 時間(単位:ミリ秒)
+    led_short_duration: 1000 # 時間(単位:ミリ秒)
+  sd:
+    use_sd: true # true(使う) , false(使わない)
+    sd_chip_select: 4 # ピン番号
+  wdt:
+    wdt_duration: 20000 # 時間(単位:ミリ秒)
+    wdt_short_duration: 500 # 時間(単位:ミリ秒)
+
+common:
+  serial:
+    speed: 9600 # コンソールのシリアル速度(bps)
+  log:
+    host_name: "MKR_WiFi1010" # ホスト名(文字列)
+    app_name: "AusEx_mqtt_client" # アプリ名(文字列)
+    use_logfile: true # true(使う) , false(使わない)
+    use_serial_log: true # true(使う) , false(使わない)
+    logfile_name_hdr: "/syslog" # ログファイル名
+    logfile_size_max: 10000000 # ログファイルの最大値(バイト)
+    log_rotate: false # true(使う) , false(使わない) 現在未対応
+  clock:
+    use_ntp : false # true(使う) , false(使わない)
+    update_rtc_by_ntp : false # true(使う) , false(使わない)
+
+network:
+  wifi:
+    ssid: "Buffalo-G-9C50" # ssid名
+    wifi_pass: "jxgdekvmujfyh" # wifiパスワード
+  ethernet:
+    mac_addr: [ '0x90', '0xa2', '0xda', '0x10', '0x11', '0x51']  # macアドレス
+  ip:
+    use_dhcp: true # true(使う) , false(使わない)
+    ip_addr: [192, 168, 1, 111] # ipアドレス
+    dns_server:  [192, 168, 1, 254] # DNSサーバ
+    gateway: [192, 168, 1, 254] # gateway
+    netmask: [255, 255, 255, 0] # マスク
+  mqtt:
+    mqtt_format: plain # plain, json, syslog
+    mqtt_auth: False # true(使う) , false(使わない)
+    mqtt_user: "foo" # ユーザ名(文字列)
+    mqtt_pass: "bar" # パスワード(文字列)
+    mqtt_topic: "arduino/echo" # MQTTトピック (文字列)
+    mqtt_server: "192.168.1.254" # mqttサーバIPアドレス
+    mqtt_port: 1883 # mqttポート番号
+
+safety:
+  use_wdt: true # true(使う) , false(使わない)
+
+sensor:
+  sensor_interval: 15000 # 測定間の待ち時間 (単位:ミリ秒)
+  low_power:
+    use_sleep: false # 待機中のsleep true(使う) , false(使わない)
+    sleep_mode: power_down # idle, adc, power_save, standby, power_down
+
+#
+# SHT31
+#
+sht31:
+  use_sht31: true # true(使う) , false(使わない)
+  temperature_sensor_id: -1
+  humidity_sensor_id: -1
+
+#
+# SHT2x
+#
+sht2x:
+  use_sht2x: true # true(使う) , false(使わない)
+  sht2x_type: SHT21 # SHT21 , SHT25
+  temperature_sensor_id: -1
+  humidity_sensor_id: -1
+
+#
+# AM232x
+#
+am232x:
+  use_am232x: true # true(使う) , false(使わない)
+  am232x_type: AM2321 # AM2321 , AM2322
+  temperature_sensor_id: -1
+  humidity_sensor_id: -1
+
+#
+# BME280
+#
+bme280:
+  use_bme280: true # true(使う) , false(使わない)
+  temperature_sensor_id: -1
+  humidity_sensor_id: -1
+  pressure_sensor_id: -1
+
+#
+# BMP180
+#
+bmp180:
+  use_bmp180: true # true(使う) , false(使わない)
+  bmp180_mode: BMP085_MODE_ULTRALOWPOWER # BMP085_MODE_ULTRALOWPOWER , BMP085_MODE_STANDARD , BMP085_MODE_HIGHRES , BMP085_MODE_ULTRAHIGHRES
+  sensor_id: -1
+
+#
+# ADXL345
+#
+adxl345:
+  use_adxl345: true # true(使う) , false(使わない)
+  adxl345_data_rate: AUSEX_ADXL345_DATARATE_100_HZ # AUSEX_ADXL345_DATARATE_3200_HZ , AUSEX_ADXL345_DATARATE_1600_HZ , AUSEX_ADXL345_DATARATE_800_HZ , AUSEX_ADXL345_DATARATE_400_HZ , AUSEX_ADXL345_DATARATE_200_HZ , AUSEX_ADXL345_DATARATE_100_HZ , AUSEX_ADXL345_DATARATE_50_HZ , AUSEX_ADXL345_DATARATE_25_HZ , AUSEX_ADXL345_DATARATE_12_5_HZ , AUSEX_ADXL345_DATARATE_6_25HZ , AUSEX_ADXL345_DATARATE_3_13_HZ , AUSEX_ADXL345_DATARATE_1_56_HZ , AUSEX_ADXL345_DATARATE_0_78_HZ , AUSEX_ADXL345_DATARATE_0_39_HZ , AUSEX_ADXL345_DATARATE_0_20_HZ , AUSEX_ADXL345_DATARATE_0_10_HZ
+  adxl345_range: AUSEX_ADXL345_RANGE_2_G # AUSEX_ADXL345_RANGE_2_G , AUSEX_ADXL345_RANGE_4_G , AUSEX_ADXL345_RANGE_8_G , AUSEX_ADXL345_RANGE_16_G
+  sensor_id: -1
+
+#
+# MMA7660
+#
+mma7660:
+  use_mma7660: true # true(使う) , false(使わない)
+  mma7660_rate: 64
+  mma7660_delay: 4000
+  sensor_id: -1
+
+#
+# Grove I2C タッチセンサ
+#
+groveI2C_Touch:
+  use_groveI2C_Touch: true # true(使う) , false(使わない)
+  sensor_id: -1
+
+#
+# TCS34725
+#
+tcs34725:
+  use_tcs34725: true # true(使う) , false(使わない)
+  tcs34725_int: TCS34725_INTEGRATIONTIME_700MS # TCS34725_INTEGRATIONTIME_2_4MS , TCS34725_INTEGRATIONTIME_24MS , TCS34725_INTEGRATIONTIME_50MS , TCS34725_INTEGRATIONTIME_101MS , TCS34725_INTEGRATIONTIME_154MS , TCS34725_INTEGRATIONTIME_700MS
+  tcs34725_gain: TCS34725_GAIN_16X # TCS34725_GAIN_1X , TCS34725_GAIN_4X , TCS34725_GAIN_16X , TCS34725_GAIN_60X
+  sensor_id: -1
+
+#
+# TSL2561
+#
+tsl2561:
+  use_tsl2561: true # true(使う) , false(使わない)
+  tsl2561_int: TSL2561_INTEGRATIONTIME_13MS # TSL2561_INTEGRATIONTIME_13MS , TSL2561_INTEGRATIONTIME_101MS , TSL2561_INTEGRATIONTIME_402MS
+  tsl2561_gain: TSL2561_GAIN_1X # TSL2561_GAIN_1X , TSL2561_GAIN_16X
+  tsl2561_addr: TSL2561_ADDR_FLOAT # TSL2561_ADDR_FLOAT , TSL2561_ADDR_LOW , TSL2561_ADDR_HIGH
+  sensor_id: -1
+
+#
+# HTS221
+#
+hts221:
+  use_hts221: true # true(使う) , false(使わない)
+  temperature_sensor_id: -1
+  humidity_sensor_id: -1
+
+#
+# LPS22HB
+#
+lps22hb:
+  use_lps22hb: true # true(使う) , false(使わない)
+  sensor_id: -1
+
+#
+# ITG3200
+#
+itg3200:
+  use_itg3200: true # true(使う) , false(使わない)
+  itg3200_samples: 100
+  itg3200_delay: 100
+  sensor_id: -1
+
+#
+# DHTシリーズ温湿度計
+#
+dht:
+  use_dht: true # true(使う) , false(使わない)
+  dht_pin: 2
+  dht_type: DHT22 # DHT11 , DHT21 , DHT22
+  temperature_sensor_id: -1
+  humidity_sensor_id: -1
+
+#
+# Grove Digital Switch
+#
+digitalSwitch:
+  use_digitalSwitch: true # true(使う) , false(使わない)
+  digitalSwitch_pin: 2
+  sensor_id: -1
+
+#
+# Groveタッチセンサ
+#
+groveTouch:
+  use_groveTouch: true # true(使う) , false(使わない)
+  groveTouch_pin: 2
+  sensor_id: -1
+
+#
+# Grove水検知センサ
+#
+waterDetection:
+  use_waterDetection: true # true(使う) , false(使わない)
+  waterDetection_pin: 2
+  sensor_id: -1
+
+#
+# Grove Lineファインダ
+#
+groveLineFinder:
+  use_groveLineFinder: true # true(使う) , false(使わない)
+  groveLineFinder_pin: 2
+  sensor_id: -1
+
+#
+# Grove  IR interrupter
+#
+groveDistanceInterrupter:
+  use_groveDistanceInterrupter: true # true(使う) , false(使わない)
+  groveDistanceInterrupter_pin: 2
+  sensor_id: -1
+
+#
+# Grove IR反射センサ
+#
+groveIrReflect:
+  use_groveIrReflect: true # true(使う) , false(使わない)
+  groveIrReflect_pin: 2
+  sensor_id: -1
+
+#
+# 人感センサ
+#
+grovePIR:
+  use_grovePIR: true # true(使う) , false(使わない)
+  grovePIR_pin: 2
+  sensor_id: -1
+
+#
+# ADXL335
+#
+adxl335:
+  use_adxl335: true # true(使う) , false(使わない)
+  adxl335_x_pin: A1
+  adxl335_y_pin: A2
+  adxl335_z_pin: A3
+  sensor_id: -1
+
+#
+# Grove Analog 1 Axis Gyro
+#
+murataENC03:
+  use_murataENC03: true # true(使う) , false(使わない)
+  murataENC03_pin: A3
+  murataENC03_try: 1000
+  sensor_id: -1
+
+#
+# Grove analog temperature
+#
+analogTemperature:
+  use_analogTemperature: true # true(使う) , false(使わない)
+  analogTemperature_pin: A3
+  sensor_id: -1
+
+#
+# Grove Rotary Angle sensor
+#
+analogRotaryAngle:
+  use_analogRotaryAngle: true # true(使う) , false(使わない)
+  analogRotaryAngle_pin: A3
+  analogRotaryAngle_vdd: 3.3
+  sensor_id: -1
+
+#
+# Grove analog light
+#
+groveAnalogLight:
+  use_groveAnalogLight: true # true(使う) , false(使わない)
+  groveAnalogLight_pin: A3
+  sensor_id: -1
+
+#
+# Grove analog sound
+#
+groveAnalogSound:
+  use_groveAnalogSound: true # true(使う) , false(使わない)
+  groveAnalogSound_pin: A3
+  sensor_id: -1
+
+#
+# Groveモイスチャーセンサ
+#
+groveAnalogMoisture:
+  use_groveAnalogMoisture: true # true(使う) , false(使わない)
+  groveAnalogMoisture_pin: A3
+  sensor_id: -1
+
+#
+# Grove GSR
+#
+groveGSR:
+  use_groveGSR: true # true(使う) , false(使わない)
+  groveGSR_pin: A3
+  sensor_id: -1
+
+#
+# Grove電流センサ
+#
+groveCurrent:
+  use_groveCurrent: true # true(使う) , false(使わない)
+  groveCurrent_pin: A3
+  groveCurrent_vdd: 3.3
+  groveCurrent_mode: 0 # 0 , 1
+  sensor_id: -1
+
+#
+# temt6000
+#
+temt6000:
+  use_temt6000: true # true(使う) , false(使わない)
+  temt6000_pin: A2
+  temt6000_vdd: 3.3
+  sensor_id: -1
+

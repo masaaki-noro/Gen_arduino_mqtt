@@ -27,9 +27,9 @@ bool use_BMP180 = false;
 bool use_ADXL345 = false;
 #endif /* USE_SENSOR_ADXL345 */
 
-#ifdef USE_SENSOR_ITG320
-bool use_ITG320 = false;
-#endif /* USE_SENSOR_ITG320 */
+#ifdef USE_SENSOR_ITG3200
+bool use_ITG3200 = false;
+#endif /* USE_SENSOR_ITG3200 */
 
 #ifdef USE_SENSOR_MMA7660FC // Grove3軸加速度センサ
 bool use_MMA7660 = false;
@@ -46,6 +46,15 @@ bool use_TCS34725 = false;
 #ifdef USE_SENSOR_TSL2561 // 照度センサ
 bool use_TSL2561 = false;
 #endif /* USE_SENSOR_TSL2561 */
+
+#ifdef USE_SENSOR_HTS221 // 温湿度センサ
+bool use_HTS221 = false;
+#endif /* USE_SENSOR_HTS221 */
+
+#ifdef USE_SENSOR_LPS22HB // 気圧センサ
+bool use_LPS22HB = false;
+#endif /* USE_SENSOR_LPS22HB */
+
 
 // digital interface sensors
 #ifdef USE_SENSOR_DHT
@@ -73,7 +82,7 @@ bool use_GroveIrDistance = false;
 #endif /* USE_SENSOR_IR_DISTANCE_INTERRUPTER */
 
 #ifdef USE_SENSOR_IR_RPR_220  // Grove - Infrared Reflective Sensor
-bool use_GroveIrRefrective = false;
+bool use_GroveIrReflective = false;
 #endif /* USE_SENSOR_IR_RPR_220 */
 
 #ifdef USE_SENSOR_PIR
@@ -93,9 +102,9 @@ bool use_ENC03R = false;
 bool use_GroveAnalogTemperature = false;
 #endif /* USE_SENSOR_ANALOG_TEMPERATURE */
 
-#ifdef USE_SENSOR_GROVE_ANALOG_ROTALY_ANGLE
-bool use_GroveAnalogRotalyAngle = false;
-#endif /* USE_SENSOR_GROVE_ANALOG_ROTALY_ANGLE */
+#ifdef USE_SENSOR_GROVE_ANALOG_ROTARY_ANGLE
+bool use_GroveAnalogRotaryAngle = false;
+#endif /* USE_SENSOR_GROVE_ANALOG_ROTARY_ANGLE */
 
 #ifdef USE_SENSOR_GROVE_ANALOG_LIGHT
 bool use_GroveAnalogLight = false;
@@ -117,6 +126,9 @@ bool use_GroveGSR = false;
 bool use_GroveCurrent = false;
 #endif /* USE_SENSOR_GROVE_CURRENT */
 
+#ifdef USE_SENSOR_TEMT6000 // 照度センサ
+bool use_TEMT6000 = false;
+#endif /* #ifdef USE_SENSOR_TEMT6000 */
 
 /*
  * センサ処理関数定義
@@ -161,11 +173,11 @@ void adxl345_output_info(void);
 void adxl345_Sensor(void);
 #endif /* USE_SENSOR_ADXL345 */
 
-#ifdef USE_SENSOR_ITG320
-bool itg320_init(void);
-void itg320_output_info(void);
-void itg320_Sensor(void);
-#endif /* USE_SENSOR_ITG320 */
+#ifdef USE_SENSOR_ITG3200
+bool itg3200_init(void);
+void itg3200_output_info(void);
+void itg3200_Sensor(void);
+#endif /* USE_SENSOR_ITG3200 */
 
 #ifdef USE_SENSOR_MMA7660FC // Grove3軸加速度センサ
 bool mma7660_init(void);
@@ -190,6 +202,19 @@ bool tsl2561_init(void);
 void tsl2561_output_info(void);
 void tsl2561_Sensor(void);
 #endif /* USE_SENSOR_TSL2561 */
+
+#ifdef USE_SENSOR_HTS221 // 温湿度センサ
+bool hts221_init(void);
+void hts221_output_info(void);
+void hts221_Sensor(void);
+#endif /* USE_SENSOR_HTS221 */
+
+#ifdef USE_SENSOR_LPS22HB // 気圧センサ
+bool lps22hb_init(void);
+void lps22hb_output_info(void);
+void lps22hb_Sensor(void);
+#endif /* USE_SENSOR_LPS22HB */
+
 
 /*
  * Digital interface
@@ -231,9 +256,9 @@ void groveIrDistance_Sensor(void);
 #endif /* USE_SENSOR_IR_DISTANCE_INTERRUPTER */
 
 #ifdef USE_SENSOR_IR_RPR_220  // Grove - Infrared Reflective Sensor
-bool groveIrRefrective_init(void);
-void groveIrRefrective_output_info(void);
-void groveIrRefrective_Sensor(void);
+bool groveIrReflective_init(void);
+void groveIrReflective_output_info(void);
+void groveIrReflective_Sensor(void);
 #endif /* USE_SENSOR_IR_RPR_220 */
 
 #ifdef USE_SENSOR_PIR
@@ -264,11 +289,11 @@ void groveAnalogTemperature_Sensor(void);
 #endif /* USE_SENSOR_ANALOG_TEMPERATURE */
 
 
-#ifdef USE_SENSOR_GROVE_ANALOG_ROTALY_ANGLE
-bool groveAnalogRotalyAngle_init(void);
-void groveAnalogRotalyAngle_output_info(void);
-void groveAnalogRotalyAngle_Sensor(void);
-#endif /* USE_SENSOR_GROVE_ANALOG_ROTALY_ANGLE */
+#ifdef USE_SENSOR_GROVE_ANALOG_ROTARY_ANGLE
+bool groveAnalogRotaryAngle_init(void);
+void groveAnalogRotaryAngle_output_info(void);
+void groveAnalogRotaryAngle_Sensor(void);
+#endif /* USE_SENSOR_GROVE_ANALOG_ROTARY_ANGLE */
 
 #ifdef USE_SENSOR_GROVE_ANALOG_LIGHT
 bool groveAnalogLight_init(void);
@@ -299,3 +324,9 @@ bool groveCurrent_init(void);
 void groveCurrent_output_info(void);
 void groveCurrent_Sensor(void);
 #endif /* USE_SENSOR_GROVE_CURRENT */
+
+#ifdef USE_SENSOR_TEMT6000 // 照度センサ
+bool temt6000_init(void);
+void temt6000_output_info(void);
+void temt6000_Sensor(void);
+#endif /* USE_SENSOR_TEMT6000 */

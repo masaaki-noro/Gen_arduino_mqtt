@@ -1,0 +1,380 @@
+
+
+#
+# 機種定義
+#
+platform:
+  - MKR_Zero
+  - MKR_WiFi_1010
+  - Uno_R4_WiFi
+  - Uno_R4_minima
+  - Nano_33_IoT
+  - Nano_ESP32
+  - other
+
+other:
+  name: "その他の機種"
+
+MKR_Zero:
+  name: "MKR Zero"
+  mcu_arch: samd
+  form_factor: mkr
+  spi:
+    - 8
+    - 9
+    - 10
+  i2c:
+    - 11
+    - 12
+  serial:
+    - 13
+    - 14
+  max_pin: 22
+  map_pins: 7
+  pin_map:
+    A0: 15
+    A1: 16
+    A2: 17
+    A3: 18
+    A4: 19
+    A5: 20
+    A6: 21
+
+MKR_WiFi_1010:
+  name: "MKR WiFi 1010"
+  mcu_arch: samd
+  form_factor: mkr
+  spi:
+    - 8
+    - 9
+    - 10
+  i2c:
+    - 11
+    - 12
+  serial:
+    - 13
+    - 14
+  max_pin: 22
+  map_pins: 7
+  pin_map:
+    A0: 15
+    A1: 16
+    A2: 17
+    A3: 18
+    A4: 19
+    A5: 20
+    A6: 21
+
+Uno_R4_WiFi:
+  name: "Uno R4 WiFi"
+  mcu_arch: ra4m1
+  form_factor: classic
+  spi:
+    - 11
+    - 12
+    - 13
+  i2c:
+    - 18
+    - 19
+  serial:
+    - 0
+    - 1
+  max_pin: 20
+  map_pins: 6
+  pin_map:
+    A0: 14
+    A1: 15
+    A2: 16
+    A3: 17
+    A4: 18
+    A5: 19
+
+Uno_R4_minima:
+  name: "Uno R4 minima"
+  mcu_arch: ra4m1
+  form_factor: classic
+  spi:
+    - 11
+    - 12
+    - 13
+  i2c:
+    - 18
+    - 19
+  serial:
+    - 0
+    - 1
+  max_pin: 20
+  map_pins: 6
+  pin_map:
+    A0: 14
+    A1: 15
+    A2: 16
+    A3: 17
+    A4: 18
+    A5: 19
+
+Nano_33_IoT:
+  name: "Nano 33 IoT"
+  mcu_arch: samd
+  form_factor: nano
+  spi:
+    - 11
+    - 12
+    - 13
+  i2c:
+    - 18
+    - 19
+  serial:
+    - 0
+    - 1
+  max_pin: 22
+  map_pins: 8
+  pin_map:
+    A0: 14
+    A1: 15
+    A2: 16
+    A3: 17
+    A4: 18
+    A5: 19
+    A6: 20
+    A7: 21
+
+Nano_ESP32:
+  name: "Nano ESP32"
+  mcu_arch: esp32
+  form_factor: nano
+  spi:
+    - 11
+    - 12
+    - 13
+  i2c:
+    - 21
+    - 22
+  serial:
+    - 0
+    - 1
+  max_pin: 25
+  map_pins: 8
+  pin_map:
+    A0: 17
+    A1: 18
+    A2: 19
+    A3: 20
+    A4: 21
+    A5: 22
+    A6: 23
+    A7: 24
+  unused_pins:
+    - 14
+    - 15
+    - 16
+
+#
+# フォームファクタの定義
+#
+
+form_factor:
+  - classic
+  - mkr
+  - nano
+  #- mega # 未サポート
+
+grove_shield:
+  mkr:
+    single: 10
+    single_connector:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - A0
+      - A1
+      - A2
+      - A3
+      - A4
+    pair: 4
+    pair_connector:
+      - 5
+      - 11
+      - 13
+      - A5
+  nano:
+    single: 0
+    pair: 8
+    pair_connector:
+      - 0
+      - 2
+      - 4
+      - 6
+      - A0
+      - A2
+      - A6
+      - A4
+  classic:
+    single: 0
+    pair: 13
+    pair_connector:
+      - 0
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - A0
+      - A1
+      - A2
+      - A3
+      - A4
+
+#
+# MCUの定義
+#
+
+mcu_type:
+  - samd
+  - esp32
+  - ra4m1
+  - other
+
+mcu_spec:
+  samd:
+    wdt_support: yes
+    sleep_support: yes
+    vdd: 1 # 1 - 3.3v  , 2 - 5.0v
+  esp32:
+    wdt_support: yes
+    sleep_support: yes
+    vdd: 1 # 1 - 3.3v  , 2 - 5.0v
+  ra4m1:
+    wdt_support: no
+    sleep_support: no
+    vdd: 2 # 1 - 3.3v  , 2 - 5.0v
+
+sensors:
+  i2c:
+    - bme280
+    - bmp180
+    - sht31
+    - sht2x
+    - am232x
+    - lps22hb
+    - hts221
+    - itg3200
+    - mma7660
+    - adxl345
+    - groveI2C_Touch
+    - tcs34725
+    - tsl2561
+  digital:
+    - dht
+    - groveTouch
+    - grovePIR
+    - digitalSwitch
+    - waterDetection
+    - groveLineFinder
+    - groveDistanceInterrupter
+    - groveIrReflect
+  analog:
+    - analogTemperature
+    - adxl335
+    - murataENC03
+    - groveGSR
+    - groveAnalogLight
+    - temt6000
+    - analogRotaryAngle
+    - groveAnalogSound
+    - groveAnalogMoisture
+    - groveCurrent
+
+
+sensor_param:
+  i2c:
+    bme280:
+      vdd : 1 # 0 (dual), 1 (3.3v), 2 (5.0v)
+    bmp180:
+      vdd : 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+    sht31:
+      vdd : 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+    sht2x:
+      vdd : 1 # 0 (dual), 1 (3.3v), 2 (5.0v)
+    am232x:
+      vdd : 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+    lps22hb:
+      vdd : 1 # 0 (dual), 1 (3.3v), 2 (5.0v)
+    hts221:
+      vdd : 1 # 0 (dual), 1 (3.3v), 2 (5.0v)
+    itg3200:
+      vdd : 1 # 0 (dual), 1 (3.3v), 2 (5.0v)
+    mma7660:
+      vdd : 1 # 0 (dual), 1 (3.3v), 2 (5.0v)
+    adxl345:
+      vdd : 1 # 0 (dual), 1 (3.3v), 2 (5.0v)
+    groveI2C_Touch:
+      vdd : 1 # 0 (dual), 1 (3.3v), 2 (5.0v)
+    tcs34725:
+      vdd : 1 # 0 (dual), 1 (3.3v), 2 (5.0v)
+    tsl2561:
+      vdd : 1 # 0 (dual), 1 (3.3v), 2 (5.0v)
+  digital:
+    dht:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    groveTouch:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    grovePIR:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    digitalSwitch:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    waterDetection:
+      vdd: 2 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    groveLineFinder:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    groveDistanceInterrupter:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    groveIrReflect:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+  analog:
+    analogTemperature:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    adxl335:
+      vdd: 1 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 3
+    murataENC03:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    groveGSR:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    groveAnalogLight:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    temt6000:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    analogRotaryAngle:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    groveAnalogSound:
+      vdd: 2 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    groveAnalogMoisture:
+      vdd: 0 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+    groveCurrent:
+      vdd: 2 # 0 (dual), 1 (3.3v), 2 (5.0v)
+      pins: 1
+
+
+
+

@@ -1,0 +1,695 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[2]:
+
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import flet as ft
+from flet_multi_page import subPage
+
+import yaml
+import sys
+import shutil
+import os
+
+
+source_file_name=""
+output_directory_path=""
+help_file="parts/Help/genSketch/help.yaml"
+
+error = ""
+
+top_dir='parts'
+sketch_dir=top_dir+'/sketch/'
+util_dir = top_dir + '/util/'
+sketch_name='AusEx_MqttClient'
+sketch_source = sketch_dir + sketch_name + '.ino'
+RTC_source= util_dir + 'RTC.cpp'
+sensor_hdr = util_dir + 'sensor.h'
+sensor_source =  util_dir + 'sensor.cpp'
+
+def copySketch():
+    global output_directory_path, output_dir, sketch_name, sketch_source
+    #output_dir = output_directory_path + "/" + sketch_name + "/"
+    if not os.path.isdir(output_dir) :
+        os.mkdir(output_dir)
+    if os.path.isfile(output_dir+'config.h') :
+        os.remove(output_dir+'config.h')
+    shutil.copyfile(sketch_source, output_dir+sketch_name+'.ino')
+    shutil.copyfile(RTC_source, output_dir+ 'RTC.cpp')
+    shutil.copyfile(sensor_hdr, output_dir+ 'sensor.h')
+    shutil.copyfile(sensor_source, output_dir+ 'sensor.cpp')
+
+def exec_command():
+    global source_file_name, output_directory_path, sketch_name, output_file , output_dir, error
+    output_dir = output_directory_path + "/" + sketch_name + "/"
+    copySketch()
+    try:
+        with open(source_file_name, mode='r', encoding='utf-8') as f:
+            configuration = yaml.safe_load(f)
+    except Exception as e:
+        error = 'Exception occurred while loading source YAML file...'
+        return error
+    try:
+        output_file = open(output_dir+"config.h", mode='w', encoding='utf-8')
+    except Exception as e1:
+        error = 'Exception occurred at opening output file...'
+        
+    platform(configuration['platform'])
+    common(configuration['common'])
+    network(configuration['network'])
+    safety(configuration['safety'])
+    sensor(configuration['sensor'])
+    #
+    # I2C インターフェース
+    #
+    if 'sht31' in configuration:
+        sht31(configuration['sht31'])
+    if 'sht2x' in configuration:
+        sht2x(configuration['sht2x'])
+    if 'am232x' in configuration:
+        am232x(configuration['am232x'])
+    if 'bme280' in configuration:
+        bme280(configuration['bme280'])
+    if 'bmp180' in configuration:
+        bmp180(configuration['bmp180'])
+    if 'adxl345' in configuration:
+        adxl345(configuration['adxl345'])
+    if 'mma7660' in configuration:
+        mma7660(configuration['mma7660'])
+    if 'itg3200' in configuration:
+        itg3200(configuration['itg3200'])
+    if 'groveI2C_Touch' in configuration:
+        groveI2C_Touch(configuration['groveI2C_Touch'])
+    if 'tcs34725' in configuration:
+        tcs34725(configuration['tcs34725'])
+    if 'tsl2561' in configuration:
+        tsl2561(configuration['tsl2561'])
+    if 'hts221' in configuration:
+        hts221(configuration['hts221'])
+    if 'lps22hb' in configuration:
+        lps22hb(configuration['lps22hb'])
+    #
+    # デジタルインターフェース
+    #
+    if 'dht' in configuration:
+        dht(configuration['dht'])
+    if 'digitalSwitch' in configuration:
+        digitalSwitch(configuration['digitalSwitch'])
+    if 'groveTouch' in configuration:
+        groveTouch(configuration['groveTouch'])
+    if 'waterDetection' in configuration:
+        waterDetection(configuration['waterDetection'])
+    if 'groveLineFinder' in configuration:
+        groveLineFinder(configuration['groveLineFinder'])
+    if 'groveDistanceInterrupter' in configuration:
+        groveDistanceInterrupter(configuration['groveDistanceInterrupter'])
+    if 'groveIrReflect' in configuration:
+        groveIrReflect(configuration['groveIrReflect'])
+    if 'grovePIR' in configuration:
+        grovePIR(configuration['grovePIR'])
+    #
+    # アナログインターフェース
+    #
+    if 'adxl335' in configuration:
+        adxl335(configuration['adxl335'])
+    if 'murataENC03' in configuration:
+        murataENC03(configuration['murataENC03'])
+    if 'analogTemperature' in configuration:
+        analogTemperature(configuration['analogTemperature'])
+    if 'analogRotaryAngle' in configuration:
+        analogRotaryAngle(configuration['analogRotaryAngle'])
+    if 'groveAnalogLight' in configuration:
+        groveAnalogLight(configuration['groveAnalogLight'])
+    if 'groveAnalogSound' in configuration:
+        groveAnalogSound(configuration['groveAnalogSound'])
+    if 'groveAnalogMoisture' in configuration:
+        groveAnalogMoisture(configuration['groveAnalogMoisture'])
+    if 'groveGSR' in configuration:
+        groveGSR(configuration['groveGSR'])
+    if 'groveCurrent' in configuration:
+        groveCurrent(configuration['groveCurrent'])
+    if 'temt6000' in configuration:
+        temt6000(configuration['temt6000'])
+    #
+    # 後始末
+    #
+    output_file.close()
+    return ''
+
+def errorWindow(page: ft.Page):
+    global error
+    page.title = "Error"
+    #error = "Can not read necesary configuration file of this application."
+    page.window_width = 400
+    page.window_height = 500
+    page.autoscroll = True
+    finish_button = ft.ElevatedButton(text="Close", on_click=lambda e: page.window_destroy())
+    page.add(
+        ft.AppBar(title=ft.Text("Fatal error"),
+        bgcolor=ft.colors.RED),
+    )
+    page.add(
+        ft.Text(error)
+    )
+    page.add(
+        ft.Divider(height=2, color="black")
+    )
+    page.add(finish_button)
+
+def icon_clicked(e):
+    p = subPage(
+        controls=[
+            ft.Markdown(
+                help['top'],
+                selectable=True,
+                extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
+            )
+        ],
+        page_props={"window_width":800},
+    )
+    p.start()
+
+def fileWindow(page: ft.Page):
+    def pick_input_file_result(e: ft.FilePickerResultEvent):
+        global source_file_name
+        if e.files:
+            selected_input_file.value = e.files[0].path
+        else:
+            selected_input_file.value = "Canceled."
+        source_file_name = selected_input_file.value
+        selected_input_file.update()
+
+    def pick_output_file_result(e: ft.FilePickerResultEvent):
+        global output_directory_path
+        selected_output_file.value = e.path
+        output_directory_path = selected_output_file.value
+        selected_output_file.update()
+
+    def exec_button_clicked(e):
+        if source_file_name=="":
+            warning_message.value = "Please select input file."
+            warning_message.update()
+            return
+        if output_directory_path=="":
+            warning_message.value = "Please select output file."
+            warning_message.update()
+            return
+        if '' != exec_command():
+            ft.app(target=errorWindow)
+        page.window_destroy()
+
+        
+    pick_input_file_dialog = ft.FilePicker(on_result=pick_input_file_result)
+    selected_input_file = ft.Text()
+    pick_output_file_dialog = ft.FilePicker(on_result=pick_output_file_result)
+    selected_output_file = ft.Text()
+
+    page.title = "Generate Arduino Sketch"
+    page.window_width = 400
+    page.window_height = 500
+    
+    page.overlay.append(pick_input_file_dialog)
+    page.overlay.append(pick_output_file_dialog)
+
+    exec_button = ft.ElevatedButton(text="Generate Arduino sketch", on_click=exec_button_clicked)
+    warning_message = ft.Text()
+
+    finish_button = ft.ElevatedButton(text="Close", on_click=lambda e: page.window_destroy())
+
+    page.add(
+        ft.AppBar(
+            title=ft.Text("Arduino sketch生成"),
+            bgcolor=ft.colors.BLUE,
+            actions=[
+                ft.IconButton(icon = ft.icons.HELP_CENTER, on_click=icon_clicked),
+            ]
+        ),
+    )
+
+    page.add(
+        ft.Text("Configuration file selection.", style=ft.TextThemeStyle.TITLE_MEDIUM)
+    )
+    page.add(
+        ft.ElevatedButton(
+            "configuration file",
+            icon=ft.icons.UPLOAD_FILE,
+            on_click=lambda _: pick_input_file_dialog.pick_files(
+                allow_multiple=False,
+            ),
+        )
+    )
+    page.add(
+        selected_input_file
+    )
+    #page.add(
+    #    ft.Row(
+    #        [
+    #            ft.ElevatedButton(
+    #                "configuration file",
+    #                icon=ft.icons.UPLOAD_FILE,
+    #                on_click=lambda _: pick_input_file_dialog.pick_files(
+    #                    allow_multiple=False,
+    #                ),
+    #            ),
+    #            selected_input_file,
+    #        ]
+    #    )
+    #)
+    page.add(
+        ft.Divider(height=2, color="black")
+    )
+    page.add(
+        ft.Text("output directory selection.", style=ft.TextThemeStyle.TITLE_MEDIUM)
+    )
+    #page.add(
+    #    ft.Row(
+    #        [
+    #            ft.ElevatedButton(
+    #                "output directory",
+    #                icon=ft.icons.DOWNLOAD,
+    #                on_click=lambda _: pick_output_file_dialog.get_directory_path(
+    #                ),
+    #            ),
+    #            selected_output_file,
+    #        ]
+    #    )
+    #)
+    page.add(
+        ft.ElevatedButton(
+            "output directory",
+            icon=ft.icons.DOWNLOAD,
+            on_click=lambda _: pick_output_file_dialog.get_directory_path(
+            ),
+        )
+    )
+    page.add(
+        selected_output_file
+    )
+    page.add(
+        ft.Divider(height=2, color="black")
+    )
+    page.add(
+        ft.Row(
+            [
+                exec_button,
+                warning_message,
+            ]
+        )
+    )
+    page.add(finish_button)
+
+def platform(platform):
+    global output_file
+    if 'wifi'==platform['network_hardware']['network_type']:
+        print('#define USE_WIFI', file=output_file)
+    elif 'ethernet'==platform['network_hardware']['network_type']:
+        print('#define USE_ETHERNET', file=output_file)
+        print("#define ETHERNET_CHIP_SELECT %d" % platform['network_hardware']['ethernet_chip_select'], file=output_file)
+    if 'RTC8564NB'==platform['rtc']['rtc_type']:
+        print('#define USE_RTC, file=output_file')
+        print('#define USE_RTC8564NB', file=output_file)
+    elif 'DS1307'==platform['rtc']['rtc_type']:
+        print('#define USE_RTC', file=output_file)
+        print('#define USE_DS1307', file=output_file)
+    elif 'DS3231'==platform['rtc']['rtc_type']:
+        print('#define USE_RTC', file=output_file)
+        print('#define USE_DS3231', file=output_file)
+    elif 'PCF8523'==platform['rtc']['rtc_type']:
+        print('#define USE_RTC', file=output_file)
+        print('#define USE_PCF8523', file=output_file)
+    elif 'RV8803'==platform['rtc']['rtc_type']:
+        print('#define USE_RTC', file=output_file)
+        print('#define USE_RV8803', file=output_file)
+    elif 'RX8025'==platform['rtc']['rtc_type']:
+        print('#define USE_RTC', file=output_file)
+        print('#define USE_RX8025', file=output_file)
+    elif 'RX8900'==platform['rtc']['rtc_type']:
+        print('#define USE_RTC', file=output_file)
+        print('#define USE_RX8900, file=output_file')
+    if platform['color_led']['use_led']:
+        print('#define USE_COLOR_LED', file=output_file)
+        print("#define LED_DATA_PIN %d" % platform['color_led']['led_data_pin'], file=output_file)
+        print("#define LED_CLK_PIN %d" % platform['color_led']['led_clk_pin'], file=output_file)
+        print("#define LED_DURATION %d" % platform['color_led']['led_duration'], file=output_file)
+        print("#define LED_SHORT_DURATION %s" % platform['color_led']['led_short_duration'], file=output_file)
+    if platform['sd']['use_sd']:
+        print("#define SD_CHIP_SELECT %s" % platform['sd']['sd_chip_select'], file=output_file)
+    print("#define WDT_DURATION %d" % platform['wdt']['wdt_duration'], file=output_file)
+    print("#define WDT_SHORT_DURATION %d" % platform['wdt']['wdt_short_duration'], file=output_file)
+
+def common(common):
+    global output_file
+    print("#define SERIAL_SPEED %d" % common['serial']['speed'], file=output_file)
+    print("#define HOSTNAME \"%s\"" % common['log']['host_name'], file=output_file)
+    print("#define APP_NAME \"%s\"" % common['log']['app_name'], file=output_file)
+    if common['log']['use_logfile']:
+        print('#define USE_LOG_FILE', file=output_file)
+        print("#define LOGFILE_NAME_HEAD \"%s\"" % common['log']['logfile_name_hdr'], file=output_file)
+        print("#define LOG_FILE_SIZE_MAX %d" % common['log']['logfile_size_max'], file=output_file)
+    if common['log']['log_rotate']:
+        print('#define LOG_ROTATE', file=output_file)
+    if common['log']['use_serial_log']:
+        print('#define USE_LOG_SERIAL', file=output_file)
+    if common['clock']['use_ntp']:
+        print('#define USE_NTP', file=output_file)
+    if common['clock']['update_rtc_by_ntp']:
+        print('#define UPDATE_RTC_BY_NTP', file=output_file)
+
+def network(network):
+    global output_file
+    print("#define SSID_STR \"%s\"" % network['wifi']['ssid'], file=output_file)
+    print("#define WIFI_PASS \"%s\"" % network['wifi']['wifi_pass'], file=output_file)
+    print("#define FIX_MAC_ADDRESS %s, %s, %s, %s, %s, %s" % (network['ethernet']['mac_addr'][0], network['ethernet']['mac_addr'][1], network['ethernet']['mac_addr'][2], network['ethernet']['mac_addr'][3], network['ethernet']['mac_addr'][4], network['ethernet']['mac_addr'][5]), file=output_file)
+    if network['ip']['use_dhcp']:
+        print('#define USE_DHCP', file=output_file)
+    print("#define SELF_IP_ADDRESS %s, %s, %s, %s" % (network['ip']['ip_addr'][0], network['ip']['ip_addr'][1], network['ip']['ip_addr'][2], network['ip']['ip_addr'][3]), file=output_file)
+    print("#define DNS_SERVER_ADDRESS %s, %s, %s, %s" % (network['ip']['dns_server'][0], network['ip']['dns_server'][1], network['ip']['dns_server'][2], network['ip']['dns_server'][3]), file=output_file)
+    print("#define GATEWAY_ADDRESS %s, %s, %s, %s" % (network['ip']['gateway'][0], network['ip']['gateway'][1], network['ip']['gateway'][2], network['ip']['gateway'][3]), file=output_file)
+    print("#define NETMASK %s, %s, %s, %s" % (network['ip']['netmask'][0], network['ip']['netmask'][1], network['ip']['netmask'][2], network['ip']['netmask'][3]), file=output_file)
+    if 'json'==network['mqtt']['mqtt_format']:
+        print('#define MQTT_MESSAGE_FORMAT FORMAT_TYPE_JSON', file=output_file)
+    elif 'syslog'==network['mqtt']['mqtt_format']:
+        print('#define MQTT_MESSAGE_FORMAT FORMAT_TYPE_SYSLOG', file=output_file)
+    else:
+        print('#define MQTT_MESSAGE_FORMAT FORMAT_TYPE_PLAIN_TEXT', file=output_file)
+    if network['mqtt']['mqtt_auth']:
+        print('#define USE_MQTT_AUTH', file=output_file)
+    print("#define MQTT_AUTH_USERNAME \"%s\"" % network['mqtt']['mqtt_user'], file=output_file)
+    print("#define MQTT_AUTH_PASSWORD \"%s\"" % network['mqtt']['mqtt_pass'], file=output_file)
+    print("#define MQTT_TOPIC \"%s\"" % network['mqtt']['mqtt_topic'], file=output_file)
+    print("#define MQTT_SERVER_ADDR \"%s\"" % network['mqtt']['mqtt_server'], file=output_file)
+    print("#define MQTT_PORT %d" % network['mqtt']['mqtt_port'], file=output_file)
+
+def safety(safety):
+    global output_file
+    if safety['use_wdt']:
+        print('#define USE_WDT', file=output_file)
+
+def sensor(sensor):
+    global output_file
+    sleepMode_dict = { 'idle' : 'MODE_IDLE', 'adc' : 'MODE_ADC' , 'power_save' : 'MODE_PWR_SAVE' , 'standby' : 'MODE_STANDBY' , 'power_down' : 'MODE_PWR_DOWN' }
+    print("#define MAX_SLEEP_DURATION %d" % sensor['sensor_interval'], file=output_file)
+    if sensor['low_power']['use_sleep']:
+        print('#define USE_SLEEP', file=output_file)
+    print("#define SLEEP_MODE %s" % sleepMode_dict[sensor['low_power']['sleep_mode']], file=output_file)
+
+#
+# I2C インターフェース
+#
+def sht31(sht31):
+    global output_file, output_dir
+    if sht31['use_sht31']:
+        shutil.copyfile(util_dir+'SHT31.cpp', output_dir+'SHT31.cpp')
+        print('#define USE_SENSOR_SHT31', file=output_file)
+        print("#define SENSOR_ID_SHT31_TEMPERATURE %d" % sht31['temperature_sensor_id'], file=output_file)
+        print("#define SENSOR_ID_SHT31_HUMIDITY %d" % sht31['humidity_sensor_id'], file=output_file)
+
+def sht2x(sht2x):
+    global output_file, output_dir
+    if sht2x['use_sht2x']:
+        shutil.copyfile(util_dir+'SHT2X.cpp', output_dir+'SHT2X.cpp')
+        print('#define USE_SENSOR_SHT2X', file=output_file)
+        print("#define SENSOR_SHT2X_TYPE %s" % sht2x['sht2x_type'], file=output_file)
+        print("#define SENSOR_ID_SHT2X_TEMPERATURE %d" % sht2x['temperature_sensor_id'], file=output_file)
+        print("#define SENSOR_ID_SHT2X_HUMIDITY %d" % sht2x['humidity_sensor_id'], file=output_file)
+
+def am232x(am232x):
+    global output_file, output_dir
+    if am232x['use_am232x']:
+        shutil.copyfile(util_dir+'AM232X.cpp', output_dir+'AM232X.cpp')
+        print('#define USE_SENSOR_AM232X', file=output_file)
+        print("#define SENSOR_AM232X_TYPE %s" % am232x['am232x_type'], file=output_file)
+        print("#define SENSOR_ID_AM232X_TEMPERATURE %d" % am232x['temperature_sensor_id'], file=output_file)
+        print("#define SENSOR_ID_AM232X_HUMIDITY %d" % am232x['humidity_sensor_id'], file=output_file)
+
+def bme280(bme280):
+    global output_file, output_dir
+    if bme280['use_bme280']:
+        shutil.copyfile(util_dir+'BME280.cpp', output_dir+'BME280.cpp')
+        print('#define USE_SENSOR_BME280', file=output_file)
+        print('#define BME280_I2C', file=output_file)
+        print("#define SENSOR_ID_BME280_TEMPERATURE %d" % bme280['temperature_sensor_id'], file=output_file)
+        print("#define SENSOR_ID_BME280_HUMIDITY %d" % bme280['humidity_sensor_id'], file=output_file)
+        print("#define SENSOR_ID_BME280_PRESSURE %d" % bme280['pressure_sensor_id'], file=output_file)
+
+def bmp180(bmp180):
+    global output_file, output_dir
+    if bmp180['use_bmp180']:
+        shutil.copyfile(util_dir+'BMP180.cpp', output_dir+'BMP180.cpp')
+        print('#define USE_SENSOR_BMP180', file=output_file)
+        print("#define BMP180_MODE %s" % bmp180['bmp180_mode'], file=output_file)
+        print("#define SENSOR_ID_BMP180 %d" % bmp180['sensor_id'], file=output_file)
+
+def adxl345(adxl345):
+    global output_file, output_dir
+    if adxl345['use_adxl345']:
+        shutil.copyfile(util_dir+'ADXL345.cpp', output_dir+'ADXL345.cpp')
+        print('#define USE_SENSOR_ADXL345', file=output_file)
+        print('#define ADXL_INTER_I2C', file=output_file)
+        print("#define ADXL345_DATA_RATE %s" % adxl345['adxl345_data_rate'], file=output_file)
+        print("#define ADXL345_RANGE %s" % adxl345['adxl345_range'], file=output_file)
+        print("#define SENSOR_ID_ADXL345 %d" % adxl345['sensor_id'], file=output_file)
+
+def mma7660(mma7660):
+    global output_file, output_dir
+    if mma7660['use_mma7660']:
+        shutil.copyfile(util_dir+'MMA7660.cpp', output_dir+'MMA7660.cpp')
+        print('#define USE_SENSOR_MMA7660FC', file=output_file)
+        print("#define MMA7660FC_SAMPLING_RATE %d" % mma7660['mma7660_rate'], file=output_file)
+        print("#define MMA7660FC_SAMPLING_DELAY %d" % mma7660['mma7660_delay'], file=output_file)
+        print("#define SENSOR_ID_MMA7660 %d" % mma7660['sensor_id'], file=output_file)
+
+def itg3200(itg3200):
+    global output_file, output_dir
+    if itg3200['use_itg3200']:
+        shutil.copyfile(util_dir+'ITG3200.cpp', output_dir+'ITG3200.cpp')
+        print('#define USE_SENSOR_ITG3200', file=output_file)
+        print("#define ITG3200_SAMPLES %d" % itg3200['itg3200_samples'], file=output_file)
+        print("#define ITG3200_SAMPLE_DELAY %d" % itg3200['itg3200_delay'], file=output_file)
+        print("#define SENSOR_ID_ITG3200 %d" % itg3200['sensor_id'], file=output_file)
+
+def groveI2C_Touch(groveI2C_Touch):
+    global output_file, output_dir
+    if groveI2C_Touch['use_groveI2C_Touch']:
+        shutil.copyfile(util_dir+'MPR121.cpp', output_dir+'MPR121.cpp')
+        print('#define USE_SENSOR_GROVE_I2C_TOUCH', file=output_file)
+        print("#define SENSOR_ID_MPR121 %d" % groveI2C_Touch['sensor_id'], file=output_file)
+
+def tcs34725(tcs34725):
+    global output_file, output_dir
+    if tcs34725['use_tcs34725']:
+        shutil.copyfile(util_dir+'TCS34725.cpp', output_dir+'TCS34725.cpp')
+        print('#define USE_SENSOR_TCS34725', file=output_file)
+        print("#define TCS34725_INTEGRATIONTIME %s" % tcs34725['tcs34725_int'], file=output_file)
+        print("#define TCS34725_GAIN %s" % tcs34725['tcs34725_gain'], file=output_file)
+        print("#define SENSOR_ID_TCS34725 %d" % tcs34725['sensor_id'], file=output_file)
+
+def tsl2561(tsl2561):
+    global output_file, output_dir
+    if tsl2561['use_tsl2561']:
+        shutil.copyfile(util_dir+'TSL2561.cpp', output_dir+'TSL2561.cpp')
+        print('#define USE_SENSOR_TSL2561', file=output_file)
+        print("#define TSL2561_I2C_ADDR %s" % tsl2561['tsl2561_addr'], file=output_file)
+        print("#define TSL2561_GAIN %s" % tsl2561['tsl2561_gain'], file=output_file)
+        print("#define TSL2561_INT_TIME %s" % tsl2561['tsl2561_int'], file=output_file)
+        print("#define SENSOR_ID_TSL2561 %d" % tsl2561['sensor_id'], file=output_file)
+
+def hts221(hts221):
+    global output_file, output_dir
+    if hts221['use_hts221']:
+        shutil.copyfile(util_dir+'HTS221.cpp', output_dir+'HTS221.cpp')
+        print('#define USE_SENSOR_HTS221', file=output_file)
+        print("#define SENSOR_ID_HTS221_TEMPERATURE %d" % hts221['temperature_sensor_id'], file=output_file)
+        print("#define SENSOR_ID_HTS221_HUMIDITY %d" % hts221['humidity_sensor_id'], file=output_file)
+
+def lps22hb(lps22hb):
+    global output_file, output_dir
+    if lps22hb['use_lps22hb']:
+        shutil.copyfile(util_dir+'LPS22HB.cpp', output_dir+'LPS22HB.cpp')
+        print('#define USE_SENSOR_LPS22HB', file=output_file)
+        print("#define SENSOR_ID_LPS22HB %d" % lps22hb['sensor_id'], file=output_file)
+
+#
+# デジタルインターフェース
+#
+def dht(dht):
+    global output_file, output_dir
+    if dht['use_dht']:
+        shutil.copyfile(util_dir+'DHT.cpp', output_dir+'DHT.cpp')
+        print('#define USE_SENSOR_DHT', file=output_file)
+        print("#define SENSOR_DHT_PIN %d" % dht['dht_pin'], file=output_file)
+        print("#define DHTTYPE %s" % dht['dht_type'], file=output_file)
+        print("#define SENSOR_ID_DHT_TEMPERATURE %d" % dht['temperature_sensor_id'], file=output_file)
+        print("#define SENSOR_ID_DHT_HUMIDITY %d" % dht['humidity_sensor_id'], file=output_file)
+
+def digitalSwitch(digitalSwitch):
+    global output_file, output_dir
+    if digitalSwitch['use_digitalSwitch']:
+        shutil.copyfile(util_dir+'Switch.cpp', output_dir+'Switch.cpp')
+        print('#define USE_SENSOR_DIGITAL_SWITCH', file=output_file)
+        print("#define SENSOR_DIGITAL_SWITCH_PIN %d" % digitalSwitch['digitalSwitch_pin'], file=output_file)
+        print("#define SENSOR_ID_DIGITAL_SWITCH %d" % digitalSwitch['sensor_id'], file=output_file)
+
+def groveTouch(groveTouch):
+    global output_file, output_dir
+    if groveTouch['use_groveTouch']:
+        shutil.copyfile(util_dir+'GroveTouchSensor.cpp', output_dir+'GroveTouchSensor.cpp')
+        print('#define USE_SENSOR_TOUCH', file=output_file)
+        print("#define SENSOR_TOUCH_PIN %d" % groveTouch['groveTouch_pin'], file=output_file)
+        print("#define SENSOR_ID_TOUCH %d" % groveTouch['sensor_id'], file=output_file)
+
+def waterDetection(waterDetection):
+    global output_file, output_dir
+    if waterDetection['use_waterDetection']:
+        shutil.copyfile(util_dir+'GroveWaterSensor.cpp', output_dir+'GroveWaterSensor.cpp')
+        print('#define USE_SENSOR_WATER_DETECTION', file=output_file)
+        print("#define SENSOR_WATER_DETECTION_PIN %d" % waterDetection['waterDetection_pin'], file=output_file)
+        print("#define SENSOR_ID_WATER_DETECTION %d" % waterDetection['sensor_id'], file=output_file)
+
+def groveLineFinder(groveLineFinder):
+    global output_file, output_dir
+    if groveLineFinder['use_groveLineFinder']:
+        shutil.copyfile(util_dir+'GroveLineFinder.cpp', output_dir+'GroveLineFinder.cpp')
+        print('#define USE_SENSOR_LINE_FINDER', file=output_file)
+        print("#define SENSOR_LINE_FINDER_PIN %d" % groveLineFinder['groveLineFinder_pin'], file=output_file)
+        print("#define SENSOR_ID_LINE_FINDER %d" % groveLineFinder['sensor_id'], file=output_file)
+
+def groveDistanceInterrupter(groveDistanceInterrupter):
+    global output_file, output_dir
+    if groveDistanceInterrupter['use_groveDistanceInterrupter']:
+        shutil.copyfile(util_dir+'GroveIrDistance.cpp', output_dir+'GroveIrDistance.cpp')
+        print('#define USE_SENSOR_IR_DISTANCE_INTERRUPTER', file=output_file)
+        print("#define SENSOR_IR_DISTANCE_INTERRUPTER_PIN %d" % groveDistanceInterrupter['groveDistanceInterrupter_pin'], file=output_file)
+        print("#define SENSOR_ID_IR_DISTANCE_INTERRUPTER %d" % groveDistanceInterrupter['sensor_id'], file=output_file)
+
+def groveIrReflect(groveIrReflect):
+    global output_file, output_dir
+    if groveIrReflect['use_groveIrReflect']:
+        shutil.copyfile(util_dir+'GroveIrReflective.cpp', output_dir+'GroveIrReflective.cpp')
+        print('#define USE_SENSOR_IR_RPR_220', file=output_file)
+        print("#define SENSOR_IR_RPR_220_PIN %d" % groveIrReflect['groveIrReflect_pin'], file=output_file)
+        print("#define SENSOR_ID_IR_RPR_220 %d" % groveIrReflect['sensor_id'], file=output_file)
+
+def grovePIR(grovePIR):
+    global output_file, output_dir
+    if grovePIR['use_grovePIR']:
+        shutil.copyfile(util_dir+'PIR.cpp', output_dir+'PIR.cpp')
+        print('#define USE_SENSOR_PIR', file=output_file)
+        print("#define SENSOR_PIR_PIN %d" % grovePIR['grovePIR_pin'], file=output_file)
+        print("#define SENSOR_ID_PIR %d" % grovePIR['sensor_id'], file=output_file)
+#
+# アナログインターフェース
+#
+def adxl335(adxl335):
+    global output_file, output_dir
+    if adxl335['use_adxl335']:
+        shutil.copyfile(util_dir+'ADXL335.cpp', output_dir+'ADXL335.cpp')
+        print('#define USE_SENSOR_ADXL335', file=output_file)
+        print("#define SENSOR_ADXL335_X_PIN %s" % adxl335['adxl335_x_pin'], file=output_file)
+        print("#define SENSOR_ADXL335_Y_PIN %s" % adxl335['adxl335_y_pin'], file=output_file)
+        print("#define SENSOR_ADXL335_Z_PIN %s" % adxl335['adxl335_z_pin'], file=output_file)
+        print("#define SENSOR_ID_ADXL335 %d" % adxl335['sensor_id'], file=output_file)
+
+def murataENC03(murataENC03):
+    global output_file, output_dir
+    if murataENC03['use_murataENC03']:
+        shutil.copyfile(util_dir+'ENC03R.cpp', output_dir+'ENC03R.cpp')
+        print('#define USE_SENSOR_MURATA_ENC03R', file=output_file)
+        print("#define SENSOR_MURATA_ENC03R_PIN %s" % murataENC03['murataENC03_pin'], file=output_file)
+        print("#define SENSOR_MURATA_ENC03R_TRY %d" % murataENC03['murataENC03_try'], file=output_file)
+        print("#define SENSOR_ID_MURATA_ENC03R %d" % murataENC03['sensor_id'], file=output_file)
+
+def analogTemperature(analogTemperature):
+    global output_file, output_dir
+    if analogTemperature['use_analogTemperature']:
+        shutil.copyfile(util_dir+'GroveAnalogTemperature.cpp', output_dir+'GroveAnalogTemperature.cpp')
+        print('#define USE_SENSOR_ANALOG_TEMPERATURE', file=output_file)
+        print("#define SENSOR_GROVE_ANALOG_TEMPERATURE_PIN %s" % analogTemperature['analogTemperature_pin'], file=output_file)
+        print("#define SENSOR_ID_GROVE_ANALOG_TEMPERATURE %d" % analogTemperature['sensor_id'], file=output_file)
+
+def analogRotaryAngle(analogRotaryAngle):
+    global output_file, output_dir
+    if analogRotaryAngle['use_analogRotaryAngle']:
+        shutil.copyfile(util_dir+'GroveRotaryAngle.cpp', output_dir+'GroveRotaryAngle.cpp')
+        print('#define USE_SENSOR_GROVE_ANALOG_ROTARY_ANGLE', file=output_file)
+        print("#define SENSOR_GROVE_ROTARY_ANGLE_PIN %s" % analogRotaryAngle['analogRotaryAngle_pin'], file=output_file)
+        print("#define SENSOR_GROVE_ROTARY_ANGLE_VDD %f" % analogRotaryAngle['analogRotaryAngle_vdd'], file=output_file)
+        print("#define SENSOR_ID_GROVE_ROTARY_ANGLE %d" % analogRotaryAngle['sensor_id'], file=output_file)
+
+def groveAnalogLight(groveAnalogLight):
+    global output_file, output_dir
+    if groveAnalogLight['use_groveAnalogLight']:
+        shutil.copyfile(util_dir+'GroveAnalogLight.cpp', output_dir+'GroveAnalogLight.cpp')
+        print('#define USE_SENSOR_GROVE_ANALOG_LIGHT', file=output_file)
+        print("#define SENSOR_GROVE_ANALOG_LIGHT_PIN %s" % groveAnalogLight['groveAnalogLight_pin'], file=output_file)
+        print("#define SENSOR_ID_GROVE_ANALOG_LIGHT %d" % groveAnalogLight['sensor_id'], file=output_file)
+
+def groveAnalogSound(groveAnalogSound):
+    global output_file, output_dir
+    if groveAnalogSound['use_groveAnalogSound']:
+        shutil.copyfile(util_dir+'GroveAnalogSound.cpp', output_dir+'GroveAnalogSound.cpp')
+        print('#define USE_SENSOR_GROVE_ANALOG_SOUND', file=output_file)
+        print("#define SENSOR_GROVE_SOUND_PIN %s" % groveAnalogSound['groveAnalogSound_pin'], file=output_file)
+        print("#define SENSOR_ID_GROVE_ANALOG_SOUND %d" % groveAnalogSound['sensor_id'], file=output_file)
+
+def groveAnalogMoisture(groveAnalogMoisture):
+    global output_file, output_dir
+    if groveAnalogMoisture['use_groveAnalogMoisture']:
+        shutil.copyfile(util_dir+'GroveAnalogMoisture.cpp', output_dir+'GroveAnalogMoisture.cpp')
+        print('#define USE_SENSOR_GROVE_MOISTURE', file=output_file)
+        print("#define SENSOR_GROVE_MOISTURE_PIN %s" % groveAnalogMoisture['groveAnalogMoisture_pin'], file=output_file)
+        print("#define SENSOR_ID_GROVE_MOISTURE %d" % groveAnalogMoisture['sensor_id'], file=output_file)
+
+def groveGSR(groveGSR):
+    global output_file, output_dir
+    if groveGSR['use_groveGSR']:
+        shutil.copyfile(util_dir+'GroveAnalogGSR.cpp', output_dir+'GroveAnalogGSR.cpp')
+        print('#define USE_SENSOR_GROVE_GSR', file=output_file)
+        print("#define SENSOR_GROVE_GSR_PIN %s" % groveGSR['groveGSR_pin'], file=output_file)
+        print("#define SENSOR_ID_GROVE_GSR %d" % groveGSR['sensor_id'], file=output_file)
+
+def groveCurrent(groveCurrent):
+    global output_file, output_dir
+    if groveCurrent['use_groveCurrent']:
+        shutil.copyfile(util_dir+'GroveAnalogCurrent.cpp', output_dir+'GroveAnalogCurrent.cpp')
+        print('#define USE_SENSOR_GROVE_CURRENT', file=output_file)
+        print("#define SENSOR_GROVE_CURRENT_PIN %s" % groveCurrent['groveCurrent_pin'], file=output_file)
+        print("#define SENSOR_GROVE_CURRENT_VDD %f" % groveCurrent['groveCurrent_vdd'], file=output_file)
+        print("#define SENSOR_GROVE_CURRENT_MODE %d" % groveCurrent['groveCurrent_mode'], file=output_file)
+        print("#define SENSOR_ID_GROVE_CURRENT %d" % groveCurrent['sensor_id'], file=output_file)
+
+def temt6000(temt6000):
+    global output_file, output_dir
+    if temt6000['use_temt6000']:
+        shutil.copyfile(util_dir+'TEMT6000.cpp', output_dir+'TEMT6000.cpp')
+        print('#define USE_SENSOR_TEMT6000', file=output_file)
+        print("#define SENSOR_TEMT6000_PIN %s" % temt6000['temt6000_pin'], file=output_file)
+        print("#define SENSOR_TEMT6000_VDD %s" % temt6000['temt6000_vdd'], file=output_file)
+        print("#define SENSOR_ID_TEMT6000 %d" % temt6000['sensor_id'], file=output_file)
+
+def load_init_file():
+    global help_file, help, error
+    try:
+        with open(help_file, mode='r', encoding='utf-8') as f:
+            help = yaml.safe_load(f)
+    except Exception as e:
+        error = 'Exception occurred while loading configuration YAML file of this application...'
+        return error
+    return ''
+
+if __name__ == "__main__":
+    if "" == load_init_file():
+        ft.app(target=fileWindow)
+    else:
+        ft.app(target=errorWindow)
+
+
+# In[ ]:
+
+
+
+
