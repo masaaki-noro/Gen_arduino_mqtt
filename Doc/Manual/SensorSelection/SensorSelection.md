@@ -99,7 +99,7 @@ Arduinoには動作電圧が5Vのものと3.3Vのものがあり，また，CPU�
 |[Grove - Infrared Reflective Sensor](sensors/Grove_IR_Refrective_Sensor.md)|物体検出(赤外線反射)|デジタル✕1|◯|
 |[Grove - Rotary Angle Sensor](sensors/Rotary_Angle.md)|回転角度|アナログ✕1|◯|
 |[Grove - Sound Sensor](sensors/Grove_Analog_Sound.md)|音の大小(デジタル値ではない)|アナログ✕1|◯|
-|[Grove水分センサー](sensors/Grove_Moisture.md)|土の湿り気|アナログ✕1|◯|
+|[Grove水分センサ](sensors/Grove_Moisture.md)|土の湿り気|アナログ✕1|◯|
 |[Grove電流センサ](sensors/Grove_Current.md)|電流の強弱(正確な値ではない)|アナログ✕1|◯|
 
 ### Groveコネクタ列

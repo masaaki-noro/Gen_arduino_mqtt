@@ -95,6 +95,16 @@ NTPClient timeClient(ntpUDP, 9 * 60 * 60);  // JST
 ```
 上の6つのAPIのうちの1つを使うように変更すれば良い．
 
+スケッチ(``ルートディレクトリ/parts/sketch/AusEx_MqttClient.ino``)のNTPクライアントの定義部分は以下のようになっている．
+```
+NTPClient timeClient(ntpUDP, 9 * 60 * 60)
+```
+
+これを下のように修正する．
+```
+NTPClient timeClient(ntpUDP, 指定したいサーバ名 or IPアドレス ,9 * 60 * 60)
+```
+
 
 ***
 - [マニュアルトップに戻る](../Manual.md)
