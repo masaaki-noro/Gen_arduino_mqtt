@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[4]:
+# In[1]:
 
 
 #!/usr/bin/env python
@@ -370,7 +370,7 @@ SHT31_flag = ft.Dropdown(
 
 # SHT2X
 def SHT2x_flag_changed(e):
-    configuration['sht31']['use_sht2x'] = SHT2x_flag.value
+    configuration['sht2x']['use_sht2x'] = SHT2x_flag.value
 
 SHT2x_flag = ft.Dropdown(
     label="SHT2x",
@@ -4159,7 +4159,7 @@ def editWindow(page: ft.Page):
         elif troute.match("/view509"):
             lastView="/view509"
             saveMenuValue()
-            if not checkYamlVal(Grove_moisture_flag.value):
+            if not checkYamlVal(Grove_current_flag.value):
                 page.go("/view999")
             else:
                 page.views.append(create_view509())
