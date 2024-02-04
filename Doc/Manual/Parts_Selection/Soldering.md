@@ -2,7 +2,7 @@
 ここでは，用意した部材のうち，センサ以外ではんだ付けが必要なものの作業について説明する．
 
 
-## 機種別のはんだ付けの要/不要
+## 1. 機種別のはんだ付けの要/不要
 
 RTCは推奨品を使う場合，必ずピンのはんだ付けが必要であるが，それ以外の部品については，機種によってはんだ付けの必要性が異なる．
 下の表は推奨品を使う場合のはんだ付けの必要性をまとめたものである．
@@ -17,49 +17,63 @@ RTCは推奨品を使う場合，必ずピンのはんだ付けが必要であ�
 - 注1 : マイクロSDを利用する場合のみ必要
 - 注2 : Seeed StudioのSDシールドではなく，SparkfunのマイクロSDのシールドを用いる場合ははんだ付けが必要
 
-## RTC
+## 2. RTC
 
 RTCは推奨品のDS3231を利用することとするが， PCF8523 (NXP Semiconductors) https://www.adafruit.com/product/3295 , https://www.adafruit.com/product/5189でも同じである．
 
-- Adafruit DS3231 Precision RTC Breakout
-![Adafruit DS3231](../images/Adafruit_DS3231.jpg)
-https://www.adafruit.com/product/3013
+- [Adafruit DS3231 Precision RTC Breakout](https://www.adafruit.com/product/3013)
 
-- ピンヘッダ　（オスＬ型）
-https://akizukidenshi.com/catalog/g/gC-01627/
+<div style="text-align: center;">
+<img src="../images/Adafruit_DS3231.jpg" width="40%">
+</div>
+
+- [ピンヘッダ　（オスＬ型）](https://akizukidenshi.com/catalog/g/gC-01627/)
 
 
 ピンヘッダは端子に名前が印字されているのとは反対側から差し込み，名前が印字されている側ではんだ付けを行う．
 
-![RTCはんだ付け](../images/RTCはんだ付け.png)
+<div style="text-align: center;">
+<img src="../images/RTCはんだ付け.png" width="80%">
+</div>
+
 
 ### ボタン電池
 AdafruitのRTCモジュールは，基板裏側に電池ボックスが存在し，表面に「プラス(+)」の印がついている．
 このプラスが見えている面にボタン電池の「+」の印字のある面を向けて挿入する．
 
-![RTCとボタン電池](../images/RTCとボタン電池.png)
+<div style="text-align: center;">
+<img src="../images/RTCとボタン電池.png" width="80%">
+</div>
 
 
-## マイクロSDモジュール
+
+## 3. [マイクロSDモジュール](https://www.adafruit.com/product/254)
 NanoファミリでマイクロSDを利用する場合，シールドが利用できないため，下のSDモジュールをジャンパケーブルでArduinoに接続することになる．
 
-![マイクロSDモジュール](../images/マイクロSDモジュール.jpg)
-https://www.adafruit.com/product/254
+<div style="text-align: center;">
+<img src="../images/マイクロSDモジュール.jpg" width="60%">
+</div>
+
+
 
 
 上記モジュールにはピンヘッダが添付されているが，直線上のものが添付されているため，これを利用すると配線が垂直になり
 面倒なことが多いため，下のようなL型のピンヘッダを使うことを勧める．
-- ピンヘッダ　（オスＬ型）
-https://akizukidenshi.com/catalog/g/gC-01627/
+
+- [ピンヘッダ　（オスＬ型）](https://akizukidenshi.com/catalog/g/gC-01627/)
+
 
 
 RTCとは異なり，ピンヘッダは端子に名前が印字されているの表側から差し込み，裏側ではんだ付けを行う．
 
-![マイクロSDモジュールはんだ付け](../images/マイクロSDモジュールはんだ付け.png)
+<div style="text-align: center;">
+<img src="../images/マイクロSDモジュールはんだ付け.png" width="60%">
+</div>
 
 
 
-## Classicファミリ用マイクロSDシールド
+
+## 4. Classicファミリ用マイクロSDシールド
 
 Classic用には，SD(大きいもの)用のシールドとマイクロSDのシールド(部品の購入とはんだ付けが必要)の
 いずれかが利用できる．
@@ -67,56 +81,87 @@ Classic用には，SD(大きいもの)用のシールドとマイクロSDのシ�
 SDのものは，マイクロSDのメディアを直接挿せないが，はんだ付けが不要なところが利点である．
 管理者の好みで選択すれば良い．
 
-### SDカードのシールド
-- SD Card Shield
-https://www.seeedstudio.com/SD-Card-Shield-V4-p-1381.html
+### 4.1. SDカードのシールド
+- [SD Card Shield](https://www.seeedstudio.com/SD-Card-Shield-V4-p-1381.html)
 
 
-### マイクロSDのシールド
+### 4.2. マイクロSDのシールド
 利用するものは以下の部材である．
 
-- SparkFun microSD Shield
-https://www.sparkfun.com/products/12761
+- [SparkFun microSD Shield](https://www.sparkfun.com/products/12761)
 
-- ピンソケット
-https://www.adafruit.com/product/85
-https://akizukidenshi.com/catalog/g/gC-17103/
-https://akizukidenshi.com/catalog/g/gC-17102/
+
+
+- ピンソケット : [Adafruit](https://www.adafruit.com/product/85),  [秋月電子1](https://akizukidenshi.com/catalog/g/gC-17103/), [秋月電子2](https://akizukidenshi.com/catalog/g/gC-17102/)
+
+
 
 ピンソケットが重複しているのは，
 [adafruitのピンソケット](https://www.adafruit.com/product/85)」に印字がなく，
 今後の使い勝手を考えて，秋月電子で売っているArduino用のピンソケット([これ](https://akizukidenshi.com/catalog/g/gC-17103/)と[これ](https://akizukidenshi.com/catalog/g/gC-17102/))とSPIの端子以外は入れ替えた．
 
 これらを下図のようにはんだ付けする．
-![Sparcfun_sd_shield](../images/Sparcfun_sd_shield.JPG)
+
+<div style="text-align: center;">
+<img src="../images/Sparcfun_sd_shield.JPG" width="60%">
+</div>
 
 
 
-## Nano用Groveシールド
+
+
+
+## 5. Nano用Groveシールド
 下の写真を見てわかるように，Nano用のGroveシールドには，ジャンパケーブル等外部に配線を引き出すためのコネクタ等はGroveの
 コネクタのみとなっている．
 
 ただし，配線を引き出すためのピンソケットをはんだ付けするための穴は存在する．
 
-- Grove Shield for Arduino Nano
-![Grove_nano_shield](../images/Grove_nano_shield.jpg)
-https://www.seeedstudio.com/Grove-Shield-for-Arduino-Nano-p-4112.html
+
+- [Grove Shield for Arduino Nano](https://www.seeedstudio.com/Grove-Shield-for-Arduino-Nano-p-4112.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_nano_shield.jpg" width="70%">
+</div>
+
+
 
 そのため，以下のピンソケットをはんだ付けする．
 
-- ピンソケット
-![ピンソケット](../images/ピンソケット.jpg)
-https://akizukidenshi.com/catalog/g/gC-10102/
+- [ピンソケット](https://akizukidenshi.com/catalog/g/gC-10102/)
+
+<div style="text-align: center;">
+<img src="../images/ピンソケット.jpg" width="30%">
+</div>
+
+
+
+
 
 
 ピンソケット2つをそれぞれ下図に従ってはめ込み，裏返す．
-![Grove_nano_shieldとピンソケット](../images/Grove_nano_shieldとピンソケット.png)
+
+<div style="text-align: center;">
+<img src="../images/Grove_nano_shieldとピンソケット.png" width="70%">
+</div>
+
 
 裏返した基板の2つの列に端子が出ているはずなので，そこをはんだ付けする．
-![Grove_nano_shieldはんだ付け場所](../images/Grove_nano_shieldはんだ付け場所.png)
+
+<div style="text-align: center;">
+<img src="../images/Grove_nano_shieldはんだ付け場所.png" width="70%">
+</div>
+
+
 
 はんだ付けしたものは以下のようになる．
-![Grove_nano_shieldはんだ付け](../images/Grove_nano_shieldはんだ付け.png)
+
+
+<div style="text-align: center;">
+<img src="../images/Grove_nano_shieldはんだ付け.png" width="80%">
+</div>
+
+
 
 
 ***

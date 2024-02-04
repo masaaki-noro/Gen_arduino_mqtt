@@ -4,7 +4,7 @@
 
 このICを使ったセンサモジュールには以下のようなものがある．
 
-- Grove - 3-Axis Analog Accelerometer https://wiki.seeedstudio.com/Grove-3-Axis_Analog_Accelerometer/
+- [Grove - 3-Axis Analog Accelerometer](https://wiki.seeedstudio.com/Grove-3-Axis_Analog_Accelerometer/)
 
 チップの動作電圧は，1.8から3.6Vであるが，上記のGroveのモジュールは3.0-5.0Vの範囲の電圧で動作する．
 
@@ -15,8 +15,14 @@
 下の写真は，ADXL335のGroveモジュールに関する解説ページの写真であるが，Arduinoのアナログ端子3つに加えて，電源とGNDの合計5つの端子をジャンパーケーブルで接続する必要がある．
 
 
-- 画像出典 https://wiki.seeedstudio.com/Grove-3-Axis_Analog_Accelerometer/
-![ADXL345接続例](../../images/Grove-3-axis_analog_accelerometer_V1.0_hardware.jpg)
+- [画像出典](https://wiki.seeedstudio.com/Grove-3-Axis_Analog_Accelerometer/)
+
+
+<div style="text-align: center;">
+<img src="../../images/Grove-3-axis_analog_accelerometer_V1.0_hardware.jpg" width="80%">
+</div>
+
+
 
 
 

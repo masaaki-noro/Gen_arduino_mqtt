@@ -1,4 +1,4 @@
-# 人感センサ
+# 人感(PIR)センサ
 
 トイレなどで，人が入ると電灯がつくような仕組みがあるが，これは人感センサで人の動きを検出して，電灯のON/OFFを制御している．
 Passive Infra-Redを縮めて，PIRセンサとも呼ばれる．
@@ -16,9 +16,11 @@ Passive Infra-Redを縮めて，PIRセンサとも呼ばれる．
 デジタル端子1つに接続する必要があるため，Groveの端子に接続できるモジュールを用いる場合は，ケーブル1本で何れかのデジタル端子に接続すれば良い．
 
 
-![PIRセンサ](../../images/PIR_Sensor.jpg)
-[写真出典](https://wiki.seeedstudio.com/Grove-PIR_Motion_Sensor/)
 
+[写真出典](https://wiki.seeedstudio.com/Grove-PIR_Motion_Sensor/)
+<div style="text-align: center;">
+<img src="../../images/PIR_Sensor.jpg" width="90%">
+</div>
 
 
 

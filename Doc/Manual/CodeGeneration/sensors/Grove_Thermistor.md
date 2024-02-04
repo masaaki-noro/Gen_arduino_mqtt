@@ -10,7 +10,11 @@
 ## 設定項目
 設定すべき項目は2つ存在する．
 
-![設定画面](../../images/editConfig_grove_thermister.png)
+<div style="text-align: center;">
+<img src="../../images/editConfig_grove_thermister.png" width="40%">
+</div>
+
+
 
 ## センサID
 この数字を変更することで，多数のセンサが交じる環境で，このセンサのデータを特定することが可能．

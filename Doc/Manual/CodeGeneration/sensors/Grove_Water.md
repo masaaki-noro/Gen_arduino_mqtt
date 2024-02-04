@@ -3,11 +3,17 @@
 これは，センサが水に触れると電流が流れることで，水濡れを判別するデジタルセンサであり，
 濡れているか濡れていないかの2択である．
 
-- Grove - Water Sensor https://wiki.seeedstudio.com/Grove-Water_Sensor/
+- Grove - Water Sensor 製品ページ : https://wiki.seeedstudio.com/Grove-Water_Sensor/
 
 ## 設定項目
 
-![設定画面](../../images/editConfig_Grove_Water.png)
+
+
+
+<div style="text-align: center;">
+<img src="../../images/editConfig_Grove_Water.png" width="30%">
+</div>
+
 
 ### センサID
 この数字を変更することで，多数のセンサが交じる環境で，このセンサのデータを特定することが可能．

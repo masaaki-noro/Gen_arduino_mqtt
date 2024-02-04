@@ -2,37 +2,62 @@
 
 
 
-## スケッチをIDEで開く
+## 1. スケッチをIDEで開く
 
 先程スケッチを生成したディレクトリを開き(下図)，スケッチ(AusEx_MqttClient.ino)をダブルクリック．
 下図の例は，センサとして「BME280」のみを選択した事例である．
 
-![スケッチをIDEで開く](../images/スケッチをIDEで開く.png)
+<div style="text-align: center;">
+<img src="../images/スケッチをIDEで開く.png" width="80%">
+</div>
+
+
 
 Arduino IDEが立ち上がり，スケッチとセンサ等のソースが読み込まれる．
 
-![IDEでスケッチを開いた画面](../images/IDEでスケッチを開いた画面.png)
+<div style="text-align: center;">
+<img src="../images/IDEでスケッチを開いた画面.png" width="80%">
+</div>
 
-## 組み立てたArduinoをPCに接続
+
+
+## 2. 組み立てたArduinoをPCに接続
 
 組み立てたArduinoをPCに接続し，IDEのボード選択ウィンドウで，接続したArduinoを選ぶ．下図の例はCOMポートの4番にArduino MKR WiFi1010が
 接続された状態の例となっている．
 
-![IDEボード選択](../images/IDEボード選択.png)
+<div style="text-align: center;">
+<img src="../images/IDEボード選択.png" width="80%">
+</div>
 
-## スケッチのコンパイル
+
+
+## 3. スケッチのコンパイル
 下図に示すコンパイルとインストールを行うボタンをIDEでクリック．
-![IDEでのコンパイル](../images/IDEでのコンパイル.png)
+
+<div style="text-align: center;">
+<img src="../images/IDEでのコンパイル.png" width="80%">
+</div>
+
+
 
 
 下図のように，エラーなく終了していれば成功．
-![IDEでのインストール成功](../images/IDEでのインストール成功.png)
+
+<div style="text-align: center;">
+<img src="../images/IDEでのインストール成功.png" width="80%">
+</div>
+
+
 
 
 ここで，シリアルモニタを開き，ArduinoがUSBに出力しているログを確認する．
 シリアルモニタでセンサによる測定結果ののログが出ていれば端末として動作している．
 
-![スケッチが正常に動いている状態](../images/スケッチが正常に動いている状態.png)
+<div style="text-align: center;">
+<img src="../images/スケッチが正常に動いている状態.png" width="80%">
+</div>
+
 
 
 ### 動作する条件
@@ -45,7 +70,7 @@ Arduino IDEが立ち上がり，スケッチとセンサ等のソースが読み
 確認すること．
 
 
-## LEDの監視
+## 4. LEDの監視
 
 カラーLEDを見ることで，ある程度の動作はわかる．
 

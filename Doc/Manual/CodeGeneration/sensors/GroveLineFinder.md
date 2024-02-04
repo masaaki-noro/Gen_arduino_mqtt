@@ -5,13 +5,17 @@
 
 Groveとしてモジュール化されたものも存在する．
 
-- Grove - Line Finder https://wiki.seeedstudio.com/Grove-Line_Finder/
+- Grove - Line Finder 製品ページ : https://wiki.seeedstudio.com/Grove-Line_Finder/
 
 
 ## 設定項目
 
 
-![設定画面](../../images/editConfig_GroveLineFinder.png)
+<div style="text-align: center;">
+<img src="../../images/editConfig_GroveLineFinder.png" width="30%">
+</div>
+
+
 
 ### センサID
 
@@ -24,10 +28,11 @@ Groveとしてモジュール化されたものも存在する．
 
 下の図はArduino MKRシリーズ用のGroveモジュールを接続するための拡張基板であり，上の設定値の場合，接続するのは，「D2」端子となる．
 
-![Alt text](../../images/MKR_carrier.png)
 [写真出典](https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compatible)
 
-
+<div style="text-align: center;">
+<img src="../../images/MKR_carrier.png" width="50%">
+</div>
 
 
 ***

@@ -7,7 +7,7 @@
 
 性能面では，PC等に搭載されるCPUが最小32bit, 最近は64や128bitが多いのに対して，マイコン用のMCUでは，8から32bitの範囲となる．
 
-## Arduinoとは
+## 1. Arduinoとは
 ワンボードマイコンとは，1枚の基板に必要最小限の回路を全て搭載したマイコンの種類であり，近年はホビー，子供や学生のプログラミング教育，IoT等のシステムの試作段階に用いられている．
 
 [Arduino](https://www.arduino.cc/)は，2005年にイタリアで開始されたプロジェクトの名前であり，統一的な設計思想で開発された多数のワンボードマイコンと，そのマイコンに接続するための周辺回路，および，マイコン用のソフトウェアを開発する開発環境からなっている．
@@ -18,7 +18,7 @@ Arduino用ソフトウェア開発環境はArduino IDEといい，Arduino Founda
 また，Arduinoの人気向上に伴い，Arduino IDEでソフトウェアの開発が可能な互換マイコンを発売する組織や，Arduinoと接続して使うための周辺機器を販売する企業も多数存在している．
 
 
-### 代表的な機種
+### 1.1. 代表的な機種
 
 Arduino公式のハードウェアは[公式サイト](https://www.arduino.cc/)のHardwareタブをクリックした[先](https://www.arduino.cc/en/hardware)にリストアップされている．
 
@@ -48,12 +48,12 @@ Atmel SAMDシリーズ(Armコア)のMCUを採用している．
 |Mega2560|ATmega2560|16MHz|256KB|8KB|
 |GIGA R1 WiFi|STM32H747XI|480MHz(240MHz)|2MB|1MB|
 
-### 互換機
+### 1.2. 互換機
 Arduinoのソフトウェア開発環境であるArduino IDEは，arm,avrを始めとし，色々なMCUやそれを搭載した様々なボードをプラグイン形式で追加できるようになっており，さまざまなベンダやLSIメーカが互換機を販売しており，日本ではルネサス社，海外発でユーザ数が多いのは，中国のEspressif Systemsが開発したWiFi内蔵MCUのESP32を搭載したマイコンがある．
 
 なお，Arduino公式ハードウェアの中にも，MCUとしてESP32を搭載したものや，WiFi専用モジュールとしてMCUとは別にESP32を搭載しているものが存在する．
 
-## Arduinoへの周辺回路の接続
+## 2. Arduinoへの周辺回路の接続
 一般的に，Arduinoに限らず，ワンボードマイコンに周辺機器/回路を試作目的などで接続する場合，ブレッドボードと呼ばれる部品を用いる．
 
 ただし，ブレッドボードを使った場合，配線が面倒だったり，配線した後は目的が終わるまで置きっぱなしにしないと，配線がおかしくなる可能があり，邪魔になるなどの問題がある．
@@ -65,37 +65,51 @@ Arduinoのソフトウェア開発環境であるArduino IDEは，arm,avrを始�
 機能上の制約はあるものの，誰でも簡単に配線することを可能にする目的でArduino用にGroveシステムというものが発売している．
 Groveはホビーストや学生が実習などで用いるのに，便利なため，多くのユーザを獲得している．
 
-### ブレッドボード
+### 2.1. ブレッドボード
 ブレッドボードは下の画像のような部品であり，電子部品を差し込んだり，専用のケーブルで端子間や外部の機器との間を配線するためのものである．
 
-[画像出典](https://html5experts.jp/youtoy/12029/)
+
 ![ブレッドボード](../images/ブレッドボード.png)
+[画像出典](https://html5experts.jp/youtoy/12029/)
 
 下の図は，LEDと抵抗をArduinoに配線した事例であり，Arduinoの特定の端子をプログラムで制御することで，LEDを点滅させることができる．
 
+
+<div style="text-align: center;">
+<img src="../images/Arduino_ブレッドボード例.jpg" width="80%">
+</div>
+
 [画像出典](https://html5experts.jp/youtoy/12029/)
-![Arduino_ブレッドボード例](../images/Arduino_ブレッドボード例.jpg)
 
 ブレッドボードの内部は，下図のように内部の端子間は横向きに配線されており，隣の端子間で電気時に導通している．
 
 上の写真の場合，青色のケーブルでArduinoの端子と抵抗を接続しており，抵抗とLEDの一方の足はブレッドボード内部で配線されている．LEDのもう一方の足がオレンジの線でArduinoの別の端子に配線されている．
 
+<div style="text-align: center;">
+<img src="../images/ブレッドボードの内部配線.png" width="70%">
+</div>
+
 [画像出典](https://html5experts.jp/youtoy/12029/)
-![ブレッドボードの内部配線](../images/ブレッドボードの内部配線.png)
 
 
 詳しい内容については，各画像の[出典元の記事](https://html5experts.jp/youtoy/12029/)を参照していただきたい．
 
-### Arduinoシールド
+### 2.2. Arduinoシールド
 
 Arduino用のシールドは，Arduinoプロジェクトから発売されており，下の2つの画像はArduinoに有線ネットワーク(イーサネット)を接続するためのシールドで，Classicファミリ用とMKRファミリ用のものである．
 
-[画像出典](https://store-usa.arduino.cc/products/arduino-ethernet-shield-2?_gl=1*t527cz*_ga*MTQ3NDI5Njk5My4xNjk3ODc0MjMw*_ga_NEXN8H46L5*MTY5Nzk1NzYwMy40LjEuMTY5Nzk1Nzg4My4wLjAuMA..&selectedStore=us)
-![イーサネットシールド](../images/イーサネットシールド.png)
+<div style="text-align: center;">
+<img src="../images/イーサネットシールド.png" width="60%">
+</div>
 
+[画像出典](https://store-usa.arduino.cc/products/arduino-ethernet-shield-2?_gl=1*t527cz*_ga*MTQ3NDI5Njk5My4xNjk3ODc0MjMw*_ga_NEXN8H46L5*MTY5Nzk1NzYwMy40LjEuMTY5Nzk1Nzg4My4wLjAuMA..&selectedStore=us)
+
+<div style="text-align: center;">
+<img src="../images/MKRイーサネットシールド.png" width="60%">
+</div>
 
 [画像出典](https://store-usa.arduino.cc/products/arduino-mkr-eth-shield?_gl=1*1cdg0eu*_ga*MTQ3NDI5Njk5My4xNjk3ODc0MjMw*_ga_NEXN8H46L5*MTY5Nzk1NzYwMy40LjEuMTY5Nzk1Nzg3MC4wLjAuMA..&selectedStore=us)
-![MKRイーサネットシールド](../images/MKRイーサネットシールド.png)
+
 
 下の写真は，MKR用とClassic用のイーサネットシールドをそれぞれ，MKR ZeroとUno R3に接続した事例である．
 配線としては，これだけでよく，ケーブル等を使う必要はない．
@@ -103,7 +117,10 @@ Arduino用のシールドは，Arduinoプロジェクトから発売されてお
 また，Arduinoのイーサネットシールドは，マイクロSD用の端子も備えているため，
 マイクロSDを接続するために特別な部品を用意する必要がない．
 
-![イーサネットシールド接続例](../images/イーサネットシールド接続例.jpg)
+<div style="text-align: center;">
+<img src="../images/イーサネットシールド接続例.jpg" width="90%">
+</div>
+
 
 ただし，公式，サードパーティ品を含めても発売されているシールドは種類が限られているため，別の手段で回路を組む必要が多い．
 そのため，ブレッドボードで試作した後は，自分で部品を買い集めて，独自のシールドを作成(配線とはんだ付け)する人も少なくない．
@@ -114,7 +131,7 @@ Classicファミリ用のものは，Megaファミリにも利用できる．た
 
 なお，Classicファミリのうち，Unoは最近R3からR4へのリビジョンアップ時にMCUがatmel AVRシリーズから，ルネサスのチップに変更になったことから，一部非互換があると報告されているため，注意が必要．
 
-### Groveシステム
+### 2.3. Groveシステム
 [seeed studioのGrove](https://jp.seeedstudio.com/category/Grove-c-1003.html)は，マイコン用の周辺回路のうち，汎用性が高いLEDやRTC(リアルタイムクロック:時計用IC)，各種のセンサやブザー，モーター等をArduinoや[Raspberry Pi](https://www.raspberrypi.com/)に容易に接続するためのものである．
 
 LED等の回路を1つの基板のモジュールにし，専用ケーブルでArduino等の接続することができる．
@@ -125,33 +142,51 @@ NanoとMKR用はArduinoを差し込む形になっており，ClassicとMega用�
 
 また，MKR用だけはSeeed studioではなく，Arduino公式から発売されている．
 
+<div style="text-align: center;">
+<img src="../images/grove-shield-for-nano.png" width="60%">
+</div>
+
 [画像出典](https://jp.seeedstudio.com/Grove-Shield-for-Arduino-Nano-p-4112.html?queryID=d0566d66791a8948353ea38fa2057d2f&objectID=4112&indexName=bazaar_jp_products)
-![grove-shield-for-nano](../images/grove-shield-for-nano.png)
+
+
+<div style="text-align: center;">
+<img src="../images/grove-shield-for-classic.png" width="60%">
+</div>
 
 [画像出典](https://jp.seeedstudio.com/Base-Shield-V2.html)
-![grove-shield-for-classic](../images/grove-shield-for-classic.png)
 
+
+
+<div style="text-align: center;">
+<img src="../images/grove-mega-shield.jpg" width="60%">
+</div>
 
 [画像出典](https://www.seeedstudio.com/Grove-Mega-Shield-v1-2.html)
-![grove-mega-shield](../images/grove-mega-shield.jpg)
 
+<div style="text-align: center;">
+<img src="../images/MKR_carrier.png" width="60%">
+</div>
 
 [画像出典](https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compatible)
-![MKR_carrier](../images/MKR_carrier.png)
+
 
 下の画像はArduino互換機に，Classic用のGroveシールドを重ね，GroveのLEDモジュールをGrove用ケーブルで繋いだものである．上の「ブレッドボード」の配線と比べれば，配線の手間がどれだけ少なくて済むかは，容易にわかると思う．
 
 ブレッドボードの配線では，LEDの他に電源電圧をあわせるための抵抗も配線していたが，それらの周辺回路はGroveモジュール内に含まれており，ユーザは特に考える必要が無いのもGroveのモジュールを利用する利点である．
 
+<div style="text-align: center;">
+<img src="../images/Grove_LED.jpg" width="70%">
+</div>
+
 [画像出典](https://wiki.seeedstudio.com/Grove-Red_LED/)
-![Grove_LED](../images/Grove_LED.jpg)
+
 
 - 注意事項
 
 Groveのモジュールは公式のシールドと比較すると非常に多く，ホビーストの入門や学生の実習などは事足りると思うが，本格的な物を作るとなると，Groveモジュールとして販売されていないICや部品を使いたくなるため，Grove用の基板を購入し，自分でGrove用のモジュールを作成することになることも多い．
 
 
-### 利用するハードウェアとユーザが実施する配線
+### 2.4. 利用するハードウェアとユーザが実施する配線
 
 
 

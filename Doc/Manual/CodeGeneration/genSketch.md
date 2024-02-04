@@ -4,7 +4,10 @@
 Arduinoにインストールするスケッチを生成するプログラムが``genSketch.py``である．
 このプログラムを実行すると，下図のような画面が表示される．
 
-![genSketch画面](../images/genSketch画面.png)
+<div style="text-align: center;">
+<img src="../images/genSketch画面.png" width="40%">
+</div>
+
 
 ここで，先程編集した仕様定義のyamlファイルを「``config file``」ボタンで選択し，
 「``output directory``」ボタンでスケッチを出力するディレクトリを選ぶ．

@@ -4,12 +4,16 @@
 
 このICを使ったセンサモジュールには以下のようなものがある．
 
-- Grove-Single Axis Analog Gyro https://wiki.seeedstudio.com/Grove-Single_Axis_Analog_Gyro/
+- [Grove-Single Axis Analog Gyro](https://wiki.seeedstudio.com/Grove-Single_Axis_Analog_Gyro/)
 
 
 ## 設定項目
 
-![設定画面](../../images/editConfig_enc03r.png)
+
+<div style="text-align: center;">
+<img src="../../images/editConfig_enc03r.png" width="30%">
+</div>
+
 
 ### センサID
 この数字を変更することで，多数のセンサが交じる環境で，このセンサのデータを特定することが可能．

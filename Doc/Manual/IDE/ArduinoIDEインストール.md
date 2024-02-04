@@ -1,23 +1,33 @@
 # Arduino IDEのインストール
 ここでは，Arduinoにプログラムを書き込むために必要になるArduino IDEを各自のPCにインストールする．
 
-## ダウンロードとインストール
+## 1. ダウンロードとインストール
 [Arduino公式](https://www.arduino.cc/)にアクセスし，下図のように，「SOFTWARE」をクリック．
 
-![Arduino公式「ソフト」タブ](../images/Arduino公式「ソフト」タブ.png)
+<div style="text-align: center;">
+<img src="../images/Arduino公式「ソフト」タブ.png" width="80%">
+</div>
+
 
 開発環境のソフトウェアをダウンロードするページ(下図)にジャンプするので，自分のPCのOSに合わせて，Arduino IDEの最新版を
 ダウンロードする．
 
-![Arduino公式「ダウンロード」](../images/Arduino公式「ダウンロード」.png)
+<div style="text-align: center;">
+<img src="../images/Arduino公式「ダウンロード」.png" width="80%">
+</div>
+
+
 
 ダウンロードしたインストーラーを実行して，インストールを行う．
 
-## Arduino IDEの画面構成
+## 2. Arduino IDEの画面構成
 
 インストールしたArduino IDEを実行すると下図のような画面が表示される(Windowsの場合)．
 
-![ArduinoIDE画面構成](../images/ArduinoIDE画面構成.png)
+<div style="text-align: center;">
+<img src="../images/ArduinoIDE画面構成.png" width="80%">
+</div>
+
 
 
 - ファイルメニュー : 既存のArduinoのプログラム(スケッチと呼ぶ)にアクセスするためのファイルメニュー
@@ -25,12 +35,15 @@
 - ライブラリメニュー : ライブラリを管理(インストール，バージョン管理，削除)するためのメニュー
 
 
-### ファイルメニュー
+### 2.1. ファイルメニュー
 下の図はファイルメニューをクリックした状態の図である．
 ファイルメニューに文字列のリストがあるが，これは，Arduino IDEの環境設定で，スケッチやライブラリの置き場所として指定されているデフォルトのディレクトリが表示されている．
 これを操作して，既存のスケッチを開くことができる．
 
-![ArduinoIDEファイルメニュー](../images/ArduinoIDEファイルメニュー.png)
+<div style="text-align: center;">
+<img src="../images/ArduinoIDEファイルメニュー.png" width="80%">
+</div>
+
 
 **デフォルトの場所**
 
@@ -42,20 +55,27 @@ C:\Users\xxx\ドキュメント\Arduino
 C:\Users\xxx\OneDrive\ドキュメント\Arduino
 ```
 
-### ボードメニュー
+### 2.2. ボードメニュー
 下図はボードメニューのクリックした状態である．
 リストに表示されているのは，Arduino IDEが認識している(インストール可能もしくはインストール済み)のボード用プラグインのリストである．
 
 タイプのタブから特定の項目を選択する，もしくは，キーワード検索をすることで，絞り込みを行うことができる．
-![ArduinoIDEボードメニュー](../images/ArduinoIDEボードメニュー.png)
+
+<div style="text-align: center;">
+<img src="../images/ArduinoIDEボードメニュー.png" width="80%">
+</div>
+
 
 こちらも，サードパーティの互換機を利用する場合は，Arduino IDEの環境設定で，プラグインの情報を追加することができ，その後は，ボードメニューからプラグインの追加削除バージョンアップが可能になる．
 
-### ライブラリメニュー
+### 2.3. ライブラリメニュー
 
 下の図はライブラリメニューをクリックした状態の図である．
 
-![ArduinoIDEライブラリメニュー](../images/ArduinoIDEライブラリメニュー.png)
+<div style="text-align: center;">
+<img src="../images/ArduinoIDEライブラリメニュー.png" width="80%">
+</div>
+
 
 Arduinoのライブラリには，以下の3種類があり，最初の2種類はこのメニューから導入できる．
 
@@ -87,17 +107,27 @@ C:\Users\xxx\OneDrive\ドキュメント\Arduino\libraries
 自分でダウンロードしたライブラリをライブラリ置き場所の「ディレクトリ」に置けば良い．
 
 
-## 環境設定
+## 3. 環境設定
 Arduino IDEの環境設定を変更する場合，最初に起動画面の上部メニューの「ファイル」メニューを開き，「基本設定」を選択する．
 
-![ArduinoIDE環境設定メニュー1](../images/ArduinoIDE環境設定メニュー1.png)
+<div style="text-align: center;">
+<img src="../images/ArduinoIDE環境設定メニュー1.png" width="80%">
+</div>
+
 
 基本設定の「設定」のうち，「スケッチブックの場所」を変更すれば，スケッチ(プログラム)やライブラリを保存する場合のディレクトリを変更することができる．
 
-![ArduinoIDE環境設定メニュー2](../images/ArduinoIDE環境設定メニュー2.png)
+<div style="text-align: center;">
+<img src="../images/ArduinoIDE環境設定メニュー2.png" width="80%">
+</div>
+
 
 上図の「追加ボードマネージャのURL」の右端のアイコンをクリックすると，以下の画面が開く．
-![ArduinoIDE環境設定メニュー3](../images/ArduinoIDE環境設定メニュー3.png)
+
+<div style="text-align: center;">
+<img src="../images/ArduinoIDE環境設定メニュー3.png" width="80%">
+</div>
+
 
 上の図は，追加のボードマネージャのURLを追加する画面であり，互換機等を追加していく際は，互換機を販売しているメーカーの
 指示に従い，URLを追加する．

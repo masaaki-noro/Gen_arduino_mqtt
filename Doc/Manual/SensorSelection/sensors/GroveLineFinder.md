@@ -15,17 +15,24 @@ LEDが発した赤外線を地面等で反射したものが赤外線センサ�
 
 そのため，黒い地面などでは赤外線が検出できなくなることを利用して，判定を行う．
 
-![Grove Buttonの接続例](../../images/Grovelinefinder.jpg)
+
 [写真出典](https://wiki.seeedstudio.com/Grove-Line_Finder/)
+
+<div style="text-align: center;">
+<img src="../../images/Grovelinefinder.jpg" width="70%">
+</div>
+
 
 
 ## Arduinoとの接続例
 デジタル端子1つに接続する必要があるため，Groveの端子に接続できるモジュールを用いる場合は，ケーブル1本で何れかのデジタル端子に接続すれば良い．
 
-![Grove Buttonの接続例](../../images/seeeduino_line_finder.jpg)
+
 [写真出典](https://wiki.seeedstudio.com/Grove-Line_Finder/)
 
-
+<div style="text-align: center;">
+<img src="../../images/seeeduino_line_finder.jpg" width="90%">
+</div>
 
 
 ## 接続先の情報

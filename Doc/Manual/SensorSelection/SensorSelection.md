@@ -13,7 +13,7 @@
 各センサの配線/接続方法はセンサ名のリンクを開いた先の資料に記述されているため，そちらを参照．
 なお，表のGroveコネクタ列が「✕」のものは独自の配線が必要になるため要注意．
 
-## センサ選択における注意事項
+## 1. センサ選択における注意事項
 
 全てのセンサが全ての機種のArduinoで使えるわけではない．
 Arduinoには動作電圧が5Vのものと3.3Vのものがあり，また，CPUアーキテクチャも3種類以上ある．
@@ -25,7 +25,7 @@ Arduinoには動作電圧が5Vのものと3.3Vのものがあり，また，CPU�
 説明資料を参照すること．
 
 
-## 環境測定系センサ
+## 2. 環境測定系センサ
 
 |センサ名|温度|湿度|気圧|インターフェース|Groveコネクタ|
 |---|---|---|---|---|---|
@@ -44,7 +44,7 @@ Arduinoには動作電圧が5Vのものと3.3Vのものがあり，また，CPU�
 - △ 変換ケーブルで接続する必要がある
 - ✕ ジャンパケーブルで配線する必要がある
 
-## 振動・加速度等
+## 3. 振動・加速度等
 
 |センサ名|加速度(軸数)|ジャイロ(軸数)|インターフェース|Groveコネクタ|
 |---|---|---|---|---|
@@ -59,7 +59,7 @@ Arduinoには動作電圧が5Vのものと3.3Vのものがあり，また，CPU�
 - △ 変換ケーブルで接続する必要がある
 - ✕ ジャンパケーブルで配線する必要がある
 
-## 対人
+## 4. 対人
 
 |センサ名|接触|人感(赤外線)|インターフェース|Groveコネクタ|
 |---|---|---|---|---|
@@ -73,7 +73,7 @@ Arduinoには動作電圧が5Vのものと3.3Vのものがあり，また，CPU�
 - △ 変換ケーブルで接続する必要がある
 - ✕ ジャンパケーブルで配線する必要がある
 
-## 視覚関連
+## 5. 視覚関連
 
 |センサ名|照度|色彩|インターフェース|Groveコネクタ|
 |---|---|---|---|---|
@@ -88,7 +88,7 @@ Arduinoには動作電圧が5Vのものと3.3Vのものがあり，また，CPU�
 - ✕ ジャンパケーブルで配線する必要がある
 
 
-## その他
+## 6. その他
 
 |センサ名|観測/測定対象|インターフェース|Groveコネクタ|
 |---|---|---|---|
@@ -108,7 +108,7 @@ Arduinoには動作電圧が5Vのものと3.3Vのものがあり，また，CPU�
 - ✕ ジャンパケーブルで配線する必要がある
 
 
-## 特殊な接続のセンサ : Arduino MKR ENV Shield
+## 7. 特殊な接続のセンサ : Arduino MKR ENV Shield
 
 [Arduino MKR ENV Shield](https://store-usa.arduino.cc/products/arduino-mkr-env-shield-rev2)は以下のセンサが搭載されたMKRファミリ用シールドである．
 
@@ -149,7 +149,7 @@ Grove端子抜きにした場合，[Arduino MKR ENV Shield](https://store-usa.ar
 
 この中から2つの信号端子を選択し，変換ケーブル等で接続する必要がある．
 
-## センサを繋ぐGroveコネクタの選択
+## 8. センサを繋ぐGroveコネクタの選択
 本プロジェクトで利用可能なセンサのうち，「[ADXL335](sensors/ADXL335.md)」以外は1つのGroveコネクタに接続可能である．
 インターフェースとしてI2Cのものは，複数の機器が1つのコネクタに繋がっていても大丈夫であるため，ピン番号(コネクタ番号)は気にする必要がない．
 また，利用する装置では，I2C用に分岐HUBを使うことで，端子数不足は回避できる．
@@ -186,42 +186,53 @@ Grove端子抜きにした場合，[Arduino MKR ENV Shield](https://store-usa.ar
 
 表だけでは理解が難しいかもしれないため，以下に図で示す．
 
-### MKR Zero + MKR Ethernetシールド
+### 8.1. MKR Zero + MKR Ethernetシールド
 
 センサ等を後に追加する場合に，I2C以外は既に使われている場所は利用できない．
 Groveのコネクタのうち，D4,D5,D6とI2Cは既に使われている．
 それを以下に示す．
 
 
-![MKR_Zero_Grove_コネクタ](../images/MKR_Zero_Grove_コネクタ.png)
+<div style="text-align: center;">
+<img src="../images/MKR_Zero_Grove_コネクタ.png" width="70%">
+</div>
 
-### MKR WiFi1010 + マイクロSDシールド
+
+### 8.2. MKR WiFi1010 + マイクロSDシールド
 
 センサ等を後に追加する場合に，I2C以外は既に使われている場所は利用できない．
 それを以下に示す．
 
-![MKR_WiFi1010_Grove_コネクタ](../images/MKR_WiFi1010_Grove_コネクタ.png)
+<div style="text-align: center;">
+<img src="../images/MKR_WiFi1010_Grove_コネクタ.png" width="70%">
+</div>
 
 
-### Arduino Uno R4 Minima + Ethernetシールド
 
-センサ等を後に追加する場合に，I2C以外は既に使われている場所は利用できない．
-
-I2Cコネクタ4つのうちの1つとLEDで6番7番端子を使っているため，下のバツ印のところは利用不可である．
-
-![Minima_Grove_コネクタ](../images/Minima_Grove_コネクタ.png)
-
-
-### Arduino Uno R4 WiFi + マイクロSDシールド
+### 8.3. Arduino Uno R4 Minima + Ethernetシールド
 
 センサ等を後に追加する場合に，I2C以外は既に使われている場所は利用できない．
 
 I2Cコネクタ4つのうちの1つとLEDで6番7番端子を使っているため，下のバツ印のところは利用不可である．
 
-![Minima_Grove_コネクタ](../images/Minima_Grove_コネクタ.png)
+<div style="text-align: center;">
+<img src="../images/Minima_Grove_コネクタ.png" width="70%">
+</div>
 
 
-### Arduino Nano 33 IoT
+
+### 8.4. Arduino Uno R4 WiFi + マイクロSDシールド
+
+センサ等を後に追加する場合に，I2C以外は既に使われている場所は利用できない．
+
+I2Cコネクタ4つのうちの1つとLEDで6番7番端子を使っているため，下のバツ印のところは利用不可である．
+
+<div style="text-align: center;">
+<img src="../images/Minima_Grove_コネクタ.png" width="70%">
+</div>
+
+
+### 8.5. Arduino Nano 33 IoT
 
 センサ等を後に追加する場合に，I2C以外は既に使われている場所は利用できない．
 
@@ -229,7 +240,10 @@ I2CコネクタとLEDで6番7番端子を使っている．また，SPIで4つ�
 
 以上から，Groveシールドのうち，下図のバツ印のところは利用不可である．
 
-![Nano_Grove_コネクタ](../images/Nano_Grove_コネクタ.png)
+<div style="text-align: center;">
+<img src="../images/Nano_Grove_コネクタ.png" width="70%">
+</div>
+
 
 
 

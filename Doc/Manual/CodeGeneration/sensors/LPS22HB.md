@@ -14,7 +14,13 @@ STマイクロ社の[LPS22HB](https://www.st.com/ja/mems-and-sensors/lps22hb.htm
 
 ## 設定項目
 
-![設定画面](../../images/editConfig_lps22hb.png)
+
+
+<div style="text-align: center;">
+<img src="../../images/editConfig_lps22hb.png" width="40%">
+</div>
+
+
 
 設定すべき項目はセンサIDのみである．
 この数字を変更することで，多数のセンサが交じる環境で，このセンサのデータを特定することが可能．

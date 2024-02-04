@@ -5,19 +5,23 @@
 
 Groveとしてモジュール化されたものも存在する．
 
-- Grove - Button https://wiki.seeedstudio.com/Grove-Button/
-- Grove - Switch https://wiki.seeedstudio.com/Grove-Switch-P/
+- [Grove - Button](https://wiki.seeedstudio.com/Grove-Button/)
+- [Grove - Switch](https://wiki.seeedstudio.com/Grove-Switch-P/)
 
 単なるスイッチなので，動作電圧に制限はない．
 
 また，自分で工作するのであれば，スイッチと同じ動作をするものは全てこれで対応できるので，以下のようなものも利用できる．
-- ドアセンサースイッチ（リードスイッチ）　ＳＰＳ－３２０ https://akizukidenshi.com/catalog/g/gP-13371/
+- [ドアセンサースイッチ（リードスイッチ）　ＳＰＳ－３２０](https://akizukidenshi.com/catalog/g/gP-13371/)
 
 
 
 ## 設定項目
 
-![設定画面](../../images/editConfig_DigitalSwitch.png)
+
+<div style="text-align: center;">
+<img src="../../images/editConfig_DigitalSwitch.png" width="40%">
+</div>
+
 
 ## センサID
 
@@ -30,8 +34,12 @@ Groveとしてモジュール化されたものも存在する．
 
 下の図はArduino MKRシリーズ用のGroveモジュールを接続するための拡張基板であり，上の設定値の場合，接続するのは，「D2」端子となる．
 
-![Alt text](../../images/MKR_carrier.png)
+
 [写真出典](https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compatible)
+
+<div style="text-align: center;">
+<img src="../../images/MKR_carrier.png" width="50%">
+</div>
 
 
 ***

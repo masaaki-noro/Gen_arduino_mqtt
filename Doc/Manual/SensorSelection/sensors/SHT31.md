@@ -17,9 +17,14 @@ SHT31は，SENSIRION社の温湿度センサでI2Cインターフェースで接
 
 上記，秋月電子製のモジュールをarduinoに接続する場合，groveの基板と以下のケーブルを用いて接続するのが一番容易である．
 
-- https://jp.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html?queryID=e8c3de5285fc84978b0660186520d221&objectID=2221&indexName=bazaar_jp_products
+- [Grove 4 ピン変換ゲーブル（メス-Grove ）](https://jp.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html?queryID=e8c3de5285fc84978b0660186520d221&objectID=2221&indexName=bazaar_jp_products)
 
-![Groveメスピンケーブル](../../images/Groveメスピンケーブル.jpg)
+
+<div style="text-align: center;">
+<img src="../../images/Groveメスピンケーブル.jpg" width="50%">
+</div>
+
+
 
 Grove用のケーブルの配線接続は以下の通り．
 |ケーブルの色|接続先端子|
@@ -29,14 +34,27 @@ Grove用のケーブルの配線接続は以下の通り．
 |黒|GND|
 |赤|+V|
 
-![SHT31接続](../../images/SHT31接続.jpg)
+
+
+<div style="text-align: center;">
+<img src="../../images/SHT31接続.jpg" width="50%">
+</div>
+
 
 Arduino側(Groveの基板)側はMKRのGrove基板では，TWIコネクタに接続する．
-![MKR_carrier](../../images/MKR_carrier.png)
+
+<div style="text-align: center;">
+<img src="../../images/MKR_carrier.png" width="50%">
+</div>
+
 
 Grove用Shieldの場合は，「I2C」コネクタに接続する．
 
-![Grove_Shield](../../images/Groveシールド.jpg)
+<div style="text-align: center;">
+<img src="../../images/Groveシールド.jpg" width="70%">
+</div>
+
+
 
 ## ``ADR``端子
 先程の説明では，``ADR``端子は何も接続していない．SHT31はこの端子の配線で，I2Cのアドレスが変化する．

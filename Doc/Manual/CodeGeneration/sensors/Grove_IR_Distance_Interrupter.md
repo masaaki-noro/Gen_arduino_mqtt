@@ -3,12 +3,18 @@
 1つのデジタル端子を使い，センサの前9cm～30cm程度の範囲に物体が置かれ，赤外線を反射すれば，それを検出するセンサである．
 
 
-- Grove - IR Distance Interrupter https://wiki.seeedstudio.com/Grove-IR_Distance_Interrupter_v1.2/
+- Grove - IR Distance Interrupter 製品ページ : https://wiki.seeedstudio.com/Grove-IR_Distance_Interrupter_v1.2/
 
 
 ## 設定項目
 
-![設定画面](../../images/editConfig_Grove_IR_Distance_Interrupter.png)
+
+
+<div style="text-align: center;">
+<img src="../../images/editConfig_Grove_IR_Distance_Interrupter.png" width="40%">
+</div>
+
+
 
 ### センサID
 
@@ -22,9 +28,11 @@
 
 下の図はArduino MKRシリーズ用のGroveモジュールを接続するための拡張基板であり，上の設定値の場合，接続するのは，「D2」端子となる．
 
-![Alt text](../../images/MKR_carrier.png)
 [写真出典](https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compatible)
 
+<div style="text-align: center;">
+<img src="../../images/MKR_carrier.png" width="50%">
+</div>
 
 
 ***

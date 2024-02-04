@@ -2,12 +2,15 @@
 
 1つのデジタル端子を使い，人が触れているか否かを判別するためのセンサである．
 
-- Grove - Touch Sensor https://wiki.seeedstudio.com/Grove-Touch_Sensor/
+- Grove - Touch Sensor 製品ページ :  https://wiki.seeedstudio.com/Grove-Touch_Sensor/
 
 
 ## 設定項目
 
-![設定画面](../../images/editConfig_DigitalTouchSensor.png)
+<div style="text-align: center;">
+<img src="../../images/editConfig_DigitalTouchSensor.png" width="40%">
+</div>
+
 
 ### センサID
 
@@ -21,9 +24,12 @@
 
 下の図はArduino MKRシリーズ用のGroveモジュールを接続するための拡張基板であり，上図の設定値の場合，接続するのは，下図の「D2」端子となる．
 
-![Alt text](../../images/MKR_carrier.png)
+
 [写真出典](https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compatible)
 
+<div style="text-align: center;">
+<img src="../../images/MKR_carrier.png" width="50%">
+</div>
 
 
 ***

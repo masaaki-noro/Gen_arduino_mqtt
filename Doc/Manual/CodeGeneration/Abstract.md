@@ -2,7 +2,10 @@
 
 本開発環境では，対話的なプログラムで，出力するプログラムの仕様を表す仕様定義ファイルを作成し，
 その定義から，Arduinoのスケッチを生成する．
-![システムイメージ](../images/System_Image.png)
+
+<div style="text-align: center;">
+<img src="../images/System_Image.png" width="80%">
+</div>
 
 この作業の流れでは以下の3種類のソフトウェアを利用する．
 

@@ -22,7 +22,7 @@ LEDやマイクロSDはなくても済むが，PCとの接続無しで動作さ�
 センサネットワーク上にNTPのサーバの準備が必要になるためお勧めしない．
 
 
-## フルカラーLED
+## 1. フルカラーLED
 現在利用可能なLEDは以下のもののみ．
 - https://wiki.seeedstudio.com/Grove-Chainable_RGB_LED/
 
@@ -30,18 +30,18 @@ LEDやマイクロSDはなくても済むが，PCとの接続無しで動作さ�
 LEDのサイズが大きすぎるとか，本来5V専用で3.3Vマイコンで駆動するのに心配があるなど，問題は多いものの，
 Grove対応の基板を使って新規にLEDモジュールを作成するよりはマシという判断からこのLEDを採用している．
 
-## RTC
+## 2. RTC
 本開発環境では，時計として使うRTCは7種類サポートしているものの，
 電子工作の素人でも簡単に組み立てできることが重要であるため，
 推奨品を選択することを強く勧める．
 
-### 推奨品
+### 2.1. 推奨品
 以下のRTCは電池ボックス付きのモジュール(Breakoutモジュール)がAdafruitから発売されており，電池もCR1220(国内メーカー品あり)が利用できること，
 下記モジュールは[Grove用の変換ケーブル](https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html)で簡単にGroveのシールドに接続できることから推奨する．
 
 - DS3231 (Analog Devices) https://www.adafruit.com/product/3013
 
-### あまり勧めない
+### 2.2. あまり勧めない
 下のRTCは電池ボックス付きのモジュール(Breakoutモジュール)がAdafruitから発売されており，電池もCR1220(国内メーカー品あり)が利用できるものの，電池ボックスに
 ボタン電池を入れても電源の抜き差し後に時刻情報が失われる確率が非常に高く，電池の挿し直しや異なるモジュールを用いて試験を行っても，安定して動作しない．
 また，Adafruitの製品ページにも記載があるように，RTCのIC自体の時刻の精度もあまり良くない(毎日2秒程度の変動が発生する)ことから推奨しない．
@@ -60,7 +60,7 @@ RV8803は，電池ボックス付きのモジュールとしては以下のも�
 以上のことから，``PCF8523``と``DS1307(Grove-RTC)``は電池無しの場合は利用可能．``DS1307(Grove-RTC)``は配線に特別なケーブルが必要ないため，
 電池無しで運用するならお勧め．
 
-### 工作(基板の作成)が必要
+### 2.3. 工作(基板の作成)が必要
 以下の3つのRTC(全てエプソン)は，電池ボックス付きでモジュール化されたものが存在しないため，電子部品の調達，基板工作(はんだ付け)が必要になることから非推奨品．
 - RTC-8564NB
 - RX8025
@@ -69,7 +69,7 @@ RV8803は，電池ボックス付きのモジュールとしては以下のも�
 ただし，自分で工作できる人は上記RTCはエプソンから技術資料が日本語で入手できること，RTC-8564NBは秋月電子で
 工作が簡単なモジュールが発売されているため，入手も難しくない上に，電池ボックスだけの拡張で済む点は有利．
 
-### 電池の必要性
+### 2.4. 電池の必要性
 本開発環境で生成されるArduinoのスケッチでは，RTCに電池が挿入されていない場合に，電源投入時にそれを検出して，デフォルトの時刻(2001年1月1日0時0分0秒)を
 設定するプログラムになっている．
 
@@ -78,53 +78,57 @@ RV8803は，電池ボックス付きのモジュールとしては以下のも�
 
 もし，デフォルトの時刻を変更したい場合は，カスタマイズに関する資料を参照していただきたい．
 
-## マイクロSD
+## 3. マイクロSD
 マイクロSDとArduinoの接続は，Classicファミリのうち5Vで動作する機種とMKRファミリの全機種はシールドが存在するため利用を推奨できる．
 
 また，マイクロSDそのものについても制限があり，Arduinoと接続するためには，ソフトウェア，ハードウェアの制約上(対応する規格の問題)から容量が16GB以下のものに限定される．
 
-### Arduino Classicファミリ
+### 3.1. Arduino Classicファミリ
 Classic用のシールドは本体が5V駆動のものにしか対応していないため，機種が限定される．
 
 
-- Arduino Ethernet Shield 2
-![Arduino Ethernet Shield 2](../images/Classic_Ethernet.png)
-https://store-usa.arduino.cc/products/arduino-ethernet-shield-2
+- [Arduino Ethernet Shield 2](https://store-usa.arduino.cc/products/arduino-ethernet-shield-2)
+
+<div style="text-align: center;">
+<img src="../images/Classic_Ethernet.png" width="70%">
+</div>
 
 
-- SD Card Shield
-https://www.seeedstudio.com/SD-Card-Shield-V4-p-1381.html
-
-- SparkFun microSD Shield
-https://www.sparkfun.com/products/12761
-
-- ピンヘッダ
-https://www.adafruit.com/product/85
-https://akizukidenshi.com/catalog/g/gC-17103/
-https://akizukidenshi.com/catalog/g/gC-17102/
 
 
-### Arduino MKRファミリ
+- [SD Card Shield](https://www.seeedstudio.com/SD-Card-Shield-V4-p-1381.html)
+
+
+- [SparkFun microSD Shield](https://www.sparkfun.com/products/12761)
+
+
+- ピンヘッダ : [Adafruit](https://www.adafruit.com/product/85), [秋月電子1](https://akizukidenshi.com/catalog/g/gC-17103/), [秋月電子2](https://akizukidenshi.com/catalog/g/gC-17102/)
+
+
+
+
+
+### 3.2. Arduino MKRファミリ
 MKRファミリのうち，MKR ZeroはマイクロSDのスロットが存在しているため，準備は不要．
 
 それ以外のMKRファミリのArduinoを使う場合は以下のシールドを用意してください．
 
 - MKR SD Proto Shield https://store-usa.arduino.cc/products/mkr-sd-proto-shield
 
-### Arduino Nanoファミリ
+### 3.3. Arduino Nanoファミリ
 Arduino Nanoはジャンパケーブル等を使って，SDの回路を外部に用意する必要があるため，SDの利用は勧められないが，
 ArduinoのNanoにマイクロSDをつなげる場合は，以下のモジュールの利用を推奨する．
 
 - MicroSD card breakout board+ (Adafruit) https://www.adafruit.com/product/254
 
 
-## マイコン本体+ネットワークI/F
+## 4. マイコン本体+ネットワークI/F
 本開発環境で生成するセンサ端末用のスケッチはメモリが少ないMCUでは動作しないことなどから，選択できる機種に制限がある．
 最近発売された機種については，検証ができていないため，動作の可否は不明である．
 
 また，Arduino本体については互換機は含めない．
 
-### 動作確認済み
+### 4.1. 動作確認済み
 |機種名|MCU|動作周波数|プログラム容量(flash)|メモリ容量(SRAM)|
 |---|---|---|---|---|
 |MKR ZERO+イーサネットシールド|SAMD21|48MHz|256KB|32KB|
@@ -132,7 +136,7 @@ ArduinoのNanoにマイクロSDをつなげる場合は，以下のモジュー�
 |Nano 33 IoT|SAMD21|48MHz|256KB|32KB|
 
 
-### 機能制限あり
+### 4.2. 機能制限あり
 
 最近リリースされたUnoのR4はMCUが新採用のルネサスのものであるため，
 WDTとスリープ(低電力モード)を利用することができない．
@@ -143,7 +147,7 @@ WDTとスリープを無効にする設定で以下の機種は動作が確認�
 |Uno R4 Minima+イーサネットシールド|RA4M1|48MHz|256KB|32KB|
 |Uno R4 WiFi|RA4M1|48MHz|256KB|32KB|
 
-### 問題あり
+### 4.3. 問題あり
 各種ESP32搭載ボードは，マイクロSDとの通信速度が非常に低速であり，
 センサ端末として動作させるには問題がある．
 WDTの動作に不審な点があり，時々再起動してしまう問題もある．
@@ -159,10 +163,13 @@ Groveに接続して利用することを想定すると，上の2機種ならGr
 Seeed systemから直輸入すれば購入できるかもしれないが未確認．
 
 そのため，現状nano esp32を使う場合，ブレッドボードで配線することになる．
-![nano_esp32_ブレッドボード](../images/nano_esp32_ブレッドボード.JPG)
+
+<div style="text-align: center;">
+<img src="../images/nano_esp32_ブレッドボード.JPG" width="70%">
+</div>
 
 
-### 動作しない
+### 4.4. 動作しない
 Uno R3, Mega等のAVR系統のMCUを搭載したプラットフォームはそもそもプログラム容量やSRAMの容量不足により動作しない．
 
 |機種名|MCU|動作周波数|プログラム容量(flash)|メモリ容量(SRAM)|

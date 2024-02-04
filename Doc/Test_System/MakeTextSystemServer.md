@@ -15,16 +15,22 @@ IoTゲートウェイとしてRaspberry Piを運用する場合，キーボー�
 必要がある．ボタンとLEDは特に縛りはないが，他のHATを積み重ねる可能性を考慮すると，SPI等に使われない
 純粋なデジタルI/Oの端子が選ぶのが無難．
 
-![ブレッドボードによる配線](images/RaspberryPiの配線(ブレッドボード).png)
+<div style="text-align: center;">
+<img src="images/RaspberryPiの配線(ブレッドボード).png" width="80%">
+</div>
+
 
 実際の配線図は下の図となる．
 
-![回路図](images/RaspberryPiの配線(回路図).png)
+<div style="text-align: center;">
+<img src="images/RaspberryPiの配線(回路図).png" width="90%">
+</div>
+
 
 
 ## 用意する部材
 
-本体については，冷却等の面倒を避ける意味で4や5は勧めない．
+本体のRaspberry Piについては，接続するセンサ端末の数の問題などでCPU処理性能やメモリ容量に問題が発生しないかぎり，CPUの冷却等の面倒を避ける意味で4や5は勧めない．
 
 - Raspberry Pi 本体 : 推奨 Pi 3 model B+ (https://www.raspberrypi.com/products/raspberry-pi-3-model-b-plus/)
 - マイクロSD (16GB以上推奨)

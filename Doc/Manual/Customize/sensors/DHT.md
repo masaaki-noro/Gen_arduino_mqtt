@@ -42,9 +42,12 @@ dht_pin: 2
 
 下の図はArduino MKRシリーズ用のGroveモジュールを接続するための拡張基板であり，上の設定値の場合，「D2」端子に接続されていることになる．
 
-![Alt text](../../images/MKR_carrier.png)
+
 [写真出典](https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compatible)
 
+<div style="text-align: center;">
+<img src="../../images/MKR_carrier.png" width="70%">
+</div>
 
 ### DHTシリーズのどれを使うか
 以下の例は，DHT22を利用することを宣言している．

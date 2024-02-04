@@ -4,8 +4,10 @@ Seeed studio社が販売するセンサで，I2C接続で複数のタッチセ�
 
 - 製品ページ : https://wiki.seeedstudio.com/Grove-I2C_Touch_Sensor/
 
-![Grove I2C タッチセンサ](../../images/Grove-I2C-Touch-Sensor.jpg)
 
+<div style="text-align: center;">
+<img src="../../images/Grove-I2C-Touch-Sensor.jpg" width="70%">
+</div>
 
 
 ## 設定項目

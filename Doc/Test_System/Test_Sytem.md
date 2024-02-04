@@ -13,8 +13,10 @@ IoTゲートウェイとなるRaspberry Piをインターネット/イントラ�
 一方，PCをインターネット/イントラネット側に接続する場合は，IoTゲートウェイを
 WiFiでインターネット/イントラネットに接続しなければならない．
 
-![IoTシステム構成](images/IoTシステム構成.png)
 
+<div style="text-align: center;">
+<img src="images/IoTシステム構成.png" width="90%">
+</div>
 
 ただし，管理者やセンサ端末開発者のPCにいくつかのソフトウェアをインストールする必要がある．
 そのため，PCをIoTネットワーク側に接続する場合は，上記のインストール作業後に行わなければならない．
@@ -46,14 +48,22 @@ PCにインストールすべきソフトウェアは管理者とセンサ端末
 
 下図はIoTゲートウェイとして用いるRaspberry Piである．これを組み立てて，IoTゲートウェイとする．
 
-![RaspberryPi組み立て前](images/RaspberryPi組み立て前.png)
+
+<div style="text-align: center;">
+<img src="images/RaspberryPi組み立て前.png" width="70%">
+</div>
 
 
 まず最初にRaspberry Piを裏向けにして，マイクロSDをソケットに挿入する．
-![マイクロSDのRaspberryPiへの接続](images/マイクロSDのRaspberryPiへの接続.png)
+<div style="text-align: center;">
+<img src="images/マイクロSDのRaspberryPiへの接続.png" width="90%">
+</div>
+
 
 次に，USBシリアルインターフェースを基板(Raspberry PiのHat)上のピンに接続する．
-![シリアルIFのRaspberryPiへの接続](images/シリアルIFのRaspberryPiへの接続.png)
+<div style="text-align: center;">
+<img src="images/シリアルIFのRaspberryPiへの接続.png" width="70%">
+</div>
 
 
 ## 機器の配線
@@ -65,14 +75,21 @@ IoT gw(Raspberry pi)はイーサネットスイッチとイーサネットケー
 上で，管理者のPCのUSBケーブル(マイクロUSB端子)で接続するが，この時点で
 電源は接続しない．
 
-![RaspberryPiの配線](images/RaspberryPiの配線.png)
+<div style="text-align: center;">
+<img src="images/RaspberryPiの配線.png" width="90%">
+</div>
 
 
 この時点で，PCがUSBシリアルインターフェースがを認識していることを確かめる．
 Windowsの場合は，デバイスマネージャーを開く．
 下図のように，COMボートのところに，USBシリアルインターフェースが存在するはずである．
 下図の場合は，COMポートの19番にUSBシリアルインターフェースが認識されている．
-![デバイスマネージャーでの接続確認](images/デバイスマネージャーでの接続確認.png)
+
+
+<div style="text-align: center;">
+<img src="images/デバイスマネージャーでの接続確認.png" width="70%">
+</div>
+
 
 もし，認識していない場合は，以下のURLからデバイスドライバをダウンロードして，インストールする．
 
@@ -87,7 +104,9 @@ Windowsの場合は，デバイスマネージャーを開く．
 ### ターミナルソフトによるコンソール接続
 最初にターミナルソフトで先程確認したUSBシリアルインターフェースのポートを開く．
 
-![Teratermでのシリアルオープン](images/Teratermでのシリアルオープン.png)
+<div style="text-align: center;">
+<img src="images/Teratermでのシリアルオープン.png" width="70%">
+</div>
 
 次に，ターミナルの通信速度を「115200bps」に設定する．
 
@@ -101,16 +120,18 @@ IoT gwであるRaspberry Piの電源(USB電源)を接続すると，シリアル
 起動画面が表示され，最終的に下図のようなログインプロンプトが表示されたところで
 止まる．
 
-
-![IoTgw起動画面](images/IoTgw起動画面.png)
-
+<div style="text-align: center;">
+<img src="images/IoTgw起動画面.png" width="70%">
+</div>
 
 次に，ターミナル画面で以下のユーザ名とパスワードでログインする．
 
 - ユーザ名 : iot-adm
 - パスワード : iot-adm
 
-![IoTgwログイン](images/IoTgwログイン.png)
+<div style="text-align: center;">
+<img src="images/IoTgwログイン.png" width="70%">
+</div>
 
 
 ### 設定変更
@@ -141,7 +162,12 @@ WiFi設定変更メニューを選択する．
 ![SSID等設定](images/SSID等設定.png)
 
 最後に，トップメニューで「``Finish``」を選択して，「``raspi-config``」を終了する．
-![RaspiConfigの終了](images/RaspiConfigの終了.png)
+
+<div style="text-align: center;">
+<img src="images/RaspiConfigの終了.png" width="70%">
+</div>
+
+
 
 
 ### 再起動と動作確認
@@ -151,10 +177,15 @@ WiFi設定変更メニューを選択する．
 
 下図に示すように，基板(Hat)上の赤いボタンをしばらく押すと，シャットダウンが始まる．
 
-![RaspberryPi組み立て前](images/RaspberryPi組み立て前.png)
+<div style="text-align: center;">
+<img src="images/RaspberryPi組み立て前.png" width="80%">
+</div>
 
 シャットダウン中は下のように，LEDが点灯する．
-![Shutdown中のLED](images/Shutdown中のLED.png)
+
+<div style="text-align: center;">
+<img src="images/Shutdown中のLED.png" width="70%">
+</div>
 
 この時，コンソール画面もシャットダウンが開始されていることが
 示されるメッセージが表示されるはずである．
@@ -162,11 +193,16 @@ WiFi設定変更メニューを選択する．
 シャットダウンが最終段階になると，マイクロSDソケット横の
 ミドリLEDが連続点滅し，最終的に消灯される．
 
-![Shutdown最後のLED.png](images/Shutdown最後のLED.png)
+<div style="text-align: center;">
+<img src="images/Shutdown最後のLED.png" width="70%">
+</div>
+
 
 この時，ターミナル画面には，電源断メッセージが出力されている．
-![Shutdown完了画面](images/Shutdown完了画面.png)
 
+<div style="text-align: center;">
+<img src="images/Shutdown完了画面.png" width="70%">
+</div>
 
 ここで，Raspberry Piの電源を抜き差しし，再起動させる．
 
@@ -176,7 +212,11 @@ WiFi設定変更メニューを選択する．
 
 下は，WiFiでインターネット/イントラネットに接続した状態であり，この場合は，IPアドレス(``inet 10.116.63.186``の部分)を
 メモしておく．
-![IPアドレス表示](images/IPアドレス表示.png)
+
+<div style="text-align: center;">
+<img src="images/IPアドレス表示.png" width="70%">
+</div>
+
 
 IoTネットワーク側のIPアドレスは``192.168.1.254``で固定なので，メモしておく必要はない．
 

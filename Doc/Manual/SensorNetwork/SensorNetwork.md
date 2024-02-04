@@ -1,13 +1,15 @@
 # 準備するセンサネットワーク
 
-## ネットワーク構成
+## 1. ネットワーク構成
 [本開発環境で想定するシステム](../Intro/IoT_Introduction.md)でも説明したように，本プロジェクトではTCP/IPのネットワーク上でMQTTプロトコルを利用したセンサ端末を運用する．
 ネットワークとしては，WiFiもしくはイーサネット(場合によっては両方)でセンサ端末を接続するが，センサ端末にはセキュリティを担保するための機能を搭載する能力がないため，
 専用のネットワークを用意する．さらに，その専用ネットワークにMQTTのサーバを設置する．
 
-![センサネットワークの図](../images/SensorNetwork.png)
+<div style="text-align: center;">
+<img src="../images/SensorNetwork.png" width="70%">
+</div>
 
-## IoTゲートウェイ用計算機
+## 2. IoTゲートウェイ用計算機
 本プロジェクトの対象は，あくまで実験や学生の実習が主眼であるため，長期間ネットワーク機器やサーバを設置し続けられる環境ではない．
 そのため，MQTTサーバ用の計算機も小型で運搬が容易な機器が望ましい．このため，ここからの解説では，[Raspberry Pi](https://www.raspberrypi.com/)を利用することを前提に説明を進める．
 
@@ -40,10 +42,12 @@ Raspberry Piでは，Linuxのサーバ機のように，PCとサーバのシリ�
 USB-uartケーブルを毎回Raspberry PiのGPIOピンに挿すのが面倒なので，USB-Uart変換基板を([これ](https://akizukidenshi.com/catalog/g/gM-08461/)とか[これ](https://akizukidenshi.com/catalog/g/gK-14652/))を
 Raspberry Pi用基板([これ](https://www.switch-science.com/products/1905)とか[これ](https://shop.sunhayato.co.jp/products/ub-rpi02))にはんだ付けしたHATを作成して運用しています．
 
-![RaspberryPi + HAT](../images/RaspberryPi+HAT.JPG)
+<div style="text-align: center;">
+<img src="../images/RaspberryPi+HAT.JPG" width="70%">
+</div>
 
 
-## MQTTブローカー用ソフトウェア
+## 3. MQTTブローカー用ソフトウェア
 センサネットワーク上に設置するIoTゲートウェイでは，MQTTのサーバ(MQTTではブローカーと呼ぶ)を動作させ，センサ端末からデータを収集するが，
 Linuxで動作するユーザ数が多いMQTTブローカーとして[Mosquitto](https://mosquitto.org/)がある．
 

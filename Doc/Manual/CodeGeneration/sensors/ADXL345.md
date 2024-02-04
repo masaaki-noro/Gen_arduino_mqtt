@@ -5,13 +5,19 @@
 
 このICを使ったセンサモジュールには以下のようなものがある．
 
-- Grove - 3 Axis Digital Accelerometer(±16g) https://wiki.seeedstudio.com/Grove-3-Axis_Digital_Accelerometer-16g/
-- SparkFun Triple Axis Accelerometer Breakout - ADXL345 https://www.sparkfun.com/products/9836
+- [Grove - 3 Axis Digital Accelerometer(±16g)](https://wiki.seeedstudio.com/Grove-3-Axis_Digital_Accelerometer-16g/)
+- [SparkFun Triple Axis Accelerometer Breakout - ADXL345](https://www.sparkfun.com/products/9836)
 
 
 ## 設定項目
 
-![設定画面](../../images/editConfig_adlx345.png)
+
+<div style="text-align: center;">
+<img src="../../images/editConfig_adlx345.png" width="40%">
+</div>
+
+
+
 
 ### センサID
 この数字を変更することで，多数のセンサが交じる環境で，このセンサのデータを特定することが可能．

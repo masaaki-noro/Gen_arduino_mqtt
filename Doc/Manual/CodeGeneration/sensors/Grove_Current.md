@@ -2,13 +2,17 @@
 
 これは，センサを土などに差し込み，土などが含む水分の量に応じて，センサの出力電圧が変化するタイプのセンサである．
 
-- Grove - Electricity Sensor https://wiki.seeedstudio.com/Grove-Electricity_Sensor/
+- Grove - Electricity Sensor 製品ページ : https://wiki.seeedstudio.com/Grove-Electricity_Sensor/
 
 
 ## 設定項目
 
 
-![設定画面](../../images/editConfig_Grove_Current.png)
+<div style="text-align: center;">
+<img src="../../images/editConfig_Grove_Current.png" width="30%">
+</div>
+
+
 
 ### センサID
 この数字を変更することで，多数のセンサが交じる環境で，このセンサのデータを特定することが可能．

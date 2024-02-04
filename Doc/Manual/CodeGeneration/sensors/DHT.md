@@ -13,7 +13,13 @@
 設定すべき項目は3つ存在する．
 
 
-![設定画面](../../images/editConfig_dht.png)
+
+<div style="text-align: center;">
+<img src="../../images/editConfig_dht.png" width="40%">
+</div>
+
+
+
 
 ### センサID
 

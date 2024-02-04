@@ -2,51 +2,82 @@
 動作の確認が取れているArduinoの機種を使った推奨の構成を組み立てる方法を説明する．
 なお，マイクロSD, LEDとRTCは用途によっては不要であるが，ここでは使うものとする．また，RTCはDS3231を例にとって説明する．
 
-## MKR Zero + MKR Ethernetシールド
+## 1. MKR Zero + MKR Ethernetシールド
 
-### パーツリスト
-- Arduino MKR ZERO
-![Arduino MKR ZERO](../images/MKR_Zero.png)
-https://store-usa.arduino.cc/products/arduino-mkr-zero-i2s-bus-sd-for-sound-music-digital-audio-data
+### 1.1. パーツリスト
 
-- Arduino MKR ETH Shield
-![Arduino MKR ETH Shield](../images/MKR_Ethernet.png)
-https://store-usa.arduino.cc/products/arduino-mkr-eth-shield
+- [Arduino MKR ZERO](https://store-usa.arduino.cc/products/arduino-mkr-zero-i2s-bus-sd-for-sound-music-digital-audio-data)
 
-- Arduino MKR Connector Carrier
-![Arduino MKR Connector Carrier](../images/MKR_Grove_Shield.png)
-https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compatible
+<div style="text-align: center;">
+<img src="../images/MKR_Zero.png" width="50%">
+</div>
+
+
+
+- [Arduino MKR ETH Shield](https://store-usa.arduino.cc/products/arduino-mkr-eth-shield)
+
+<div style="text-align: center;">
+<img src="../images/MKR_Ethernet.png" width="53%">
+</div>
+
+
+
+- [Arduino MKR Connector Carrier](https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compatible)
+
+<div style="text-align: center;">
+<img src="../images/MKR_Grove_Shield.png" width="70%">
+</div>
+
 
 - マイクロSDメディア
 
-- Grove – Chainable RGB LED
-![Grove – Chainable RGB LED](../images/Grove_Chainable_RGB_LED.jpg)
-https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html
+- [Grove – Chainable RGB LED](https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html)
 
-- Grove - 4 pin Male Jumper
-![Grove - 4 pin Male Jumper](../images/Grove_4pin_Male_Jumper.jpg)
-https://www.seeedstudio.com/Grove-4-pin-Male-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-Pack.html
-
-- Adafruit DS3231 Precision RTC Breakout
-![Adafruit DS3231](../images/Adafruit_DS3231.jpg)
-https://www.adafruit.com/product/3013
-
-- Grove - 4 pin Female Jumper to Grove 4 pin Conversion Cable
-![Grove - 4 pin Female Jumper](../images/Grove_4pin_Female_Jumper.jpg)
-https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html
-
-- Grove - I2C Hub
-![Grove - I2C Hub](../images/Grove_I2C_Hub.jpg)
-https://www.seeedstudio.com/Grove-I2C-Hub.html
+<div style="text-align: center;">
+<img src="../images/Grove_Chainable_RGB_LED.jpg" width="30%">
+</div>
 
 
-### 組み立て
+
+- [Grove - 4 pin Male Jumper](https://www.seeedstudio.com/Grove-4-pin-Male-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-Pack.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_4pin_Male_Jumper.jpg" width="70%">
+</div>
+
+
+- [Adafruit DS3231 Precision RTC Breakout](https://www.adafruit.com/product/3013)
+
+<div style="text-align: center;">
+<img src="../images/Adafruit_DS3231.jpg" width="40%">
+</div>
+
+
+
+- [Grove - 4 pin Female Jumper to Grove 4 pin Conversion Cable](https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_4pin_Female_Jumper.jpg" width="40%">
+</div>
+
+
+- [Grove - I2C Hub](https://www.seeedstudio.com/Grove-I2C-Hub.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_I2C_Hub.jpg" width="30%">
+</div>
+
+
+
+### 1.2. 組み立て
 
 本体とGrove対応基板，イーサネットシールドを下図のように組み立てる．この時，青い大きな端子(ターミナルブロック)とはUSBやイーサネットのコネクタが反対になるように組み上げる．
 
 さらに，マイクロSDは本体側のスロットに挿入する．イーサネットシールドにもマイクロSDのスロットは存在するが，本体側が優先されるため，イーサネットシールド側にマイクロSDを挿入しても，認識されない．
 
-![MKR_Zero_Base](../images/MKR_Zero_Base.jpg)
+<div style="text-align: center;">
+<img src="../images/MKR_Zero_Base.jpg" width="80%">
+</div>
 
 
 LEDはデジタル端子2つが1つのGroveコネクタに配線されている必要があるため，下図の「A5A6」もしくは「D5D6」コネクタのどちらかに接続する必要がある．
@@ -54,137 +85,213 @@ LEDはデジタル端子2つが1つのGroveコネクタに配線されている�
 回路の配線の都合上，アナログ端子をデジタル端子として利用できない．
 
 
-![MKR_Grove_Shield](../images/MKR_Grove_Shield.png)
+<div style="text-align: center;">
+<img src="../images/MKR_Grove_Shield.png" width="70%">
+</div>
+
+
 
 そのため，この[ケーブル](https://www.seeedstudio.com/Grove-4-pin-Male-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-Pack.html)を使って
 配線する必要があるが，Groveのコネクタへの配線，I2CやSPIのピン配置を考えると，「D6,D7」に接続するのが望ましい．
 「D6」に白ケーブル,「D7」に黄色ケーブル,「GND」に黒ケーブル「VCC」に赤ケーブルを接続する．
 
 
-![MKR_Zero+LED](../images/MKR_Zero+LED.jpg)
+<div style="text-align: center;">
+<img src="../images/MKR_Zero+LED.jpg" width="70%">
+</div>
+
+
 
 
 RTCはI2C接続であるため，下図の「TWI」端子に接続する必要がある．
 
-![MKR_Grove_Shield](../images/MKR_Grove_Shield.png)
+<div style="text-align: center;">
+<img src="../images/MKR_Grove_Shield.png" width="70%">
+</div>
+
+
+
 
 ただし，コネクタが1つしか存在しないため，I2Cのセンサ等を後に接続する可能性があるため，I2C HUBを基板のTWIに接続し，I2C HUBにRTCを繋ぐ．
 
+<div style="text-align: center;">
+<img src="../images/MKR_ZERO+LED+RTC.jpg" width="70%">
+</div>
 
-![MKR_ZERO+LED+RTC](../images/MKR_ZERO+LED+RTC.jpg)
+
+
 
 RTC(DS3231)の配線は，VIN端子に赤色，GND端子に黒色，SCL端子に黄色，SDA端子に白色端子を接続する．
-![DS3231](../images/DS3231.JPG)
+
+<div style="text-align: center;">
+<img src="../images/DS3231.JPG" width="70%">
+</div>
 
 
 
-## MKR WiFi1010 + マイクロSDシールド
 
-### パーツリスト
-- Arduino MKR WiFi 1010
 
-![Arduino MKR WiFi 1010](../images/MKR_WiFi1010.png)
+## 2. MKR WiFi1010 + マイクロSDシールド
 
-https://store-usa.arduino.cc/products/arduino-mkr-wifi-1010
+### 2.1. パーツリスト
+- [Arduino MKR WiFi 1010](https://store-usa.arduino.cc/products/arduino-mkr-wifi-1010)
 
-- Arduino MKR Connector Carrier
-![Arduino MKR Connector Carrier](../images/MKR_Grove_Shield.png)
-https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compatible
+<div style="text-align: center;">
+<img src="../images/MKR_WiFi1010.png" width="50%">
+</div>
+
+
+
+
+- [Arduino MKR Connector Carrier](https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compatible)
+
+<div style="text-align: center;">
+<img src="../images/MKR_Grove_Shield.png" width="70%">
+</div>
+
+
 
 
 - マイクロSDメディア
 
-- MKR SD Proto Shield
-![MKR SD Proto Shield](../images/MKR_SD.png)
-https://store-usa.arduino.cc/products/mkr-sd-proto-shield
+- [MKR SD Proto Shield](https://store-usa.arduino.cc/products/mkr-sd-proto-shield)
 
-- Grove – Chainable RGB LED
+<div style="text-align: center;">
+<img src="../images/MKR_SD.png" width="50%">
+</div>
 
-![Grove – Chainable RGB LED](../images/Grove_Chainable_RGB_LED.jpg)
-https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html
+- [Grove – Chainable RGB LED](https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_Chainable_RGB_LED.jpg" width="30%">
+</div>
+
+- [Adafruit DS3231 Precision RTC Breakout](https://www.adafruit.com/product/3013)
+
+<div style="text-align: center;">
+<img src="../images/Adafruit_DS3231.jpg" width="40%">
+</div>
+
+- [Grove - 4 pin Female Jumper to Grove 4 pin Conversion Cable](https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_4pin_Female_Jumper.jpg" width="40%">
+</div>
+
+- [Grove - I2C Hub](https://www.seeedstudio.com/Grove-I2C-Hub.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_I2C_Hub.jpg" width="30%">
+</div>
 
 
-- Adafruit DS3231 Precision RTC Breakout
-![Adafruit DS3231](../images/Adafruit_DS3231.jpg)
-https://www.adafruit.com/product/3013
-
-
-- Grove - 4 pin Female Jumper to Grove 4 pin Conversion Cable
-![Grove - 4 pin Female Jumper](../images/Grove_4pin_Female_Jumper.jpg)
-https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html
-
-- Grove - I2C Hub
-![Grove - I2C Hub](../images/Grove_I2C_Hub.jpg)
-https://www.seeedstudio.com/Grove-I2C-Hub.html
-
-
-
-### 組み立て
+### 2.2. 組み立て
 
 本体とGrove対応基板，イーサネットシールドを下図のように組み立てる．この時，青い大きな端子(ターミナルブロック)とはUSBやイーサネットのコネクタが反対になるように組み上げる．
 
 さらに，マイクロSDは本体側のスロットに挿入する．イーサネットシールドにもマイクロSDのスロットは存在するが，本体側が優先されるため，イーサネットシールド側にマイクロSDを挿入しても，認識されない．
 
-![MKR_WiFi1010_Base](../images/MKR_WiFi1010_Base.png)
+
+<div style="text-align: center;">
+<img src="../images/MKR_WiFi1010_Base.png" width="80%">
+</div>
+
+
 
 
 Arduinoのアナログ端子はデジタル端子としても利用できるが，
 Arduino MKR Connector Carrierのアナログ端子の配線の関係で，「A5A6」コネクタをデジタル端子として利用することが
 できないため，D5D6端子に接続する必要がある．
 
-![MKR_Grove_Shield](../images/MKR_Grove_Shield.png)
+<div style="text-align: center;">
+<img src="../images/MKR_Grove_Shield.png" width="70%">
+</div>
+
+
 
 
 RTCはI2C接続であるため，下図の「TWI」端子に接続する必要がある．
 
-![MKR_Grove_Shield](../images/MKR_Grove_Shield.png)
+<div style="text-align: center;">
+<img src="../images/MKR_Grove_Shield.png" width="70%">
+</div>
 
 ただし，コネクタが1つしか存在しないため，I2Cのセンサ等を後に接続する可能性があるため，I2C HUBを基板のTWIに接続し，I2C HUBにRTCを繋ぐ．
 
 
-![MKR_WiFi1010+LED+RTC](../images/MKR_WiFi1010+LED+RTC.jpg)
+<div style="text-align: center;">
+<img src="../images/MKR_WiFi1010+LED+RTC.jpg" width="80%">
+</div>
+
 
 RTC(DS3231)の配線は，VIN端子に赤色，GND端子に黒色，SCL端子に黄色，SDA端子に白色端子を接続する．
-![DS3231](../images/DS3231.JPG)
+
+
+
+<div style="text-align: center;">
+<img src="../images/DS3231.JPG" width="40%">
+</div>
+
+
+
+## 3. Arduino Uno R4 Minima + Ethernetシールド
+
+### 3.1. パーツリスト
+- [Arduino UNO R4 Minima](https://store-usa.arduino.cc/products/uno-r4-minima)
+
+<div style="text-align: center;">
+<img src="../images/Uno_R4.png" width="50%">
+</div>
 
 
 
 
-## Arduino Uno R4 Minima + Ethernetシールド
-
-### パーツリスト
-- Arduino® UNO R4 Minima
-![Arduino® UNO R4 Minima](../images/Uno_R4.png)
-https://store-usa.arduino.cc/products/uno-r4-minima
 
 
-- Arduino Ethernet Shield 2
-![Arduino Ethernet Shield 2](../images/Classic_Ethernet.png)
-https://store-usa.arduino.cc/products/arduino-ethernet-shield-2
+- [Arduino Ethernet Shield 2](https://store-usa.arduino.cc/products/arduino-ethernet-shield-2)
 
-- Arduino用 Groveベースシールド
-![Arduino用 Groveベースシールド](../images/Groveシールド.jpg)
-https://jp.seeedstudio.com/Base-Shield-V2.html
+<div style="text-align: center;">
+<img src="../images/Classic_Ethernet.png" width="50%">
+</div>
+
+
+
+
+
+- [Arduino用 Groveベースシールド](https://jp.seeedstudio.com/Base-Shield-V2.html)
+
+<div style="text-align: center;">
+<img src="../images/Groveシールド.jpg" width="70%">
+</div>
+
+
+
 
 
 - マイクロSDメディア
 
-- Grove – Chainable RGB LED
-![Grove – Chainable RGB LED](../images/Grove_Chainable_RGB_LED.jpg)
-https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html
+- [Grove – Chainable RGB LED](https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html)
 
-- Adafruit DS3231 Precision RTC Breakout
-![Adafruit DS3231](../images/Adafruit_DS3231.jpg)
-https://www.adafruit.com/product/3013
+<div style="text-align: center;">
+<img src="../images/Grove_Chainable_RGB_LED.jpg" width="30%">
+</div>
 
 
-- Grove - 4 pin Female Jumper to Grove 4 pin Conversion Cable
-![Grove - 4 pin Female Jumper](../images/Grove_4pin_Female_Jumper.jpg)
-https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html
+- [Adafruit DS3231 Precision RTC Breakout](https://www.adafruit.com/product/3013)
+
+<div style="text-align: center;">
+<img src="../images/Adafruit_DS3231.jpg" width="40%">
+</div>
 
 
+- [Grove - 4 pin Female Jumper to Grove 4 pin Conversion Cable](https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html)
 
-### 組み立て
+<div style="text-align: center;">
+<img src="../images/Grove_4pin_Female_Jumper.jpg" width="50%">
+</div>
+
+
+### 3.2. 組み立て
 
 イーサネットシールドの背が高いため，積み重ねる際には，本体，Groveシールド，イーサネットシールドの順で重ねる必要がある．
 
@@ -193,91 +300,165 @@ https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-
 
 イーサネットシールドに，マイクロSDを挿入する．
 
-![イーサネットシールド+マイクロSD](../images/Ethernet_Shield+micro_SD.jpg)
+<div style="text-align: center;">
+<img src="../images/Ethernet_Shield+micro_SD.jpg" width="80%">
+</div>
+
 
 
 GroveシールドのI2CコネクタにRTCを，デジタル端子にLEDを接続するが，後で接続するモジュール(回路)が増える可能性もあるので，シール基板の中央付近のコネクタを選択している．下図では，LEDはGrove D2コネクタ(D2端子とD3端子の2個組)を利用している
 
-![Groveシールド+rtc+LED](../images/Grove_Shield+LED+RTC.jpg)
+<div style="text-align: center;">
+<img src="../images/Grove_Shield+LED+RTC.jpg" width="80%">
+</div>
+
+
 
 最後に，本体と重ねて組み上げれば終了である．
 
-![Uno R4 Base system](../images/UNO+Shield+RTC+LED.jpg)
+<div style="text-align: center;">
+<img src="../images/UNO+Shield+RTC+LED.jpg" width="80%">
+</div>
+
+
 
 
 RTC(DS3231)の配線は，VIN端子に赤色，GND端子に黒色，SCL端子に黄色，SDA端子に白色端子を接続する．
-![DS3231](../images/DS3231.JPG)
+
+<div style="text-align: center;">
+<img src="../images/DS3231.JPG" width="40%">
+</div>
 
 
-## Arduino Uno R4 WiFi + マイクロSDシールド
-### パーツリスト
-- Arduino® UNO R4 WiFi
-![Arduino® UNO R4 WiFi](../images/Uno_R4_WiFi.png)
-https://store-usa.arduino.cc/products/uno-r4-wifi
 
 
-- Arduino用 Groveベースシールド
-
-![Arduino用 Groveベースシールド](../images/Groveシールド.jpg)
-https://jp.seeedstudio.com/Base-Shield-V2.html
+## 4. Arduino Uno R4 WiFi + マイクロSDシールド
+### 4.1. パーツリスト
 
 
-- SD Card Shield
-https://www.seeedstudio.com/SD-Card-Shield-V4-p-1381.html
+- [Arduino UNO R4 WiFi](https://store-usa.arduino.cc/products/uno-r4-wifi)
 
-- SparkFun microSD Shield
-https://www.sparkfun.com/products/12761
+<div style="text-align: center;">
+<img src="../images/Uno_R4_WiFi.png" width="50%">
+</div>
+
+
+
+- [Arduino用 Groveベースシールド](https://jp.seeedstudio.com/Base-Shield-V2.html)
+
+<div style="text-align: center;">
+<img src="../images/Groveシールド.jpg" width="70%">
+</div>
+
+
+
+
+- [SD Card Shield](https://www.seeedstudio.com/SD-Card-Shield-V4-p-1381.html)
+
+
+- [SparkFun microSD Shield](https://www.sparkfun.com/products/12761)
+
 
 - マイクロSDメディア
 
-- Grove – Chainable RGB LED
-![Grove – Chainable RGB LED](../images/Grove_Chainable_RGB_LED.jpg)
-https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html
+- [Grove – Chainable RGB LED](https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html)
 
-- Adafruit DS3231 Precision RTC Breakout
-![Adafruit DS3231](../images/Adafruit_DS3231.jpg)
-https://www.adafruit.com/product/3013
+<div style="text-align: center;">
+<img src="../images/Grove_Chainable_RGB_LED.jpg" width="30%">
+</div>
 
 
-- Grove - 4 pin Female Jumper to Grove 4 pin Conversion Cable
-![Grove - 4 pin Female Jumper](../images/Grove_4pin_Female_Jumper.jpg)
-https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html
 
-### 組み立て
+
+- [Adafruit DS3231 Precision RTC Breakout](https://www.adafruit.com/product/3013)
+
+<div style="text-align: center;">
+<img src="../images/Adafruit_DS3231.jpg" width="40%">
+</div>
+
+
+- [Grove - 4 pin Female Jumper to Grove 4 pin Conversion Cable](https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_4pin_Female_Jumper.jpg" width="50%">
+</div>
+
+
+
+### 4.2. 組み立て
 
 下の手順は，[SDシールド](https://www.seeedstudio.com/SD-Card-Shield-V4-p-1381.html)ではなく，[マイクロSDシールド](https://www.sparkfun.com/products/12761)を
 用いたものであるが，手順は同じである．
 
 まずはじめに，マイクロSDのシールドにメディアを挿しておく．
-![Sparcfun_sd_shield](../images/Sparcfun_sd_shield.JPG)
+
+
+<div style="text-align: center;">
+<img src="../images/Sparcfun_sd_shield.JPG" width="80%">
+</div>
+
+
 
 マイクロSDのシールドは基板面に触ることがないので，本体とGroveのシールドで挟む形で組み立てる．
-![Uno_R4_WiFi_Base](../images/Uno_R4_WiFi_Base.JPG)
+
+<div style="text-align: center;">
+<img src="../images/Uno_R4_WiFi_Base.JPG" width="80%">
+</div>
+
 
 RTC(DS3231)の配線は，VIN端子に赤色，GND端子に黒色，SCL端子に黄色，SDA端子に白色端子を接続する．
-![DS3231](../images/DS3231.JPG)
+
+<div style="text-align: center;">
+<img src="../images/DS3231.JPG" width="40%">
+</div>
+
+
 
 最後に，RTCをGroveのI2C端子のいずれかに，また，LEDはGroveのD6コネクタ(D6ピンとD7ピンを使うもの)に挿す．
+<div style="text-align: center;">
+<img src="../images/Uno_R4_WiFi_Base_all.JPG" width="80%">
+</div>
 
-![Uno_R4_WiFi_Base_all](../images/Uno_R4_WiFi_Base_all.JPG)
 
-## Arduino Nano 33 IoT
-### パーツリスト
-Arduino Nano 33 IoT
-![Nano_33_IoT](../images/Nano_33_IoT.png)
-https://store-usa.arduino.cc/products/arduino-nano-33-iot
+## 5. Arduino Nano 33 IoT
+### 5.1. パーツリスト
 
-Grove Shield for Arduino Nano
-![Grove_nano_shield](../images/Grove_nano_shield.jpg)
-https://www.seeedstudio.com/Grove-Shield-for-Arduino-Nano-p-4112.html
 
-ピンソケット
-![ピンソケット](../images/ピンソケット.jpg)
-https://akizukidenshi.com/catalog/g/gC-10102/
+- [Arduino Nano 33 IoT](https://store-usa.arduino.cc/products/arduino-nano-33-iot)
 
-マイクロSDモジュール
-![マイクロSDモジュール](../images/マイクロSDモジュール.jpg)
-https://www.adafruit.com/product/254
+<div style="text-align: center;">
+<img src="../images/Nano_33_IoT.png" width="50%">
+</div>
+
+
+
+
+
+- [Grove Shield for Arduino Nano](https://www.seeedstudio.com/Grove-Shield-for-Arduino-Nano-p-4112.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_nano_shield.jpg" width="70%">
+</div>
+
+
+
+
+- [ピンソケット](https://akizukidenshi.com/catalog/g/gC-10102/)
+
+<div style="text-align: center;">
+<img src="../images/ピンソケット.jpg" width="30%">
+</div>
+
+
+
+
+
+- [マイクロSDモジュール](https://www.adafruit.com/product/254)
+
+<div style="text-align: center;">
+<img src="../images/マイクロSDモジュール.jpg" width="40%">
+</div>
+
 
 
 - ジャンパーワイヤ
@@ -289,42 +470,71 @@ https://www.adafruit.com/product/254
 | 青 | https://akizukidenshi.com/catalog/g/gC-08934/ |
 | 白 | https://akizukidenshi.com/catalog/g/gC-08935/ |
 
-![ジャンパーケーブル黒](../images/ジャンパーケーブル黒.jpg)
+<div style="text-align: center;">
+<img src="../images/ジャンパーケーブル黒.jpg" width="40%">
+</div>
+
+
 
 
 - マイクロSDメディア
 
 
-- Grove – Chainable RGB LED
-![Grove – Chainable RGB LED](../images/Grove_Chainable_RGB_LED.jpg)
-https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html
+- [Grove – Chainable RGB LED](https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html)
 
-- Adafruit DS3231 Precision RTC Breakout
-![Adafruit DS3231](../images/Adafruit_DS3231.jpg)
-https://www.adafruit.com/product/3013
+<div style="text-align: center;">
+<img src="../images/Grove_Chainable_RGB_LED.jpg" width="30%">
+</div>
 
 
-- Grove - 4 pin Female Jumper to Grove 4 pin Conversion Cable
-![Grove - 4 pin Female Jumper](../images/Grove_4pin_Female_Jumper.jpg)
-https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html
 
 
-- Grove - I2C Hub
-![Grove - I2C Hub](../images/Grove_I2C_Hub.jpg)
-https://www.seeedstudio.com/Grove-I2C-Hub.html
+
+- [Adafruit DS3231 Precision RTC Breakout](https://www.adafruit.com/product/3013)
+
+<div style="text-align: center;">
+<img src="../images/Adafruit_DS3231.jpg" width="40%">
+</div>
 
 
-### 組み立て
+- [Grove - 4 pin Female Jumper to Grove 4 pin Conversion Cable](https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_4pin_Female_Jumper.jpg" width="50%">
+</div>
+
+
+- [Grove - I2C Hub](https://www.seeedstudio.com/Grove-I2C-Hub.html)
+
+
+<div style="text-align: center;">
+<img src="../images/Grove_I2C_Hub.jpg" width="30%">
+</div>
+
+
+### 5.2. 組み立て
 
 
 Arduino Nano 33 IoTの各ピンがどのような機能の端子に対応しているかを示す図が公式サイトの
 [ここ](https://content.arduino.cc/assets/Pinout-NANO33IoT_latest.pdf)に記載されている．
 
 上の図の中で，SPIに関係する端子は下図の赤点線で囲まれている端子(D11, D12, D13)となる．
-![Nano_33_IoT_SPI](../images/Nano_33_IoT_SPI.png)
+
+
+<div style="text-align: center;">
+<img src="../images/Nano_33_IoT_SPI.png" width="100%">
+</div>
+
+
+
 
 また，マイクロSDモジュールのピンは以下の図の通り．
-![マイクロSDモジュール_Pin](../images/マイクロSDモジュール_Pin.jpg)
+
+<div style="text-align: center;">
+<img src="../images/マイクロSDモジュール_Pin.jpg" width="50%">
+</div>
+
+
 
 マイクロSDはSPI接続となるため，[マイクロSDモジュール](https://www.adafruit.com/product/254)の各端子とNano 33 IoTとの
 ピンの対応関係は以下の表のようになる．
@@ -342,24 +552,41 @@ Arduino Nano 33 IoTの各ピンがどのような機能の端子に対応して�
 Grove用のコネクタに割り当てられていないため，これを用いるのが望ましい．
 
 また，Nano用Groveシールドにピンをはんだ付けし，Nanoを挿入すると端子番号はほぼ読めなくなるため，下に拡大図を示す．
-![Nano_Grove_SPI](../images/Nano_Grove_SPI.png)
+<div style="text-align: center;">
+<img src="../images/Nano_Grove_SPI.png" width="80%">
+</div>
+
+
 
 実際に配線すると以下のようになる．
 
-![マイクロSDの接続](../images/Nano33_IoT+SD.png)
+<div style="text-align: center;">
+<img src="../images/Nano33_IoT+SD.png" width="80%">
+</div>
+
+
 
 次に，LEDとRTC等のI2C機器の接続であるが，LEDは特に規制は無いが，既に使われている比率が高い数字の大きい方から選択し，D6コネクタ(D6とD7端子)とし，
 I2Cは該当のコネクタがGroveシールド上にあるため，それを使う．
 
-![Nano_Grove_LED等](../images/Nano_Grove_LED等.png)
+<div style="text-align: center;">
+<img src="../images/Nano_Grove_LED等.png" width="60%">
+</div>
+
 
 
 また，RTC(DS3231)の配線は，VIN端子に赤色，GND端子に黒色，SCL端子に黄色，SDA端子に白色端子を接続する．
-![DS3231](../images/DS3231.JPG)
+<div style="text-align: center;">
+<img src="../images/DS3231.JPG" width="40%">
+</div>
 
 全て配線すると以下の図のようになる．
 
-![Nano33_IoT+周辺機器](../images/Nano33_IoT+SD+LED+RTC.png)
+<div style="text-align: center;">
+<img src="../images/Nano33_IoT+SD+LED+RTC.png" width="80%">
+</div>
+
+
 
 
 <!-- コメントアウトしたい内容 -->

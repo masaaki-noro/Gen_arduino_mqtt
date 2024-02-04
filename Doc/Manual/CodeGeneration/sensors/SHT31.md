@@ -12,8 +12,11 @@ SENSIRION社の温湿度センサでI2Cインターフェースで接続でき�
 
 
 
-![設定画面](../../images/editConfig_sht31.png)
 
+
+<div style="text-align: center;">
+<img src="../../images/editConfig_sht31.png" width="40%">
+</div>
 
 
 

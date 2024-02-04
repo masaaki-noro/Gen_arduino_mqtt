@@ -11,12 +11,22 @@
 下の写真はこのモジュールの基板部分の拡大であるが，赤外線のLEDと赤外線センサを組み合わせて，
 LEDが発した赤外線を地面等で反射したものが赤外線センサで検知できるか否かでセンサの出力が変化する．
 
-![赤外線センサ部分](../../images/IR_distance_sensor.jpg)
+
 [写真出典](https://jp.seeedstudio.com/Grove-IR-Distance-Interrupter-v1-2.html)
 
+<div style="text-align: center;">
+<img src="../../images/IR_distance_sensor.jpg" width="50%">
+</div>
+
+
 下の写真の「R8」の部分のネジを回すことで，検出する距離の調整を行う．
-![赤外線センサ部分](../../images/IR_distance_surface.jpg)
+
 [写真出典](https://jp.seeedstudio.com/Grove-IR-Distance-Interrupter-v1-2.html)
+
+<div style="text-align: center;">
+<img src="../../images/IR_distance_surface.jpg" width="90%">
+</div>
+
 
 
 ## 接続先の情報

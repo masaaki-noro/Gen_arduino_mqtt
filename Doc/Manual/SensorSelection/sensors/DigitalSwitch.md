@@ -16,8 +16,12 @@ Groveとしてモジュール化されたものも存在する．
 ## Arduinoとの接続例
 デジタル端子1つに接続する必要があるため，Groveの端子に接続できるモジュールを用いる場合は，ケーブル1本で何れかのデジタル端子に接続すれば良い．
 
-![Grove Buttonの接続例](../../images/seeeduino_button.jpg)
+
 [写真出典](https://wiki.seeedstudio.com/Grove-Button/)
+
+<div style="text-align: center;">
+<img src="../../images/seeeduino_button.jpg" width="90%">
+</div>
 
 
 ## 接続先の情報

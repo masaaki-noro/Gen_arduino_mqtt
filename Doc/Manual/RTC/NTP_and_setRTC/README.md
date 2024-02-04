@@ -2,7 +2,7 @@
 # NTPを使って、RTCに時刻を設定するプログラム
 
 
-## 動作確認した環境
+## 1. 動作確認した環境
 
 - ESPr One 32 (ESP32) https://www.switch-science.com/products/3555
 - Arduino Mega 2560 + Arduino ETHERNET shield2
@@ -10,10 +10,10 @@
 
 ネットワークの条件は「pool.ntp.org」とUDP通信が可能であること．
 
-## 設定
+## 2. 設定
 「``config.h``」を編集して，以下の項目を利用する環境に合わせて変更
 
-### ネットワークメディア
+### 2.1. ネットワークメディア
 イーサネットを利用する場合，「``USE_ETHERNET``」を有効にして，
 MACアドレス(「``FIX_MAC_ADDRESS``」)を変更する．
 WiFiネットワークを利用する場合は，「``USE_ETHERNET``」をコメントアウトする．
@@ -28,7 +28,7 @@ WiFiネットワークを使う場合は，以下の2項目を接続するネッ
 #define WIFI_PASS "wifi_password"
 ```
 
-### IPアドレス
+### 2.2. IPアドレス
 IPアドレスは自動設定(「DHCP」)を用いる場合は，「``#define USE_DHCP``」を有効化，
 固定設定を行う場合は，「``#define USE_DHCP``」をコメントアウト．
 
@@ -46,7 +46,7 @@ IPアドレスは自動設定(「DHCP」)を用いる場合は，「``#define US
 ```
 
 
-### 利用するRTCの選択
+### 2.3. 利用するRTCの選択
 利用するRTCの種類に関する定義のみ有効化する．
 ```
 //#define USE_RTC_4543
@@ -60,7 +60,7 @@ IPアドレスは自動設定(「DHCP」)を用いる場合は，「``#define US
 //#define USE_RX8900
 ```
 
-### RTCのインターフェース
+### 2.4. RTCのインターフェース
 I2Cではないインターフェースを持つ，RTCを使う場合は，Arduinoと接続する際のピン番号を以下の項目に定義(編集)する．
 ```
 // 独自I/F : EPSON 4543

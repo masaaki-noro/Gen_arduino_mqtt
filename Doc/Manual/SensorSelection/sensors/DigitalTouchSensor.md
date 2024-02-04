@@ -13,9 +13,13 @@
 デジタル端子1つに接続する必要があるため，Groveの端子に接続できるモジュールを用いる場合は，ケーブル1本で何れかのデジタル端子に接続すれば良い．
 
 以下のイメージは，タッチセンサを触れた場合にLEDを点灯させるようなアプリケーションを想定した接続である．
-![Grove Buttonの接続例](../../images/grove_touch_sensor.jpg)
+
 [写真出典](https://wiki.seeedstudio.com/Grove-Touch_Sensor/)
 
+
+<div style="text-align: center;">
+<img src="../../images/grove_touch_sensor.jpg" width="90%">
+</div>
 
 ## 接続先の情報
 

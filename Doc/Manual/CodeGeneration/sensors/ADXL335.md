@@ -4,12 +4,16 @@
 
 このICを使ったセンサモジュールには以下のようなものがある．
 
-- Grove - 3-Axis Analog Accelerometer https://wiki.seeedstudio.com/Grove-3-Axis_Analog_Accelerometer/
+- [Grove - 3-Axis Analog Accelerometer](https://wiki.seeedstudio.com/Grove-3-Axis_Analog_Accelerometer/)
 
 
 ## 設定項目
 
-![設定画面](../../images/editConfig_adlx335.png)
+<div style="text-align: center;">
+<img src="../../images/editConfig_adlx335.png" width="30%">
+</div>
+
+
 
 ### 接続端子の指定
 

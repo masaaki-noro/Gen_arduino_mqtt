@@ -2,12 +2,15 @@
 
 指に測定用の端子をつけて，その端子間の電流の流れやすさを測定するためのセンサである．
 
-- Grove - GSR Sensor https://wiki.seeedstudio.com/Grove-GSR_Sensor/
+- Grove - GSR Sensor 製品ページ : https://wiki.seeedstudio.com/Grove-GSR_Sensor/
 
 
 ## 設定項目
 
-![設定画面](../../images/editConfig_gsr.png)
+<div style="text-align: center;">
+<img src="../../images/editConfig_gsr.png" width="40%">
+</div>
+
 
 ## センサID
 この数字を変更することで，多数のセンサが交じる環境で，このセンサのデータを特定することが可能．

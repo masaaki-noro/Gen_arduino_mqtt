@@ -4,7 +4,10 @@
 
 下図は起動時の画面であるが，このページでは，チェック対象のファイルを選択し，そのファイルをロードするところまでを行う．
 
-![初期画面](../images/checkConfig1.png)
+<div style="text-align: center;">
+<img src="../images/checkConfig1.png" width="40%">
+</div>
+
 
 次に，管理者の推奨プラットフォームを利用するか否かを指示する．
 このプログラムでは，管理者が配布したハードウェアのMCUの種類や
@@ -12,70 +15,99 @@ LED等で利用されているピン番号等を記載したconfigファイル�
 管理者がArduinoおよびRTC等の周辺回路を用意している場合，
 用意されたハードウェアの情報を用いて，仕様の整合性の検査を行う．
 
-![ベースシステム利用判断](../images/checkConfig2.png)
+<div style="text-align: center;">
+<img src="../images/checkConfig2.png" width="30%">
+</div>
+
 
 何れかを選択したら，「Nextボタン」で次に進む．
 
-## 事前に準備されたシステムを用いる場合
+## 1. 事前に準備されたシステムを用いる場合
 管理者が用意したベースとなるシステムの利用を選択した場合，
 どのシステムを用いるかをここで選択する．
 
 管理者が用意したconfigファイルに規定されたシステムの
 名前の中から，渡された装置の名前を選択する(下図右)．
-![ベースシステムの選択](../images/checkConfig3.png)
+
+<div style="text-align: center;">
+<img src="../images/checkConfig3.png" width="80%">
+</div>
+
 
 事前に準備されたシステムを用いる場合は，選択肢は
 これで終了し，「Nextボタン」で診断画面に遷移する．
 
 
-## 事前に準備されたシステムはない(もしくは利用しない)場合
+## 2. 事前に準備されたシステムはない(もしくは利用しない)場合
 事前に用意されたシステムが存在しない，もしくは，用意されたものを利用しない場合は，
 実際に使う機材のハードウェアの情報を順次入力していく．
 
 
-### Arduinoの機種選択
+### 2.1. Arduinoの機種選択
 最初に，Arduinoの機種を選択する．選択肢には，動作が確認された純正のArduinoか
 動作しない可能性はあるが，その他を選択することができる．
-![Arduino機種選択](../images/checkConfig4.png)
 
-### Grove対応シールドの利用
+<div style="text-align: center;">
+<img src="../images/checkConfig4.png" width="80%">
+</div>
+
+
+
+### 2.2. Grove対応シールドの利用
 ここでは，Seeed Studio社の[Groveシールド](https://jp.seeedstudio.com/Base-Shield-V2.html)や[Arduino MKR Connector Carrier](https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compatible)を利用するか否かを選択する．
 
-![Groveシールドの利用](../images/checkConfig5.png)
+<div style="text-align: center;">
+<img src="../images/checkConfig5.png" width="30%">
+</div>
+
 
 動作が確認されているArduinoの機種を用いる場合は，ここで選択は終了し，「Nextボタン」で診断画面に遷移する．
 
-### Arduinoの機種が選択「その他」で，「Groveシールド」を用いる場合
+### 2.3. Arduinoの機種が選択「その他」で，「Groveシールド」を用いる場合
 Groveシールドを用いる場合，コネクタ数やどのピンにコネクタが割当てられているかが
 Arduinoのファミリによって異なるため，ファミリの種類を選択する．
 
-![Arduinoファミリの選択](../images/checkConfig6.png)
+<div style="text-align: center;">
+<img src="../images/checkConfig6.png" width="60%">
+</div>
+
+
 
 
 なお，現在このソフトウェアはMegaファミリ(MegaおよびGita)には対応していない．
 
-### MCUの種類の選択
+### 2.4. MCUの種類の選択
 Arduinoの機種が「その他」であるため，仕様する機種に搭載しているMCUの種別を選択する(下図)．
 選択できるのは，動作が確認されているMCUと「other(動作未確認)」である．
-![MCUの選択](../images/checkConfig7.png)
+
+<div style="text-align: center;">
+<img src="../images/checkConfig7.png" width="60%">
+</div>
+
+
 
 MCUの種別が「other」でなければ，これで選択は終わり，「Nextボタン」で診断画面に遷移する．
 
-### 動作電圧の選択
+### 2.5. 動作電圧の選択
 ここでは，利用するArduino(もしくは互換機)の動作電圧を選択する．
 選択可能なのは，3.3Vと5.0Vの2種類である．
 この電圧は，ACアダプタから給電する電圧ではなく，回路の動作電圧であることに注意．
-![VDDの選択](../images/checkConfig8.png)
+
+<div style="text-align: center;">
+<img src="../images/checkConfig8.png" width="60%">
+</div>
 
 
-## 検査
+
+
+## 3. 検査
 本ソフトウェアにおける検査には以下のような項目がある．
 - MCU対応機能の確認
 - 動作電圧のチェック
 - 端子の重複利用
 
 
-### MCU対応機能の確認
+### 3.1. MCU対応機能の確認
 この項目では，生成させるArduinoのスケッチが利用しているライブラリがMCUに対応しているか否かの組み合わせを検査する．
 
 検査するのは，以下の2種類．
@@ -88,7 +120,7 @@ WDTは，MCUが無反応になった場合に再起動させて動作を復帰�
 そのため，仕様定義ファイルで，WDTや省電力モードの利用が宣言されているにも関わらず，利用している機種のMCUが
 これらの機能のライブラリでサポートされていない場合にエラーとして報告される．
 
-### 動作電圧チェック
+### 3.2. 動作電圧チェック
 Arduino(や互換機)が搭載しているMCUの動作電圧と，利用するセンサの動作電圧が一致していない場合に警告(エラーではない)を出力する．
 エラーにしない理由は，ハードウェア的にセンサICの動作電圧とモジュールにした際につけられた周辺回路の関係で，実際の動作電圧が一致しない場合が
 あるためである．
@@ -96,20 +128,29 @@ Arduino(や互換機)が搭載しているMCUの動作電圧と，利用する�
 具体的には，センサICの周りに信号電圧を変換する回路をつけることで，動作電圧を変化させることは珍しくなく，ICの動作電圧と
 センサモジュールの動作電圧の範囲が一致しているとは限らない．
 
-### デジタル/アナログ端子の重複利用
+### 3.3. デジタル/アナログ端子の重複利用
 I2CやSPIのデータ通信用の端子を除くと，1つの端子に接続できる周辺回路は1つに限定される．そのため，SDやLEDと利用が宣言されているセンサの端子番号が同じものがないかどうかを確認する．
 
 また，Arduinoのアナログ端子はデジタル端子としても利用できるため，これも確認している．これらの結果はエラーとして出力される．
 
-### 検査画面
+### 3.4. 検査画面
 下図の画面が検査実施前の画面状態である．
 先程までの検査パラメータの選択で特に問題がなければ「検査実施」ボタンを押す．
 また，「Back to top」ボタンは検査対象のファイルを選びなおすところまで戻る．
-![VDDの選択](../images/checkConfig9.png)
 
-### 検査の例
+<div style="text-align: center;">
+<img src="../images/checkConfig9.png" width="40%">
+</div>
+
+
+### 3.5. 検査の例
 下の図は，とある仕様定義ファイルで検査した場合の出力である．
-![検査結果の例](../images/checkConfig10.png)
+
+<div style="text-align: center;">
+<img src="../images/checkConfig10.png" width="40%">
+</div>
+
+
 
 上の結果となった仕様定義ファイルとパラメータの概要は以下のようなものである．
 - センサはすべてを使う設定

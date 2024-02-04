@@ -3,11 +3,11 @@
 インストールする必要があるため，その方法を説明する．
 
 
-## インストールする必要があるライブラリ
+## 1. インストールする必要があるライブラリ
 インストールする必要があるライブラリは，ライブラリマネージャでインストール可能なものと，
 独自にインストールする必要があるものが存在する．
 
-### ライブラリマネージャでインストールするライブラリ
+### 1.1. ライブラリマネージャでインストールするライブラリ
 
 | ライブラリ名| ライブラリの種類(機能) |
 |---|---|
@@ -20,7 +20,7 @@
 | [ArduinoLowPower](https://www.arduino.cc/reference/en/libraries/arduino-low-power/) | 省電力用ライブラリ |
 | [RTCZero](https://www.arduino.cc/reference/en/libraries/rtczero/) | RTC関連ライブラリ |
 
-### 手動でインストールする必要があるライブラリ
+### 1.2. 手動でインストールする必要があるライブラリ
 
 |ライブラリ配布元 | ライブラリの種類(機能) |
 |---|---|
@@ -32,63 +32,94 @@
 | https://github.com/houtbrion/AusEx | センサライブラリ |
 
 
-## ライブラリマネージャを使うライブラリのインストール方法
+## 2. ライブラリマネージャを使うライブラリのインストール方法
 下の図は，「ArduinoMqttClient」をインストールする場合の画面である．
 
 最初にライブラリマネージャを開き，検索窓にライブラリ名を入力すると，ライブラリ名が似たものが下に一覧表示される．
 
 この中から，適切な物を選択し，「インストール」ボタンを押すとインストールが実行される．
-![ArduinoIDEライブラリインストール画面](../images/ArduinoIDEライブラリインストール画面.png)
+
+<div style="text-align: center;">
+<img src="../images/ArduinoIDEライブラリインストール画面.png" width="80%">
+</div>
+
 
 下の図はインストール直後の画面である．
 インストール操作のメッセージが出力され，ライブラリマネージャ側には，インストールされたバージョン等が表示される．
-![ArduinoIDEライブラリインストール後の画面](../images/ArduinoIDEライブラリインストール後の画面.png)
+
+<div style="text-align: center;">
+<img src="../images/ArduinoIDEライブラリインストール後の画面.png" width="80%">
+</div>
+
 
 以上のような手順で，ライブラリマネージャでインストールすべきライブラリを全てインストールする．
 
-## RTC_Uのインストール
+## 3. RTC_Uのインストール
 このライブラリは，ライブラリマネージャではインストールできない．
-### ライブラリのダウンロードと本体部分のインストール
+### 3.1. ライブラリのダウンロードと本体部分のインストール
 githubの[ここ](https://github.com/houtbrion/RTC_U)をブラウザで開き，「Code」ボタンを押し，
 「Download Zip」をクリックする(下図)．
 
-![RTC_Uリポジトリ](../images/RTC_U.png)
+<div style="text-align: center;">
+<img src="../images/RTC_U.png" width="80%">
+</div>
+
 
 ダウンロードディレクトリにZipアーカイブが格納されるため，zipを解凍(下図)．
 
-![ダウンロードディレクトリ](../images/ダウンロードディレクトリ(RTC_U).png)
+<div style="text-align: center;">
+<img src="../images/ダウンロードディレクトリ(RTC_U).png" width="80%">
+</div>
+
+
 
 解凍したディレクトリに移動すると，同じ名前のディレクトリができている．
 
-![展開したディレクトリ](../images/展開したフォルダ.png)
+<div style="text-align: center;">
+<img src="../images/展開したフォルダ.png" width="80%">
+</div>
+
+
 
 このディレクトリをそのまま(もしくは名前を変更)して，Arduino IDEのライブラリ置き場にコピーした後に，コピー元ディレクトリ内に移動．
 
+<div style="text-align: center;">
+<img src="../images/RTC_Uディレクトリ内部.png" width="80%">
+</div>
 
-![RTC_Uディレクトリ内部](../images/RTC_Uディレクトリ内部.png)
+
+
 
 このディレクトリの「extension」ディレクトリに移動(下図)すると，「RTC_Utils」というディレクトリがあるので，
 これをArduinoのライブラリ置き場にコピーする．
 
-![RTC_Uのextension](../images/RTC_Uのextension.png)
+<div style="text-align: center;">
+<img src="../images/RTC_Uのextension.png" width="80%">
+</div>
 
 
 
-### 個別RTC用デバイスドライバのインストール
+
+### 3.2. 個別RTC用デバイスドライバのインストール
 再度，アーカイブを解いたライブラリの大元のディレクトリ(下図)に移動．
 
-![RTC_Uディレクトリ内部](../images/RTC_Uディレクトリ内部.png)
+<div style="text-align: center;">
+<img src="../images/RTC_Uディレクトリ内部.png" width="80%">
+</div>
+
 
 ここの「driver」ディレクトリに移動すると，RTCのIC毎にディレクトリが作られているので，
 すべてのディレクトリをArduinoのライブラリ置き場にコピーする．
 
+<div style="text-align: center;">
+<img src="../images/RTC_Uのdriver.png" width="80%">
+</div>
 
-![RTC_Uのdriver](../images/RTC_Uのdriver.png)
 
 以上でRTC_Uのインストールは完了．
 
 
-## detectArduinoHardwareのインストール
+## 4. detectArduinoHardwareのインストール
 githubの[ここ](https://github.com/houtbrion/detectArduinoHardware)をブラウザで開き，「Code」ボタンを押し，
 「Download Zip」をクリックしてアーカイブをダウンロードする．
 
@@ -97,7 +128,7 @@ githubの[ここ](https://github.com/houtbrion/detectArduinoHardware)をブラ�
 次に，
 「extension」ディレクトリ内部の「arduinoHardwareHelper」と「UniSleep」ディレクトリもArduinoのライブラリ置き場にコピーする．
 
-## dateUtilsのインストール
+## 5. dateUtilsのインストール
 
 githubの[ここ](https://github.com/houtbrion/dateUtils)をブラウザで開き，「Code」ボタンを押し，
 「Download Zip」をクリックしてアーカイブをダウンロードする．
@@ -106,18 +137,18 @@ githubの[ここ](https://github.com/houtbrion/dateUtils)をブラウザで開�
 
 dateUtilsには特別な拡張機能などはないため，これでインストールは終了．
 
-## AusExのインストール
+## 6. AusExのインストール
 githubの[ここ](https://github.com/houtbrion/AusEx)をブラウザで開き，「Code」ボタンを押し，
 「Download Zip」をクリックしてアーカイブをダウンロードする．
 
 アーカイブを解き，ライブラリ本体のディレクトリをArduinoのライブラリ置き場にコピーする．
 
-### pluginのインストール
+### 6.1. pluginのインストール
 
 コピー元のディレクトリ内部を見ると，pluginディレクトリがある．
 この「plugin」ディレクトリ内部の「AusExOutputPlugin」ディレクトリをArduinoのライブラリ置き場にコピーする．
 
-### 個別デバイス用ドライバのインストール
+### 6.2. 個別デバイス用ドライバのインストール
 
 コピー元のディレクトリ内部を再度見ると，driversディレクトリがある．
 この「drivers」ディレクトリを開くと「I2C_SPI」など，Arduinoの周辺回路の
@@ -131,7 +162,7 @@ Arduino IDEはライブラリがあるディレクトリの中はすべてのラ
 何らかの基準でディレクトリに分けて，個々のライブラリがサブディレクトリとして格納されていた場合，IDEが
 ライブラリを認識しないため，コピーする際には注意が必要．
 
-## Syslogのインストール
+## 7. Syslogのインストール
 
 
 githubの[ここ](https://github.com/houtbrion/Syslog)をブラウザで開き，「Code」ボタンを押し，
@@ -186,6 +217,20 @@ RTCを使うことを前提としているため，以下のような設定に�
 
 また，RTCを使わずにNTPで時刻を問い合わせる等の場合はそれに合わせて定義を
 カスタマイズする．
+
+## 8. UniSleepのインストール
+
+githubの[ここ](https://github.com/houtbrion/UniSleep)をブラウザで開き，「Code」ボタンを押し，
+「Download Zip」をクリックしてアーカイブをダウンロードする．
+
+アーカイブを解き，ライブラリ本体のディレクトリをArduinoのライブラリ置き場にコピーする．
+
+
+
+UniSleep
+には特別な拡張機能などはないため，これでインストールは終了．
+
+
 
 ***
 - [「Arduinoのプログラム(スケッチ)のインストール」に進む](スケッチのコンパイルとインストール.md)

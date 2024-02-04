@@ -14,10 +14,12 @@
 ## Arduinoとの接続例
 DHTシリーズのセンサは，デジタル端子1つに接続する必要があるため，Groveの端子に接続できるモジュールを用いる場合は，ケーブル1本で何れかのデジタル端子に接続すれば良い．
 
-![Grove DHT proの接続例](../../images/DHT22_usage_example.jpg)
-
-
 [写真出典](https://wiki.seeedstudio.com/Grove-Temperature_and_Humidity_Sensor_Pro/)
+
+<div style="text-align: center;">
+<img src="../../images/DHT22_usage_example.jpg" width="90%">
+</div>
+
 
 
 ## 接続先の情報

@@ -13,8 +13,12 @@ LEDが発した赤外線を地面等で反射したものが赤外線センサ�
 
 そのため，黒い地面などでは赤外線が検出できなくなることを利用して，判定を行う．
 
-![赤外線反射センサ](../../images/IR_Refrective.jpg)
+
 [写真出典](https://wiki.seeedstudio.com/Grove-Infrared_Reflective_Sensor/)
+
+<div style="text-align: center;">
+<img src="../../images/IR_Refrective.jpg" width="50%">
+</div>
 
 Groveには似た機能のモジュールが存在するが，検出対称である地面や机までの距離が
 異なるなどの性質の違いがあるため，それによって使い分ける．
@@ -27,9 +31,12 @@ Groveには似た機能のモジュールが存在するが，検出対称であ
 
 下の図はArduino MKRシリーズ用のGroveモジュールを接続するための拡張基板であり，D0からD4のうちのいずれかに接続する．
 
-![Alt text](../../images/MKR_carrier.png)
+
 [写真出典](https://store-usa.arduino.cc/products/arduino-mkr-connector-carrier-grove-compatible)
 
+<div style="text-align: center;">
+<img src="../../images/MKR_carrier.png" width="50%">
+</div>
 
 ## 接続先の情報
 

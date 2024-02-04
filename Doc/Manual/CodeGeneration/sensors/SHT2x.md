@@ -6,8 +6,14 @@ SENSIRION社の温湿度センサでI2Cインターフェースで接続でき�
 
 このセンサICを利用したセンサモジュールとしては，以下のようなものがある．
 
-- ストロベリーリナックス SHT21 : https://strawberry-linux.com/catalog/items?code=80021
-![SHT21](../images/SHT21.jpg)
+- [ストロベリーリナックス SHT21](https://strawberry-linux.com/catalog/items?code=80021)
+
+
+<div style="text-align: center;">
+<img src="../../images/SHT21.jpg" width="40%">
+</div>
+
+
 
 SHT2xシリーズのセンサICは3種類存在し，低価格版のSHT20系，標準的な性能のSHT21系，高精度のSHT25系になる．
 
@@ -16,7 +22,12 @@ SHT2xシリーズのセンサICは3種類存在し，低価格版のSHT20系，�
 ## 設定項目
 設定すべき項目は2項目存在する．
 
-![設定画面](../../images/editConfig_sht2x.png)
+
+<div style="text-align: center;">
+<img src="../../images/editConfig_sht2x.png" width="40%">
+</div>
+
+
 
 
 ### センサID

@@ -2,7 +2,7 @@
 
 このGroveモジュールの詳細は以下のWebに記載されている．
 
-- Grove - Rotary Angle Sensor https://wiki.seeedstudio.com/Grove-Rotary_Angle_Sensor/
+- Grove - Rotary Angle Sensor 製品ページ :  https://wiki.seeedstudio.com/Grove-Rotary_Angle_Sensor/
 
 
 このモジュールの動作原理はオーディオ機器のボリューム等と同じで回転させると
@@ -11,7 +11,12 @@
 
 ## 設定項目
 
-![設定画面](../../images/editConfig_Rotary_Angle.png)
+
+<div style="text-align: center;">
+<img src="../../images/editConfig_Rotary_Angle.png" width="30%">
+</div>
+
+
 
 ### センサID
 この数字を変更することで，多数のセンサが交じる環境で，このセンサのデータを特定することが可能．
