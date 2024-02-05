@@ -7,8 +7,8 @@ platform:
     rtc_int_pin: 4 # ピン番号
   color_led:
     use_led: true # true(使う) , false(使わない)
-    led_data_pin: 3 # ピン番号
-    led_clk_pin: 2 # ピン番号
+    led_data_pin: 7 # ピン番号
+    led_clk_pin: 6 # ピン番号
     led_duration: 3000 # 時間(単位:ミリ秒)
     led_short_duration: 1000 # 時間(単位:ミリ秒)
   sd:

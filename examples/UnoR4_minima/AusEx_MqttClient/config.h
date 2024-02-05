@@ -3,8 +3,8 @@
 #define USE_RTC
 #define USE_PCF8523
 #define USE_COLOR_LED
-#define LED_DATA_PIN 3
-#define LED_CLK_PIN 2
+#define LED_DATA_PIN 7
+#define LED_CLK_PIN 6
 #define LED_DURATION 3000
 #define LED_SHORT_DURATION 1000
 #define SD_CHIP_SELECT 4
