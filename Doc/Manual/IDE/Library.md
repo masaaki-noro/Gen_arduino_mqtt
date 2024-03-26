@@ -148,6 +148,33 @@ githubの[ここ](https://github.com/houtbrion/AusEx)をブラウザで開き，
 コピー元のディレクトリ内部を見ると，pluginディレクトリがある．
 この「plugin」ディレクトリ内部の「AusExOutputPlugin」ディレクトリをArduinoのライブラリ置き場にコピーする．
 
+srcディレクトリの「config.h」を
+編集する必要がある．その設定を説明する．
+
+データ出力先がネットワークでない場合は，以下の何れかを有効にする．
+今回は，MQTTでネットワークに出力するだけなので，全てコメントアウトすれば良い
+```
+//#define __USE_SD__
+//#define __USE_SERIAL__
+//#define __USE_SOFT_SERIAL__
+```
+
+次に，ネットワークはMQTTを有効にする．
+```
+//#define __USE_ETHERNET_CLIENT__
+//#define __USE_WIFI_CLIENT__
+//#define __USE_HTTP_CLIENT__
+#define __USE_MQTT_CLIENT__
+```
+
+出力データにRTCの時刻を含める必要があるため，以下のエントリを有効にする．
+```
+#define __USE_RTC__             /* ログの時刻情報の取得にRTCを使う */
+```
+
+
+
+
 ### 6.2. 個別デバイス用ドライバのインストール
 
 コピー元のディレクトリ内部を再度見ると，driversディレクトリがある．
