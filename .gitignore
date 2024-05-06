@@ -41,6 +41,8 @@ backup
 .jupyter
 /hoge
 
+/Doc/Presentation
+
 # working directory
 Gen_arduino_mqtt
 
