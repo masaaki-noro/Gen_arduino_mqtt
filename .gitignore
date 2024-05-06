@@ -40,7 +40,7 @@ backup
 .ipynb_checkpoints
 .jupyter
 /hoge
-
+.ipynb
 /Doc/Presentation
 
 # working directory
