@@ -40,3 +40,8 @@ backup
 .ipynb_checkpoints
 .jupyter
 /hoge
+
+# working directory
+Gen_arduino_mqtt
+
+
