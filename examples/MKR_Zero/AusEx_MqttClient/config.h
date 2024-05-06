@@ -1,3 +1,9 @@
+#include "detectArduinoHardware.h"
+#if HARDWARE_TYPE==ARDUINO_GIGA_WIFI_MAIN || HARDWARE_TYPE==ARDUINO_GIGA_WIFI_SUB
+#define I2C_IF Wire1
+#else
+#define I2C_IF Wire
+#endif
 #define USE_ETHERNET
 #define ETHERNET_CHIP_SELECT 5
 #define USE_RTC
@@ -28,7 +34,7 @@
 #define MQTT_MESSAGE_FORMAT FORMAT_TYPE_PLAIN_TEXT
 #define MQTT_AUTH_USERNAME "foo"
 #define MQTT_AUTH_PASSWORD "bar"
-#define MQTT_TOPIC "arduino/echo"
+#define MQTT_TOPIC "arduino/MkrZero"
 #define MQTT_SERVER_ADDR "192.168.1.254"
 #define MQTT_PORT 1883
 #define USE_WDT

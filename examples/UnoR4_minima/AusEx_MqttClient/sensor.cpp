@@ -43,12 +43,12 @@ bool init_sensors(void) {
 #endif /* USE_WDT */
 #endif /* USE_SENSOR_BMP180 */
 
-#ifdef USE_SENSOR_ADSX345 // 3軸加速度センサー Grove 3軸加速度センサ 16g
+#ifdef USE_SENSOR_ADXL345 // 3軸加速度センサー Grove 3軸加速度センサ 16g
   use_ADXL345 = adxl345_init();
 #ifdef USE_WDT
   Watchdog.reset();
 #endif /* USE_WDT */
-#endif /* USE_SENSOR_ADSX345 */
+#endif /* USE_SENSOR_ADXL345 */
 
 #ifdef USE_SENSOR_ITG3200
   use_ITG3200 = itg3200_init();
@@ -251,9 +251,9 @@ bool init_sensors(void) {
   total |= use_BMP180;
 #endif /* USE_SENSOR_BMP180 */
 
-#ifdef USE_SENSOR_ADSX345 // 3軸加速度センサー Grove 3軸加速度センサ 16g
+#ifdef USE_SENSOR_ADXL345 // 3軸加速度センサー Grove 3軸加速度センサ 16g
   total |= use_ADXL345;
-#endif /* USE_SENSOR_ADSX345 */
+#endif /* USE_SENSOR_ADXL345 */
 
 #ifdef USE_SENSOR_ITG3200
   total |= use_ITG3200;
@@ -410,14 +410,14 @@ void output_sensors_info(void) {
 #endif /* USE_WDT */
 #endif /* USE_SENSOR_BMP180 */
 
-#ifdef USE_SENSOR_ADSX345 // 3軸加速度センサー Grove 3軸加速度センサ 16g
+#ifdef USE_SENSOR_ADXL345 // 3軸加速度センサー Grove 3軸加速度センサ 16g
   if (use_ADXL345) {
     adxl345_output_info();
   };
 #ifdef USE_WDT
   Watchdog.reset();
 #endif /* USE_WDT */
-#endif /* USE_SENSOR_ADSX345 */
+#endif /* USE_SENSOR_ADXL345 */
 
 #ifdef USE_SENSOR_ITG3200
   if (use_ITG3200) {
@@ -696,14 +696,14 @@ void process_sensors(void) {
 #endif /* USE_WDT */
 #endif /* USE_SENSOR_BMP180 */
 
-#ifdef USE_SENSOR_ADSX345 // 3軸加速度センサー Grove 3軸加速度センサ 16g
+#ifdef USE_SENSOR_ADXL345 // 3軸加速度センサー Grove 3軸加速度センサ 16g
   if (use_ADXL345) {
     adxl345_Sensor();
   };
 #ifdef USE_WDT
   Watchdog.reset();
 #endif /* USE_WDT */
-#endif /* USE_SENSOR_ADSX345 */
+#endif /* USE_SENSOR_ADXL345 */
 
 #ifdef USE_SENSOR_ITG3200
   if (use_ITG3200) {

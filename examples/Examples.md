@@ -13,7 +13,9 @@
 |Uno R4 minima + イーサネットシールド|AM2321|
 |Uno R4 WiFi|BMP180|
 |Nano IoT 33|Grove - 3 Axis Digital Accelerometer(±16g)|
-
+|Nano ESP32|SHT21|
+|Nano RP2040 Connect|TSL2561|
+|Giga R1 WiFi|SHT31|
 
 
 ***

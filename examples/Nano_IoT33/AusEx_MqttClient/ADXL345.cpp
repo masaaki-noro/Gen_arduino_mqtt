@@ -25,7 +25,7 @@ extern unsigned long currentTime;
 #error "interface of ADXL345 is not defined."
 #endif
 #ifdef ADXL_INTER_I2C
-AusExADXL345 adxl345 = AusExADXL345(&Wire, SENSOR_ID_ADXL345);
+AusExADXL345 adxl345 = AusExADXL345(&I2C_IF, SENSOR_ID_ADXL345);
 #endif /* ADXL_INTER_I2C */
 #ifdef ADXL_INTER_HARD_SPI
 AusExADXL345 adxl345 = AusExADXL345(0xFF, 0, 0, ADXL345_CS, SENSOR_ID_ADXL345);

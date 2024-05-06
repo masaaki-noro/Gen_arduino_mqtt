@@ -96,6 +96,16 @@ void(* resetFunc) (void) = 0;//declare reset function at address 0
 #define MAX_DURATION MAX_SLEEP_DURATION // sleep duration in ms.
 #endif /* CPU_ARCH==SAM_ARCH */
 
+// STM32_ARCH
+#if CPU_ARCH==STM32_ARCH /* Giga R1 WiFi */
+#define MAX_DURATION MAX_SLEEP_DURATION // sleep duration in ms.
+#endif /* CPU_ARCH==STM32_ARCH */
+
+// RP_ARCH
+#if CPU_ARCH==RP_ARCH /* Nano RP2040 WiFi */
+#define MAX_DURATION MAX_SLEEP_DURATION // sleep duration in ms.
+#endif /* CPU_ARCH==RP_ARCH */
+
 #ifdef USE_SLEEP
 #include "UniSleep.h"
 #define PIN_MASK 0
@@ -240,20 +250,25 @@ void reboot() {
     Serial.print(".");
   }
 #else /* USE_WDT */
-
+  hwHelper.SoftwareReset();
 // Mega
-#if CPU_ARCH==AVR_ARCH /* AVR */
-  resetFunc();
-#endif /* CPU_ARCH==AVR_ARCH */
+//#if CPU_ARCH==AVR_ARCH /* AVR */
+//  resetFunc();
+//#endif /* CPU_ARCH==AVR_ARCH */
 
 // MKR WiFi 1010
-#if CPU_ARCH==SAMD_ARCH /* MKR, Zero */
-  NVIC_SystemReset();
-#endif /* CPU_ARCH==SAMD_ARCH */
+//#if CPU_ARCH==SAMD_ARCH /* MKR, Zero */
+//  NVIC_SystemReset();
+//#endif /* CPU_ARCH==SAMD_ARCH */
 
-#if CPU_ARCH==XTENSA_LX6_ARCH /* ESP32 */
-  ESP.restart();
-#endif /* ESP32 */
+//#if CPU_ARCH==XTENSA_LX6_ARCH /* ESP32 */
+//  ESP.restart();
+//#endif /* ESP32 */
+
+// Uno R4
+//#if CPU_ARCH==RA4_ARCH /* Uno R4 */
+//  NVIC_SystemReset();
+//#endif /* CPU_ARCH==RA4_ARCH */
 
 #endif /* USE_WDT */
 

@@ -50,7 +50,7 @@ network:
     mqtt_auth: false # true(使う) , false(使わない)
     mqtt_user: "foo" # ユーザ名(文字列)
     mqtt_pass: "bar" # パスワード(文字列)
-    mqtt_topic: "arduino/echo" # MQTTトピック (文字列)
+    mqtt_topic: "arduino/MkrZero" # MQTTトピック (文字列)
     mqtt_server: "192.168.1.254" # mqttサーバIPアドレス
     mqtt_port: 1883 # mqttポート番号
 

@@ -4,7 +4,7 @@
 #include "RTC_Utils.h"
 #else /* USE_RTC */
 #include "RTC_U.h"
-#define I2C_IF Wire
+/*#define I2C_IF Wire*/
 #endif /* USE_RTC */
 
 #ifdef USE_WDT
@@ -37,7 +37,7 @@ void reboot(void);
 
 
 #ifdef USE_RTC
-RTC_CLASS rtc = RTC_CLASS(&Wire);
+RTC_CLASS rtc = RTC_CLASS(&I2C_IF);
 #endif /* USE_RTC */
 
 /*

@@ -4,8 +4,7 @@
 #else
 #define I2C_IF Wire
 #endif
-#define USE_ETHERNET
-#define ETHERNET_CHIP_SELECT 10
+#define USE_WIFI
 #define USE_RTC
 #define USE_PCF8523
 #define USE_COLOR_LED
@@ -13,11 +12,11 @@
 #define LED_CLK_PIN 6
 #define LED_DURATION 3000
 #define LED_SHORT_DURATION 1000
-#define SD_CHIP_SELECT 4
+#define SD_CHIP_SELECT 8
 #define WDT_DURATION 20000
 #define WDT_SHORT_DURATION 500
 #define SERIAL_SPEED 9600
-#define HOSTNAME "UnoR4_Minima"
+#define HOSTNAME "GiGa_R1_WiFi"
 #define APP_NAME "AusEx_mqtt_client"
 #define USE_LOG_FILE
 #define LOGFILE_NAME_HEAD "/syslog"
@@ -34,12 +33,11 @@
 #define MQTT_MESSAGE_FORMAT FORMAT_TYPE_PLAIN_TEXT
 #define MQTT_AUTH_USERNAME "foo"
 #define MQTT_AUTH_PASSWORD "bar"
-#define MQTT_TOPIC "arduino/UnoR4_Minima"
+#define MQTT_TOPIC "arduino/GigaWiFi"
 #define MQTT_SERVER_ADDR "192.168.1.254"
 #define MQTT_PORT 1883
 #define MAX_SLEEP_DURATION 15000
 #define SLEEP_MODE MODE_PWR_DOWN
-#define USE_SENSOR_AM232X
-#define SENSOR_AM232X_TYPE AM2321
-#define SENSOR_ID_AM232X_TEMPERATURE -1
-#define SENSOR_ID_AM232X_HUMIDITY -1
+#define USE_SENSOR_SHT31
+#define SENSOR_ID_SHT31_TEMPERATURE -1
+#define SENSOR_ID_SHT31_HUMIDITY -1

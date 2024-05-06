@@ -3,16 +3,16 @@ platform:
     network_type: wifi # wifi , ethernet , none
     ethernet_chip_select: 5 # イーサネットのチップセレクトピン番号
   rtc:
-    rtc_type: PCF8523 # RTC8564NB , DS1307 , DS3231 , PCF8523 , RV8803 , RX8025 , RX8900 , none
+    rtc_type: DS3231 # RTC8564NB , DS1307 , DS3231 , PCF8523 , RV8803 , RX8025 , RX8900 , none
     rtc_int_pin: 4 # ピン番号
   color_led:
     use_led: true # true(使う) , false(使わない)
-    led_data_pin: 7 # ピン番号
-    led_clk_pin: 6 # ピン番号
+    led_data_pin: 8 # ピン番号
+    led_clk_pin: 7 # ピン番号
     led_duration: 3000 # 時間(単位:ミリ秒)
     led_short_duration: 1000 # 時間(単位:ミリ秒)
   sd:
-    use_sd: true # true(使う) , false(使わない)
+    use_sd: false # true(使う) , false(使わない)
     sd_chip_select: 10 # ピン番号
   wdt:
     wdt_duration: 20000 # 時間(単位:ミリ秒)
@@ -22,9 +22,9 @@ common:
   serial:
     speed: 9600 # コンソールのシリアル速度(bps)
   log:
-    host_name: "Nano_IoT33" # ホスト名(文字列)
+    host_name: "Nano_ESP32" # ホスト名(文字列)
     app_name: "AusEx_mqtt_client" # アプリ名(文字列)
-    use_logfile: true # true(使う) , false(使わない)
+    use_logfile: false # true(使う) , false(使わない)
     use_serial_log: true # true(使う) , false(使わない)
     logfile_name_hdr: "/syslog" # ログファイル名
     logfile_size_max: 10000000 # ログファイルの最大値(バイト)
@@ -50,7 +50,7 @@ network:
     mqtt_auth: false # true(使う) , false(使わない)
     mqtt_user: "foo" # ユーザ名(文字列)
     mqtt_pass: "bar" # パスワード(文字列)
-    mqtt_topic: "arduino/Nano33IoT" # MQTTトピック (文字列)
+    mqtt_topic: "arduino/NanoESP32" # MQTTトピック (文字列)
     mqtt_server: "192.168.1.254" # mqttサーバIPアドレス
     mqtt_port: 1883 # mqttポート番号
 
@@ -75,7 +75,7 @@ sht31:
 # SHT2x
 #
 sht2x:
-  use_sht2x: false # true(使う) , false(使わない)
+  use_sht2x: true # true(使う) , false(使わない)
   sht2x_type: SHT21 # SHT21 , SHT25
   temperature_sensor_id: -1
   humidity_sensor_id: -1
@@ -110,7 +110,7 @@ bmp180:
 # ADXL345
 #
 adxl345:
-  use_adxl345: true # true(使う) , false(使わない)
+  use_adxl345: false # true(使う) , false(使わない)
   adxl345_data_rate: AUSEX_ADXL345_DATARATE_100_HZ # AUSEX_ADXL345_DATARATE_3200_HZ , AUSEX_ADXL345_DATARATE_1600_HZ , AUSEX_ADXL345_DATARATE_800_HZ , AUSEX_ADXL345_DATARATE_400_HZ , AUSEX_ADXL345_DATARATE_200_HZ , AUSEX_ADXL345_DATARATE_100_HZ , AUSEX_ADXL345_DATARATE_50_HZ , AUSEX_ADXL345_DATARATE_25_HZ , AUSEX_ADXL345_DATARATE_12_5_HZ , AUSEX_ADXL345_DATARATE_6_25HZ , AUSEX_ADXL345_DATARATE_3_13_HZ , AUSEX_ADXL345_DATARATE_1_56_HZ , AUSEX_ADXL345_DATARATE_0_78_HZ , AUSEX_ADXL345_DATARATE_0_39_HZ , AUSEX_ADXL345_DATARATE_0_20_HZ , AUSEX_ADXL345_DATARATE_0_10_HZ
   adxl345_range: AUSEX_ADXL345_RANGE_2_G # AUSEX_ADXL345_RANGE_2_G , AUSEX_ADXL345_RANGE_4_G , AUSEX_ADXL345_RANGE_8_G , AUSEX_ADXL345_RANGE_16_G
   sensor_id: -1
