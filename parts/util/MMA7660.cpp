@@ -22,7 +22,7 @@ extern unsigned long currentTime;
 #define SENSOR_ID_MMA7660  -1
 #endif /* SENSOR_ID_MMA7660 */
 
-AusExGrove3AxisDigitalAccelerometer1_5g mma7660=AusExGrove3AxisDigitalAccelerometer1_5g(&Wire,SENSOR_ID_MMA7660);
+AusExGrove3AxisDigitalAccelerometer1_5g mma7660=AusExGrove3AxisDigitalAccelerometer1_5g(&I2C_IF,SENSOR_ID_MMA7660);
 
 /*
  * センサの初期化

@@ -84,7 +84,8 @@ RV8803は，電池ボックス付きのモジュールとしては以下のも�
 また，マイクロSDそのものについても制限があり，Arduinoと接続するためには，ソフトウェア，ハードウェアの制約上(対応する規格の問題)から容量が16GB以下のものに限定される．
 
 ### 3.1. Arduino Classicファミリ
-Classic用のシールドは本体が5V駆動のものにしか対応していないため，機種が限定される．
+Classic用のシールドは本体が5V駆動のものにしか対応していないものが多く，それを利用する場合は機種が限定される．ただし，以下の「SparkFun microSD Shield」は本体が3.3Vでも
+動作することが確認できている．
 
 
 - [Arduino Ethernet Shield 2](https://store-usa.arduino.cc/products/arduino-ethernet-shield-2)
@@ -121,6 +122,12 @@ ArduinoのNanoにマイクロSDをつなげる場合は，以下のモジュー�
 
 - MicroSD card breakout board+ (Adafruit) https://www.adafruit.com/product/254
 
+### 3.4. Arduino Megaファミリ
+Megaファミリのうち，センサ端末として動作するのはGigaのみである．
+また，Gigaは3.3V動作であることや，Megaファミリの3.3V用Groveシールドが存在しないため，
+Uno R4でも使える以下のSparcfunのマイクロSDシールドが適している．
+
+- [SparkFun microSD Shield](https://www.sparkfun.com/products/12761)
 
 ## 4. マイコン本体+ネットワークI/F
 本開発環境で生成するセンサ端末用のスケッチはメモリが少ないMCUでは動作しないことなどから，選択できる機種に制限がある．
@@ -139,13 +146,17 @@ ArduinoのNanoにマイクロSDをつなげる場合は，以下のモジュー�
 ### 4.2. 機能制限あり
 
 最近リリースされたUnoのR4はMCUが新採用のルネサスのものであるため，
-WDTとスリープ(低電力モード)を利用することができない．
-WDTとスリープを無効にする設定で以下の機種は動作が確認できている．
+WDTとスリープ(低電力モード)を利用することができない．Giga R1 WiFiのSTマイクロ製チップも同様である．
+そのため，WDTとスリープを無効にする設定で以下の機種は動作が確認できている．
 
 |機種名|MCU|動作周波数|プログラム容量(flash)|メモリ容量(SRAM)|
 |---|---|---|---|---|
 |Uno R4 Minima+イーサネットシールド|RA4M1|48MHz|256KB|32KB|
+|Uno R4 WiFi|RA4M1|48MHz|256KB|32KB|
+|Giga R1 WiFi|STM32H7|480MHz(240MHz)|2M|1M|
 
+なお，GigaのMCUは不均等なデュアルコアで，メインコアがARM M7，サブコアがARM M4であり，
+メインコアが480MHz動作，サブコアが240MHz動作となっている．
 
 ### 4.3. 問題あり
 
@@ -170,14 +181,11 @@ Seeed systemから直輸入すれば購入できるかもしれないが未確�
 <img src="../images/nano_esp32_ブレッドボード.JPG" width="70%">
 </div>
 
-#### 4.3.2 Uno R4 WiFi
-Uno R4 WiFiはネットワークの動作に問題が見られる．センサ端末のプログラムを動作させ，しばらくすると，
-端末はデータをMQTTブローカーに送っているつもりになっているが，サーバ側にはまったく届かなくなる．
+#### 4.3.2 Arduino Nano RP2040
+Raspberry Pi Picoと同じMCUを搭載したこの機種は，Watch Dogや低電力モードが使えない．
+また，Groveシールドが存在しないため，ESP32と同じく，自分でGrove用のシールドを作成するか，ブレッドボードで配線する
+必要がある．
 
-他の機種では，MQTT接続が切れると自動的に再起動がかかるが，Uno R4 WiFiは接続が切れても
-気が付かない．
-
-これについては，今のところ解決の見込みがない．
 
 ### 4.4. 動作しない
 Uno R3, Mega等のAVR系統のMCUを搭載したプラットフォームはそもそもプログラム容量やSRAMの容量不足により動作しない．

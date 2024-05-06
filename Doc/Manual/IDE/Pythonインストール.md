@@ -14,7 +14,23 @@ windowsの場合は，下のURLからインストール用バイナリをダウ�
 
 - [https://www.python.org/downloads/windows/](https://www.python.org/downloads/windows/)
 
-## 1. Python用ライブラリ
+
+
+## 1. Macの場合の事前作業
+Macの場合はPython環境を構築するためには，HomebrewのようなOSS環境を構築するためのツールを導入する必要があります．
+
+以下の手順に従って，環境を構築してください．
+
+- 「https://brew.sh/ja/」に従い，Homebrewをインストール
+- 「https://docs.python.org/ja/3/using/mac.html」に従い，Pythonをインストール
+- 以下のコマンドで，pipをインストール
+
+```
+$ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+$ python get-pip.py
+```
+
+## 2. Python用ライブラリ
 
 GUI用とyaml用のライブラリとして3つのライブラリをインストールする必要があります．
 
@@ -27,7 +43,7 @@ GUI用とyaml用のライブラリとして3つのライブラリをインスト
 
 
 
-## 2. 注意事項 : 各プログラムの実行可能バイナリ化
+## 3. 注意事項 : 各プログラムの実行可能バイナリ化
 Pythonには，「``pyinstaller``」と呼ばれるプログラムで，Pythonのプログラム(スクリプト)を
 実行可能なバイナリに変換することができます．
 

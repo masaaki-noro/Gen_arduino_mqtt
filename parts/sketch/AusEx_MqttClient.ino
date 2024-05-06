@@ -7,7 +7,6 @@
 
 HardwareHelper hwHelper;
 
-//#define HARD_SERIAL Serial1
 #define HARD_SERIAL Serial
 
 
@@ -95,6 +94,16 @@ void(* resetFunc) (void) = 0;//declare reset function at address 0
 #if CPU_ARCH==RA4_ARCH /* Uno R4 Minima, WiFi */
 #define MAX_DURATION MAX_SLEEP_DURATION // sleep duration in ms.
 #endif /* CPU_ARCH==SAM_ARCH */
+
+// STM32_ARCH
+#if CPU_ARCH==STM32_ARCH /* Giga R1 WiFi */
+#define MAX_DURATION MAX_SLEEP_DURATION // sleep duration in ms.
+#endif /* CPU_ARCH==STM32_ARCH */
+
+// RP_ARCH
+#if CPU_ARCH==RP_ARCH /* Nano RP2040 WiFi */
+#define MAX_DURATION MAX_SLEEP_DURATION // sleep duration in ms.
+#endif /* CPU_ARCH==RP_ARCH */
 
 #ifdef USE_SLEEP
 #include "UniSleep.h"
@@ -240,21 +249,7 @@ void reboot() {
     Serial.print(".");
   }
 #else /* USE_WDT */
-
-// Mega
-#if CPU_ARCH==AVR_ARCH /* AVR */
-  resetFunc();
-#endif /* CPU_ARCH==AVR_ARCH */
-
-// MKR WiFi 1010
-#if CPU_ARCH==SAMD_ARCH /* MKR, Zero */
-  NVIC_SystemReset();
-#endif /* CPU_ARCH==SAMD_ARCH */
-
-#if CPU_ARCH==XTENSA_LX6_ARCH /* ESP32 */
-  ESP.restart();
-#endif /* ESP32 */
-
+  hwHelper.SoftwareReset();
 #endif /* USE_WDT */
 
 }
@@ -432,9 +427,20 @@ void setup() {
 #ifdef USE_WIFI
     WiFi.begin(SSID_STR, WIFI_PASS);
 
+#ifndef USE_WDT
+  int wifiCount = 0;
+#endif /* USE_WDT */
+
     while (WiFi.status() != WL_CONNECTED) {
       delay(500);
       Serial.print(".");
+#ifndef USE_WDT
+      if (wifiCount > 100) {
+        reboot();
+      } else {
+        wifiCount++ ;
+      }
+#endif /* USE_WDT */
     }
 #endif /* USE_WIFI */
 
@@ -455,16 +461,11 @@ void setup() {
   Serial.print(F("IP address : "));
   Serial.println(Ethernet.localIP());
 
-  //String ipaddr = Ethernet.localIP()[0] + "." + Ethernet.localIP()[1] + "." + Ethernet.localIP()[2] + "." + Ethernet.localIP()[3];
-  //outputBootlog(F("IP address : "));
-  //outputBootlog(F(ipaddr.c_str()));
 #endif /* USE_ETHERNET */
 #ifdef USE_WIFI
   Serial.print(F("IP address : "));
   Serial.println(WiFi.localIP());
-  //String ipaddr = WiFi.localIP()[0] + "." + WiFi.localIP()[1] + "." + WiFi.localIP()[2] + "." + WiFi.localIP()[3];
-  //outputBootlog(F("IP address : "));
-  //outputBootlog(F(ipaddr.c_str()));
+
 #endif /* USE_WIFI */
 
   outputBootlog(F("network setup done"));
@@ -490,7 +491,6 @@ void setup() {
 #endif /* USE_NTP */
 
 #ifdef UPDATE_RTC_BY_NTP
-  //unsigned long currentTime = timeClient.getEpochTime();
   currentTime = timeClient.getEpochTime();
   if (update_RTC_Time(currentTime)) {
     outputBootlog(F("update RTC time by NTP."));

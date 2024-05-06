@@ -21,7 +21,7 @@ extern unsigned long currentTime;
 #define SENSOR_ID_MPR121  -1
 #endif /* SENSOR_ID_MPR121 */
 
-AusExGroveI2cTouchSensor mpr121=AusExGroveI2cTouchSensor(&Wire, SENSOR_ID_MPR121);
+AusExGroveI2cTouchSensor mpr121=AusExGroveI2cTouchSensor(&I2C_IF, SENSOR_ID_MPR121);
 
 /*
  * センサの初期化

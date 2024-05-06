@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 #!/usr/bin/env python
@@ -304,13 +304,19 @@ def fileWindow(page: ft.Page):
 
 def platform(platform):
     global output_file
+    print('#include \"detectArduinoHardware.h\"', file=output_file)
+    print('#if HARDWARE_TYPE==ARDUINO_GIGA_WIFI_MAIN || HARDWARE_TYPE==ARDUINO_GIGA_WIFI_SUB', file=output_file)
+    print('#define I2C_IF Wire1', file=output_file)
+    print('#else', file=output_file)
+    print('#define I2C_IF Wire', file=output_file)
+    print('#endif', file=output_file)
     if 'wifi'==platform['network_hardware']['network_type']:
         print('#define USE_WIFI', file=output_file)
     elif 'ethernet'==platform['network_hardware']['network_type']:
         print('#define USE_ETHERNET', file=output_file)
         print("#define ETHERNET_CHIP_SELECT %d" % platform['network_hardware']['ethernet_chip_select'], file=output_file)
     if 'RTC8564NB'==platform['rtc']['rtc_type']:
-        print('#define USE_RTC, file=output_file')
+        print('#define USE_RTC', file=output_file)
         print('#define USE_RTC8564NB', file=output_file)
     elif 'DS1307'==platform['rtc']['rtc_type']:
         print('#define USE_RTC', file=output_file)
@@ -677,7 +683,7 @@ def load_init_file():
         with open(help_file, mode='r', encoding='utf-8') as f:
             help = yaml.safe_load(f)
     except Exception as e:
-        error = 'Exception occurred while loading configuration YAML file of this application...'
+        error = 'Exception occurred while loading help file of this application...'
         return error
     return ''
 

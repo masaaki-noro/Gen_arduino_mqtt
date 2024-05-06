@@ -16,9 +16,13 @@
 <img src="../images/Arduino公式「ダウンロード」.png" width="80%">
 </div>
 
-
-
 ダウンロードしたインストーラーを実行して，インストールを行う．
+
+### Macユーザの注意事項
+Apple製CPU搭載のMacを利用している場合は，以下のURLの「Manual Installation」を参照し，「Rosetta」をインストールする
+
+- https://support.arduino.cc/hc/en-us/articles/7765785712156-Error-bad-CPU-type-in-executable-on-macOS
+
 
 ## 2. Arduino IDEの画面構成
 

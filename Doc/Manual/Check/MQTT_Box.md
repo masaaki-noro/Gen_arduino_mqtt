@@ -7,7 +7,8 @@
 </div>
 
 
-## 1. テスト用アプリケーションのインストール
+## 1. Windowsの場合
+### 1.1 テスト用アプリケーションのインストール
 
 テストに用いるアプリケーションは，「MQTT Box」というMQTTクライアントアプリケーションである．
 まず，最初にMQTT Boxをインストールする．
@@ -19,7 +20,7 @@ MQTT BoxはMac, Windows, Linux, Chrome OSの全てで動作するアプリケー
 </div>
 
 
-## 2. MQTT Boxの設定
+### 1.2 MQTT Boxの設定
 下の図はMQTT Box起動時の初期画面である．最初に，「Create MQTT Client」ボタンを押す．
 
 <div style="text-align: center;">
@@ -49,8 +50,7 @@ MQTT Boxのクライアント画面の右側(subscribe欄)に，Arduino設定で
 <img src="../images/MQTT_box_監視画面.png" width="80%">
 </div>
 
-
-## 3. MQTT Boxによる動作確認
+### 1.3 MQTT Boxによる動作確認
 下の図は，温湿度・気圧センサであるBME280を搭載したArduinoをテスト環境のネットワークに接続した場合の画面である．
 この図にあるように，一番上に気圧，次に，気温，最後に温度が出力されているのが読み取れる．
 
@@ -64,6 +64,21 @@ MQTT Boxのクライアント画面の右側(subscribe欄)に，Arduino設定で
 <div style="text-align: center;">
 <img src="../images/センサ端末実行例_IDE.png" width="80%">
 </div>
+
+## 2. MacやLinuxの場合
+MacやLinuxでは，MQTTをサポートしたツール(Mosquitto)が利用できます．
+
+Macの場合は，以下のURLを参照して，brewでインストールする．
+- 「https://qiita.com/segur/items/0536ced1fe741b55713d」
+
+なお，以下の2つのパスを環境変数に追加することを忘れない用にしてください．
+- /usr/local/opt/mosquitto/sbin
+- /usr/local/opt/mosquitto/bin
+
+また，動作確認時は以下のコマンドを使ってください．
+```
+$ mosquitto_sub -d -t orz -h MQTTブローカのIPアドレス –topic センサ端末のトピック
+```
 
 
 ***

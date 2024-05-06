@@ -21,7 +21,7 @@ extern unsigned long currentTime;
 #define SENSOR_ID_LPS22HB  -1
 #endif /* SENSOR_ID_LPS22HB */
 
-AusExLPS22HB lps22hb=AusExLPS22HB(&Wire,SENSOR_ID_LPS22HB);
+AusExLPS22HB lps22hb=AusExLPS22HB(&I2C_IF,SENSOR_ID_LPS22HB);
 
 /*
  * センサの初期化

@@ -588,6 +588,92 @@ I2Cは該当のコネクタがGroveシールド上にあるため，それを使
 
 
 
+## 6. Arduino Giga R1 WiFi + マイクロSDシールド
+基本的に，本体が異なる以外はUno R4 WiFiと同じである．
+
+### 6.1. パーツリスト
+
+
+- [Arduino Giga R1 WiFi](https://store.arduino.cc/products/giga-r1-wifi)
+
+<div style="text-align: center;">
+<img src="../images/GigaR1WiFi本体.png" width="50%">
+</div>
+
+
+
+- [Arduino用 Groveベースシールド](https://jp.seeedstudio.com/Base-Shield-V2.html)
+
+<div style="text-align: center;">
+<img src="../images/Groveシールド.jpg" width="70%">
+</div>
+
+
+- [SparkFun microSD Shield](https://www.sparkfun.com/products/12761)
+
+
+- マイクロSDメディア
+
+- [Grove – Chainable RGB LED](https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_Chainable_RGB_LED.jpg" width="30%">
+</div>
+
+
+
+
+- [Adafruit DS3231 Precision RTC Breakout](https://www.adafruit.com/product/3013)
+
+<div style="text-align: center;">
+<img src="../images/Adafruit_DS3231.jpg" width="40%">
+</div>
+
+
+- [Grove - 4 pin Female Jumper to Grove 4 pin Conversion Cable](https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_4pin_Female_Jumper.jpg" width="50%">
+</div>
+
+
+
+### 6.2. 組み立て
+
+
+まずはじめに，マイクロSDのシールドにメディアを挿しておく．
+
+
+<div style="text-align: center;">
+<img src="../images/Sparcfun_sd_shield.JPG" width="80%">
+</div>
+
+
+
+マイクロSDのシールドは基板面に触ることがないので，本体とGroveのシールドで挟む形で組み立てる．
+下の画像はUno R4であるが，Gigaも同じである．
+
+<div style="text-align: center;">
+<img src="../images/Uno_R4_WiFi_Base.JPG" width="80%">
+</div>
+
+
+RTC(DS3231)の配線は，VIN端子に赤色，GND端子に黒色，SCL端子に黄色，SDA端子に白色端子を接続する．
+
+<div style="text-align: center;">
+<img src="../images/DS3231.JPG" width="40%">
+</div>
+
+
+
+最後に，RTCをGroveのI2C端子のいずれかに，また，LEDはGroveのD6コネクタ(D6ピンとD7ピンを使うもの)に挿す．
+<div style="text-align: center;">
+<img src="../images/GigaR1WiFi組み立て済み.png" width="80%">
+</div>
+
+最後に，Gigaに標準添付されている外部WiFiアンテナを接続して組み立てを完成となる．
+
+
 
 <!-- コメントアウトしたい内容 -->
 <!-- 

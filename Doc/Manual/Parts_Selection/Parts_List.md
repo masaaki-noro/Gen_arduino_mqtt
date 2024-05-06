@@ -324,9 +324,68 @@ RTCにはピンヘッダが添付されているが，直線上のものが添�
 </div>
 
 
+## 5. Arduino Giga R1 WiFi
+
+- [Arduino GIGA R1 WiFi](https://store-usa.arduino.cc/products/giga-r1-wifi)
+
+<div style="text-align: center;">
+<img src="../images/GigaR1WiFi本体.png" width="50%">
+</div>
 
 
-## 5. Arduino Nano 33 IoT
+
+- [Arduino用 Groveベースシールド](https://jp.seeedstudio.com/Base-Shield-V2.html)
+
+<div style="text-align: center;">
+<img src="../images/Groveシールド.jpg" width="70%">
+</div>
+
+Groveベースシールドは，動作電圧の設定スイッチがあるため，3.3Vに切り替えてから
+使用すること．
+
+
+- [SparkFun microSD Shield](https://www.sparkfun.com/products/12761)
+マイクロSDのシールドは，本体が3Vでも動作することが確認できているのはこの製品．
+
+
+- ピンヘッダ : [Adafruit](https://www.adafruit.com/product/85),  [秋月電子1](https://akizukidenshi.com/catalog/g/gC-17103/), [秋月電子2](https://akizukidenshi.com/catalog/g/gC-17102/)
+
+ピンヘッダはAdafruit物を購入すれば，端子的には足りるものの，ピンに印刷してあったほうが便利なので，2x3ピンのものと秋月で売られているものの
+組み合わせが便利．
+
+- マイクロSDのメディア : 好きなものを購入すれば良い(ただし，16GB以下)．
+
+
+- [Grove – Chainable RGB LED](https://www.seeedstudio.com/Grove-Chainable-RGB-Led-V2-0.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_Chainable_RGB_LED.jpg" width="30%">
+</div>
+
+
+
+
+- [Adafruit DS3231 Precision RTC Breakout](https://www.adafruit.com/product/3013)
+
+<div style="text-align: center;">
+<img src="../images/Adafruit_DS3231.jpg" width="40%">
+</div>
+
+
+
+
+RTCにはピンヘッダが添付されているが，直線上のものが添付されているため，これを利用すると基板に印字されている端子の名称が読めなく
+なるため，下のようなL型のピンヘッダを使うことを勧める．
+- [ピンヘッダ　（オスＬ型）](https://akizukidenshi.com/catalog/g/gC-01627/)
+
+- [Grove - 4 pin Female Jumper to Grove 4 pin Conversion Cable](https://www.seeedstudio.com/Grove-4-pin-Female-Jumper-to-Grove-4-pin-Conversion-Cable-5-PCs-per-PAck.html)
+
+<div style="text-align: center;">
+<img src="../images/Grove_4pin_Female_Jumper.jpg" width="50%">
+</div>
+
+
+## 6. Arduino Nano 33 IoT
 
 - [Arduino Nano 33 IoT](https://store-usa.arduino.cc/products/arduino-nano-33-iot)
 

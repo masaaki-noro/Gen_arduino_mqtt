@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[3]:
+# In[1]:
 
 
 #!/usr/bin/env python
@@ -22,7 +22,7 @@ helpPageName=""
 
 selection = {}
 
-max_digital_pin = 25
+max_digital_pin = 200
 
 used_pin = {
     #'digital' : list(range(max_digital_pin)),
@@ -35,7 +35,11 @@ used_pin = {
         'A4': 0,
         'A5': 0,
         'A6': 0,
-        'A7': 0
+        'A7': 0,
+        'A8': 0,
+        'A9': 0,
+        'A10': 0,
+        'A11': 0
     }
 }
 
@@ -368,7 +372,7 @@ def loadDefaults(defaultFile, customFile, helpFile):
         with open(helpFile, mode='r', encoding='utf-8') as f:
             help = yaml.safe_load(f)
     except Exception as e:
-        return "Exception occurred while loading custom platform definition YAML file..."
+        return "Exception occurred while loading help file..."
     buildMenu()
     return ""
 
@@ -677,7 +681,14 @@ def mainWindow(page: ft.Page):
             messages=check_multi_use_pin()
             warning.value = warning.value + messages['warning']
             error.value = error.value + messages['error']
+            #
+            if warning.value == '':
+                warning.value = 'No warning exist.'
+            if error.value == '':
+                error.value = 'No error detected.'
             # result
+            exec_button.disabled=True
+            top_button.disabled=True
             page.update()
         
         page.window_width = 500
@@ -764,12 +775,6 @@ if __name__ == "__main__":
         ft.app(target=errorWindow)
     else:
         ft.app(target=mainWindow)
-
-
-# In[ ]:
-
-
-
 
 
 # In[ ]:

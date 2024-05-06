@@ -228,7 +228,7 @@ I2Cコネクタ4つのうちの1つとLEDで6番7番端子を使っているた�
 I2Cコネクタ4つのうちの1つとLEDで6番7番端子を使っているため，下のバツ印のところは利用不可である．
 
 <div style="text-align: center;">
-<img src="../images/Minima_Grove_コネクタ.png" width="70%">
+<img src="../images/UnoR4WiFi_Grove_コネクタ.png" width="70%">
 </div>
 
 
@@ -245,9 +245,16 @@ I2CコネクタとLEDで6番7番端子を使っている．また，SPIで4つ�
 </div>
 
 
+### 8.6. Arduino Giga R1 WiFi
+センサ等を後に追加する場合に，I2C以外は既に使われている場所は利用できない．
 
+I2Cコネクタ4つのうちの1つとLEDで6番7番端子を使っているため，下のバツ印のところは利用不可である．
 
+利用済み端子はUno R4 WiFiと同じとなっている．
 
+<div style="text-align: center;">
+<img src="../images/UnoR4WiFi_Grove_コネクタ.png" width="70%">
+</div>
 
 ***
 - [マニュアルトップに戻る](../Manual.md)

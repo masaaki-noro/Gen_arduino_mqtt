@@ -7,6 +7,9 @@ custom_list:
   - Uno_R4_WiFi
   - Uno_R4_minima
   - Nano_33_IoT
+  - Nano_RP2040_WiFi
+  - Nano_ESP32
+  - Giga_R1_WiFi
 
 MKR_WiFi_1010:
   name: "MKR WiFi 1010改"
@@ -53,11 +56,11 @@ Uno_R4_minima:
     rtc_type: PCF8523 # RTC8564NB , DS1307 , DS3231 , PCF8523 , RV8803 , RX8025 , RX8900 , none
   color_led:
     use_led: true # true(使う) , false(使わない)
-    led_data_pin: 21 # ピン番号
-    led_clk_pin: 20 # ピン番号
+    led_data_pin: 6 # ピン番号
+    led_clk_pin: 7 # ピン番号
   sd:
     use_sd: true # true(使う) , false(使わない)
-    sd_chip_select: 4 # ピン番号
+    sd_chip_select: 8 # ピン番号
 
 Uno_R4_WiFi:
   name: "Uno R4 WiFi改"
@@ -70,11 +73,11 @@ Uno_R4_WiFi:
     rtc_type: PCF8523 # RTC8564NB , DS1307 , DS3231 , PCF8523 , RV8803 , RX8025 , RX8900 , none
   color_led:
     use_led: true # true(使う) , false(使わない)
-    led_data_pin: 21 # ピン番号
-    led_clk_pin: 20 # ピン番号
+    led_data_pin: 6 # ピン番号
+    led_clk_pin: 7 # ピン番号
   sd:
     use_sd: true # true(使う) , false(使わない)
-    sd_chip_select: 4 # ピン番号
+    sd_chip_select: 8 # ピン番号
 
 Nano_33_IoT:
   name: "Nano 33 IoT改"
@@ -92,4 +95,55 @@ Nano_33_IoT:
   sd:
     use_sd: true # true(使う) , false(使わない)
     sd_chip_select: 4 # ピン番号
-    
+
+Nano_RP2040_WiFi:
+  name: "Nano RP2040 WiFi改"
+  arduino_type: Nano_RP2040_WiFi
+  use_groveShield: no
+  network_hardware:
+    network_type: wifi # wifi , ethernet , none
+    ethernet_chip_select: 8 # イーサネットのチップセレクトピン番号
+  rtc:
+    rtc_type: PCF8523 # RTC8564NB , DS1307 , DS3231 , PCF8523 , RV8803 , RX8025 , RX8900 , none
+  color_led:
+    use_led: true # true(使う) , false(使わない)
+    led_data_pin: 8 # ピン番号
+    led_clk_pin: 7 # ピン番号
+  sd:
+    use_sd: true # true(使う) , false(使わない)
+    sd_chip_select: 10 # ピン番号
+
+Nano_ESP32:
+  name: "Nano ESP32改"
+  arduino_type: Nano_ESP32
+  use_groveShield: no
+  network_hardware:
+    network_type: wifi # wifi , ethernet , none
+    ethernet_chip_select: 8 # イーサネットのチップセレクトピン番号
+  rtc:
+    rtc_type: PCF8523 # RTC8564NB , DS1307 , DS3231 , PCF8523 , RV8803 , RX8025 , RX8900 , none
+  color_led:
+    use_led: true # true(使う) , false(使わない)
+    led_data_pin: 8 # ピン番号
+    led_clk_pin: 7 # ピン番号
+  sd:
+    use_sd: true # true(使う) , false(使わない)
+    sd_chip_select: 10 # ピン番号
+
+Giga_R1_WiFi:
+  name: "Giga R1 WiFi改"
+  arduino_type: Giga_R1_WiFi
+  use_groveShield: yes
+  network_hardware:
+    network_type: wifi # wifi , ethernet , none
+    ethernet_chip_select: 8 # イーサネットのチップセレクトピン番号
+  rtc:
+    rtc_type: PCF8523 # RTC8564NB , DS1307 , DS3231 , PCF8523 , RV8803 , RX8025 , RX8900 , none
+  color_led:
+    use_led: true # true(使う) , false(使わない)
+    led_data_pin: 6 # ピン番号
+    led_clk_pin: 7 # ピン番号
+  sd:
+    use_sd: true # true(使う) , false(使わない)
+    sd_chip_select: 8 # ピン番号
+

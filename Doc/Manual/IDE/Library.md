@@ -13,7 +13,6 @@
 |---|---|
 | [ArduinoMqttClient](https://www.arduino.cc/reference/en/libraries/arduinomqttclient/) | MQTTクライアント用ライブラリ |
 | [Adafruit_SleepyDog](https://www.arduino.cc/reference/en/libraries/adafruit-sleepydog-library/) | WDT用ライブラリ |
-| [Grove_Chainable_RGB_LED](https://www.arduino.cc/reference/en/libraries/grove-chainable-rgb-led/) | フルカラーLED用ライブラリ |
 | [WiFiNINA](https://www.arduino.cc/reference/en/libraries/wifinina/) | 一部機種用WiFiチップ用ライブラリ |
 | [NTPClient](https://www.arduino.cc/reference/en/libraries/ntpclient/) | NTP用ライブラリ |
 | [ArduinoHttpClient](https://www.arduino.cc/reference/en/libraries/arduinohttpclient/) | HTTPライブラリ |
@@ -24,6 +23,7 @@
 
 |ライブラリ配布元 | ライブラリの種類(機能) |
 |---|---|
+| https://github.com/pjpmarques/ChainableLED | Grove Chainable LED用ライブラリ |
 | https://github.com/houtbrion/RTC_U | RTC用ライブラリ |
 | https://github.com/houtbrion/Syslog | syslog用ライブラリ |
 | https://github.com/houtbrion/UniSleep | 省電力用機能 |
@@ -148,7 +148,7 @@ githubの[ここ](https://github.com/houtbrion/AusEx)をブラウザで開き，
 コピー元のディレクトリ内部を見ると，pluginディレクトリがある．
 この「plugin」ディレクトリ内部の「AusExOutputPlugin」ディレクトリをArduinoのライブラリ置き場にコピーする．
 
-srcディレクトリの「config.h」を
+srcディレクトリの「AusEx_p_config.h」を
 編集する必要がある．その設定を説明する．
 
 データ出力先がネットワークでない場合は，以下の何れかを有効にする．
@@ -199,37 +199,30 @@ githubの[ここ](https://github.com/houtbrion/Syslog)をブラウザで開き�
 
 
 Syslogはすべての機能を同時に有効にすると，Arduinoのスケッチ(プログラム)のサイズが極端に大きくなることと，
-実装している機能には，相互に有効にすると問題が発生するものがあるため，srcディレクトリの「config.h」を
-編集する必要がある．以下はデフォルトの設定である．
-```
-#define USE_NETWORK
-#define USE_FILE
-#define USE_HARDWARE_SERIAL
-//#define USE_SOFTWARE_SERIAL
-
-#define OUTPUT_TIME
-//#define USE_RTC
-//#define USE_NTP
-```
+実装している機能には，相互に有効にすると問題が発生するものがあるため，srcディレクトリの「syslog_config.h」を
+編集する必要がある．
 
 今回の対象となるIoTのセンサ端末では，ログの出力先はシリアルかファイル(もしくは両方)に限定されることと，
-RTCを使うことを前提としているため，以下のような設定に変更する．
+RTCを使うことを前提としているため，以下のような設定にする．
 
 ```
 
-#define USE_FILE
-#define USE_HARDWARE_SERIAL
-//#define USE_SOFTWARE_SERIAL
+//#define _SYSLOG_USE_NETWORK
+#define _SYSLOG_USE_FILE
+//#define _SYSLOG_USE_SD_FAT
+#define _SYSLOG_USE_HARDWARE_SERIAL
+//#define _SYSLOG_USE_SOFTWARE_SERIAL
 
-#define OUTPUT_TIME
-#define USE_RTC
+#define _SYSLOG_OUTPUT_TIME
+#define _SYSLOG_USE_RTC
+//#define _SYSLOG_USE_NTP
 ```
 
-シリアルに関しては，利用するArduinoの機種のUSB端子(もしくはシリアル端子)がUSE_SOFTWARE_SERIAL
-の場合のみ，以下のように変更する．
+シリアルに関しては，利用するArduino機種のUSB端子(もしくはシリアル端子)がソフトウェアシリアル端子の場合
+のみ，以下のように変更する．
 ```
-//#define USE_HARDWARE_SERIAL
-#define USE_SOFTWARE_SERIAL
+//#define _SYSLOG_USE_HARDWARE_SERIAL
+#define _SYSLOG_USE_SOFTWARE_SERIAL
 ```
 
 基本的に，Arduino公式が販売しているハードウェアでは，プログラムに使うポート(通常USB)は

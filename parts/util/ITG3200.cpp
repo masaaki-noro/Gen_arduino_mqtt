@@ -21,7 +21,7 @@ extern unsigned long currentTime;
 #define SENSOR_ID_ITG3200  -1
 #endif /* SENSOR_ID_ITG3200 */
 
-AusExGrove3AxisDigitalGyro itg3200=AusExGrove3AxisDigitalGyro(&Wire,ITG3200_SAMPLES,ITG3200_SAMPLE_DELAY,SENSOR_ID_ITG3200);
+AusExGrove3AxisDigitalGyro itg3200=AusExGrove3AxisDigitalGyro(&I2C_IF,ITG3200_SAMPLES,ITG3200_SAMPLE_DELAY,SENSOR_ID_ITG3200);
 
 /*
  * センサの初期化
