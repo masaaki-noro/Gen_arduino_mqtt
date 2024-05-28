@@ -6,7 +6,7 @@
 #endif
 #define USE_WIFI
 #define USE_RTC
-#define USE_DS3231
+#define USE_PCF8523
 #define USE_COLOR_LED
 #define LED_DATA_PIN 8
 #define LED_CLK_PIN 7

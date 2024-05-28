@@ -3,7 +3,7 @@ platform:
     network_type: wifi # wifi , ethernet , none
     ethernet_chip_select: 5 # イーサネットのチップセレクトピン番号
   rtc:
-    rtc_type: DS3231 # RTC8564NB , DS1307 , DS3231 , PCF8523 , RV8803 , RX8025 , RX8900 , none
+    rtc_type: PCF8523 # RTC8564NB , DS1307 , DS3231 , PCF8523 , RV8803 , RX8025 , RX8900 , none
     rtc_int_pin: 4 # ピン番号
   color_led:
     use_led: true # true(使う) , false(使わない)
