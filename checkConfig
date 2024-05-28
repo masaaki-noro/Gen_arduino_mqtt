@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from flet_multi_page import subPage
@@ -17,7 +11,6 @@ default_file="parts/app_defaults/checkConfig_defaults.yaml"
 help_file="parts/Help/checkConfig/help.yaml"
 
 config_file_name=""
-#lastView=""
 helpPageName=""
 
 selection = {}
@@ -25,7 +18,6 @@ selection = {}
 max_digital_pin = 200
 
 used_pin = {
-    #'digital' : list(range(max_digital_pin)),
     'digital' :[],
     'analog' : {
         'A0': 0,
@@ -81,22 +73,16 @@ def checkMCU():
     mcu_type = selection['mcu_type']
     use_wdt = config['safety']['use_wdt']
     use_sleep = config['sensor']['low_power']['use_sleep']
-    #print("mcu_type : %s" % mcu_type)
-    #print("use_wdt : %s" % use_wdt)
-    #print("use_sleep : %s" % use_sleep)
     if mcu_type == "other":
         if ((use_sleep) or (use_wdt)):
             message['error'] = "can not use wdt and sleep in unkown MCU architecture\n"
         return message
     wdt_support = defaults['mcu_spec'][mcu_type]['wdt_support']
     sleep_support = defaults['mcu_spec'][mcu_type]['sleep_support']
-    #print("wdt_support : %s" % wdt_support)
-    #print("sleep_support : %s" % sleep_support)
     if ((not wdt_support) and (use_wdt)):
         message['error'] = "can not use wdt in this MCU architecture\n"
     if ((not sleep_support) and (use_sleep)):
         message['error'] =  message['error'] + "can not use sleep in this MCU architecture\n"
-    #print("message : %s" % message['error'])
     return message
 
 def check_multi_use_pin():
@@ -207,28 +193,22 @@ def checkSensorVDD():
         u = "use_" + i
         if config[i][u]:
             if defaults['sensor_param']['i2c'][i]['vdd'] != 0:
-                #print("sensor vdd = %d , platform vdd = %d" % (defaults['sensor_param']['i2c'][i]['vdd'],selection['vdd']))
                 if defaults['sensor_param']['i2c'][i]['vdd'] != selection['vdd']:
                     message['warning'] = message['warning'] + ("VDD of %s is not eqal platform VDD\n" % i)
-                    #print('VDD of %s is not eqal platform VDD' % i)
     # デジタルセンサのチェック
     for i in defaults['sensors']['digital']:
         u = "use_" + i
         if config[i][u]:
             if defaults['sensor_param']['digital'][i]['vdd'] != 0:
-                #print("sensor vdd = %d , platform vdd = %d" % (defaults['sensor_param']['i2c'][i]['vdd'],selection['vdd']))
                 if defaults['sensor_param']['digital'][i]['vdd'] != selection['vdd']:
                     message['warning'] = message['warning'] + ("VDD of %s is not eqal platform VDD\n" % i)
-                    #print('VDD of %s is not eqal platform VDD' % i)
     # デジタルセンサのチェック
     for i in defaults['sensors']['analog']:
         u = "use_" + i
         if config[i][u]:
             if defaults['sensor_param']['analog'][i]['vdd'] != 0:
-                #print("sensor vdd = %d , platform vdd = %d" % (defaults['sensor_param']['i2c'][i]['vdd'],selection['vdd']))
                 if defaults['sensor_param']['analog'][i]['vdd'] != selection['vdd']:
                     message['warning'] = message['warning'] + ("VDD of %s is not eqal platform VDD\n" % i)
-                    #print('VDD of %s is not eqal platform VDD' % i)
     return message
 
 def use_custom_changed(e):
@@ -287,7 +267,6 @@ def use_groveShield_changed(e):
         selection['use_groveShield'] = True
     else:
         selection['use_groveShield'] = False
-    #print(use_groveShield.value)
 
 use_groveShield = ft.Dropdown(
     label="利用するか?",
@@ -302,7 +281,6 @@ use_groveShield = ft.Dropdown(
 def arduino_family_changed(e):
     global selection
     selection['arduino_family'] = arduino_family.value
-    #print(arduino_family.value)
 
 arduino_family = ft.Dropdown(
     label="基板形状(Arduinoのファミリ)指定",
@@ -315,7 +293,6 @@ def mcu_type_changed(e):
     selection['mcu_type'] = mcu_type.value
     if mcu_type.value != 'other':
         selection['vdd'] = defaults['mcu_spec'][mcu_type.value]['vdd']
-    #print(mcu_type.value)
 
 mcu_type = ft.Dropdown(
     label="MCUの種類",
@@ -326,7 +303,6 @@ mcu_type = ft.Dropdown(
 def vdd_changed(e):
     global selection
     selection['vdd'] = vdd.value
-    #print(vdd.value)
 
 vdd = ft.Dropdown(
     label="動作電圧",
@@ -341,19 +317,15 @@ vdd = ft.Dropdown(
 def buildMenu():
     # customPlatform_type
     for i in customPlatform['custom_list']:
-        #print(i)
         customPlatform_type.options.append(ft.dropdown.Option(key=i, text=customPlatform[i]['name']))
     # arduino_type
     for i in defaults['platform']:
-        #print(i)
         arduino_type.options.append(ft.dropdown.Option(key=i, text=defaults[i]['name']))
     # arduino family (formfactor)
     for i in defaults['form_factor']:
-        #print(i)
         arduino_family.options.append(ft.dropdown.Option(key=i, text=i))
     # mcu_type
     for i in defaults['mcu_type']:
-        #print(i)
         mcu_type.options.append(ft.dropdown.Option(key=i, text=i))
 
 def loadDefaults(defaultFile, customFile, helpFile):
@@ -775,10 +747,5 @@ if __name__ == "__main__":
         ft.app(target=errorWindow)
     else:
         ft.app(target=mainWindow)
-
-
-# In[ ]:
-
-
 
 

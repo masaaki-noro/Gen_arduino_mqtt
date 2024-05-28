@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import flet as ft
@@ -33,7 +27,6 @@ sensor_source =  util_dir + 'sensor.cpp'
 
 def copySketch():
     global output_directory_path, output_dir, sketch_name, sketch_source
-    #output_dir = output_directory_path + "/" + sketch_name + "/"
     if not os.path.isdir(output_dir) :
         os.mkdir(output_dir)
     if os.path.isfile(output_dir+'config.h') :
@@ -143,7 +136,6 @@ def exec_command():
 def errorWindow(page: ft.Page):
     global error
     page.title = "Error"
-    #error = "Can not read necesary configuration file of this application."
     page.window_width = 400
     page.window_height = 500
     page.autoscroll = True
@@ -245,39 +237,12 @@ def fileWindow(page: ft.Page):
     page.add(
         selected_input_file
     )
-    #page.add(
-    #    ft.Row(
-    #        [
-    #            ft.ElevatedButton(
-    #                "configuration file",
-    #                icon=ft.icons.UPLOAD_FILE,
-    #                on_click=lambda _: pick_input_file_dialog.pick_files(
-    #                    allow_multiple=False,
-    #                ),
-    #            ),
-    #            selected_input_file,
-    #        ]
-    #    )
-    #)
     page.add(
         ft.Divider(height=2, color="black")
     )
     page.add(
         ft.Text("output directory selection.", style=ft.TextThemeStyle.TITLE_MEDIUM)
     )
-    #page.add(
-    #    ft.Row(
-    #        [
-    #            ft.ElevatedButton(
-    #                "output directory",
-    #                icon=ft.icons.DOWNLOAD,
-    #                on_click=lambda _: pick_output_file_dialog.get_directory_path(
-    #                ),
-    #            ),
-    #            selected_output_file,
-    #        ]
-    #    )
-    #)
     page.add(
         ft.ElevatedButton(
             "output directory",
@@ -692,16 +657,4 @@ if __name__ == "__main__":
         ft.app(target=fileWindow)
     else:
         ft.app(target=errorWindow)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
 
